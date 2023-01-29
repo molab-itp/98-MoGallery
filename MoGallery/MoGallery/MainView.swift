@@ -44,7 +44,7 @@ struct MainView: View {
         }
         .onAppear {
             print("MainView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
-            app.locationManager.requestUse();
+            // app.locationManager.requestUse();
         }
     }
 

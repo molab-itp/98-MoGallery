@@ -58,34 +58,16 @@ struct AppSettingView: View {
                     TextField("", text: $app.settings.photoAlbum)
                 }
             }
+            Section {
+                Link("MoGallery git repo",
+                     destination:
+                        URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
+                .padding(8)
+            }
         }
         .onDisappear {
             print("AppSettingView onDisappear")
             app.updateSettings();
-        }
-        VStack {
-            
-// https://www.hackingwithswift.com/quick-start/swiftui/how-to-open-web-links-in-safari
-//            Link("Visit Apple", destination: URL(string: "https://www.apple.com")!)
-//                .font(.title)
-//                .foregroundColor(.red)
-
-            Link("p5js gallery previews",
-                 destination:
-                    URL(string: "https://mobilelabclass-itp.github.io/98-MoGallery-p5js")!
-            )
-            .padding(2)
-            Link("git repo",
-                 destination:
-                    URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")!
-            )
-            .padding(2)
-//            Button(action: {
-//                openURL(URL(string: "https://mobilelabclass-itp.github.io/98-MoGallery-p5js")!)
-//            }) {
-//                Text("p5js gallery previews")
-//            }
-
         }
     }
 }

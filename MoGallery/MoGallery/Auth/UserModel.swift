@@ -19,7 +19,7 @@ class UserModel: ObservableObject, Identifiable {
     // @Published var activeLapse: TimeInterval
 
     var activeCountLabel: String? {
-        if activeCount > 0 { return String(activeCount) }
+        if activeCount > 0 { return "signin: "+String(activeCount) }
         return nil
     }
     

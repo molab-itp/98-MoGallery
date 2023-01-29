@@ -13,9 +13,15 @@ p5js demo scripts to view Firebase storage in any web browser
 
 - [98-MoGallery-p5js](https://github.com/mobilelabclass-itp/98-MoGallery-p5js)
 
-Created for
+Created for NYU ITP Course:
 
 - [ITP Mobile App Development Lab course](https://github.com/mobilelabclass-itp/content-2023)
+
+
+## Manifesto
+
+Born of a need to share and collaborate free of evil profit-driven corporations.
+- [use social media?](https://github.com/jht1493/jht-site#facts)
 
 ## References
 

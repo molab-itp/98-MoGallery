@@ -93,6 +93,7 @@ struct LobbyView: View {
                         HStack {
                             Text(user.dateIn.getElapsedInterval())
                                 .font(.subheadline)
+                            Spacer()
                             Text(user.activeCountLabel ?? "")
                                 .font(.subheadline)
                         }
