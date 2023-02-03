@@ -3,4 +3,5 @@
 node_modules
 xcuserdata
 GoogleService-Info.plist
-retired
+z-private
+z-retired

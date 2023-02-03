@@ -39,7 +39,7 @@ struct GalleryPickerView: View {
                     }
                     .onDelete { (indices) in
                         print("onDelete", indices)
-                        app.removeSettings(at: indices);
+                        app.removeGalleryKey(at: indices);
                         app.saveSettings()
                     }
                 }
@@ -55,7 +55,7 @@ struct GalleryPickerView: View {
                             name = String(app.settings.galleryKeys.count + 1)
                         }
                         name = "mo-gallery-" + name
-                        app.addSettings(name: name)
+                        app.addGalleryKey(name: name)
                         app.saveSettings()
                         selection = name
                     }) {
@@ -88,11 +88,7 @@ struct GalleryPickerView: View {
             if let mediaItem, selection != app.settings.storeGalleryKey {
                 app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem)
             }
-            app.settings.storeGalleryKey = selection
-            // gApp.updateSettings()
-            app.saveSettings()
-            app.galleryModel.refresh()
-            app.lobbyModel.refresh()
+            app.setStoreGallery(key: selection)
         }
         dismiss()
     }

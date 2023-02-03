@@ -9,7 +9,7 @@ import os.log
 // photos link to details which allows for set favorite and delete
 
 struct PhotoCollectionView: View {
-    
+    @StateObject var lobbyModel: LobbyModel
     @StateObject var photosModel: PhotosModel
     @StateObject var cameraModel: CameraModel
 
@@ -40,7 +40,9 @@ struct PhotoCollectionView: View {
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(photosModel.photoCollection!.photoAssets) { asset in
                         NavigationLink {
-                            PhotoDetailView(asset: asset, cache: photosModel.photoCollection!.cache)
+                            PhotoDetailView(lobbyModel: lobbyModel,
+                                            asset: asset,
+                                            cache: photosModel.photoCollection!.cache)
                         } label: {
                             photoItemView(asset: asset, cache: photosModel.photoCollection!.cache)
                         }

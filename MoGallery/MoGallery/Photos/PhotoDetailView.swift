@@ -4,12 +4,14 @@ See the License.txt file for this sample’s licensing information.
 
 import SwiftUI
 import Photos
+import MapKit
 
 // view single 1024x1024 image
 // async load using CachedImageManager.requestImage
 
 
 struct PhotoDetailView: View {
+    @StateObject var lobbyModel: LobbyModel
     var asset: PhotoAsset
     var cache: CachedImageManager?
     
@@ -43,7 +45,16 @@ struct PhotoDetailView: View {
                     Text( (phAsset.creationDate?.description ?? "").prefix(19) )
                     Text( "\(phAsset.pixelWidth) x \(phAsset.pixelHeight)" )
                     if let locationDescription = phAsset.locationDescription {
-                        Text(locationDescription)
+                        Button {
+                            app.selectedTab = .map
+                        } label: {
+                            Text(locationDescription)
+                        }
+//                        NavigationLink {
+//                            MapView(locs: lobbyModel.mapRegion.locs)
+//                        } label: {
+//                            Text(locationDescription)
+//                        }
                     }
                 }
                 .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
@@ -62,6 +73,11 @@ struct PhotoDetailView: View {
                         self.image = result.image
                     }
                 }
+            }
+        }
+        .onAppear {
+            if let phAsset = asset.phAsset {
+                lobbyModel.locsForUsers(firstLoc: phAsset.loc)
             }
         }
     }
@@ -120,5 +136,10 @@ extension PHAsset {
         guard let lat = self.location?.coordinate.latitude else { return nil }
         guard let lon = self.location?.coordinate.longitude else { return nil }
         return "\( String(format: "%.6f", lat) ) \( String(format: "%.6f", lon) )"
+    }
+    var loc: Location? {
+        guard let lat = self.location?.coordinate.latitude as? Double else { return nil }
+        guard let lon = self.location?.coordinate.longitude as? Double else { return nil }
+        return Location(id: "photo", latitude: lat, longitude: lon, label: "photo")
     }
 }

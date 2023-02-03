@@ -5,6 +5,19 @@ import Firebase
 import GoogleSignIn
 import FirebaseDatabase
 import FirebaseAuth
+import MapKit
+
+struct MapRegionModel {
+    var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 37.334_900,
+                                       longitude: -122.009_020),
+        latitudinalMeters: 750,
+        longitudinalMeters: 750
+    )
+    var locIndex = 0
+    var regionLabel = ""
+    var locs: [Location] = []
+}
 
 class LobbyModel: ObservableObject {
     enum SignInState {
@@ -15,6 +28,8 @@ class LobbyModel: ObservableObject {
     @Published var state: SignInState = .signedOut
     @Published var users: [UserModel] = []
     @Published var albumName = ""
+    
+    @Published var mapRegion = MapRegionModel()
     
     var currentUser: UserModel?
     
@@ -123,7 +138,7 @@ class LobbyModel: ObservableObject {
     // update db user property dateIn with current time in seconds
     //
     func updateCurrentUser() {
-        guard let lobbyRef = self.lobbyRef else { return }
+        guard let lobbyRef else { return }
         
         let id = Auth.auth().currentUser?.uid ?? ""
         let guser = GIDSignIn.sharedInstance.currentUser;
@@ -155,7 +170,12 @@ class LobbyModel: ObservableObject {
 //                print("getData num", num);
 //            }
 //        }
-        
+        // Current user location is update on each login check
+        if let loc = app.locationManager.lastLocation {
+            values["lat"] = loc.coordinate.latitude;
+            values["lon"] = loc.coordinate.longitude
+        }
+
         // Get user info and prepare to update
         lobbyRef.getData() { error, snapshot in
             guard error == nil else {
@@ -183,7 +203,7 @@ class LobbyModel: ObservableObject {
     }
     
     func observeStart() {
-        guard let lobbyRef = self.lobbyRef else { return }
+        guard let lobbyRef else { return }
         print("observeUsersStart usersHandle", lobbyHandle ?? "nil")
         if lobbyHandle != nil {
             return;
@@ -199,12 +219,20 @@ class LobbyModel: ObservableObject {
             let sortedItems = items.sorted(by: { $0.dateIn > $1.dateIn })
             self.users = sortedItems;
             // print("observeUsersStart users", self.users)
+            // Update current user check
+            if let user = self.currentUser {
+                if let nuser = sortedItems.first(where: { $0.id == user.id } ) {
+                    print("LobbyModel currentUser nuser", nuser)
+                    self.currentUser = nuser
+                }
+            }
             print("LobbyModel users.count", self.users.count)
+            self.locsForUsers(firstLoc: nil)
         })
     }
     
     func observeStop() {
-        guard let lobbyRef = self.lobbyRef else { return }
+        guard let lobbyRef else { return }
         print("observeUsersStop usersHandle", lobbyHandle ?? "nil")
         if let refHandle = lobbyHandle {
             lobbyRef.removeObserver(withHandle: refHandle)
@@ -212,6 +240,27 @@ class LobbyModel: ObservableObject {
         }
     }
     
+    func locsForUsers(firstLoc: Location?) {
+        print("locsForUsers firstLoc", firstLoc ?? "-nil-")
+//        guard let currentUser else { return }
+//        let uid = currentUser.id
+        var locs = [Location]()
+        if let firstLoc {
+            locs.append(firstLoc)
+        }
+        users.forEach { user in
+//            if user.id != uid {
+                if let loc = user.loc {
+                    locs.append( loc )
+                }
+//            }
+        }
+        if let last = app.locationManager.lastLocation {
+            let center = last.coordinate
+            locs.append(Location(id: "current", latitude: center.latitude, longitude: center.longitude, label: "current") )
+        }
+        self.mapRegion.locs = locs
+    }
 }
 
 extension Database {

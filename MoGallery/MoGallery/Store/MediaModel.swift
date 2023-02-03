@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 
 struct MediaModel:  Identifiable {
     
@@ -17,13 +18,14 @@ struct MediaModel:  Identifiable {
     var uploadCount: Int
     var createdAt: Date
     var info: [String: Any]
-    var ownerRef: [String]
+    var homeRef: [String]
     var mediaPathFullRez: String
     var storagePathFullRez: String
     var createdDate: String
+    var userGalleryChildId: String
     
-    var ownerRefLabel: String {
-        ownerRef.isEmpty ? "": "[\( ownerRef[0] )]"
+    var homeRefLabel: String {
+        homeRef.isEmpty ? "": "[\( homeRef[0] )]"
     }
     
     var fullRezWidth: Int {
@@ -61,12 +63,6 @@ struct MediaModel:  Identifiable {
         return item as? String
     }
 
-    var locationDescription: String? {
-        guard let lat = info["lat"] as? Double else { return nil }
-        guard let lon = info["lon"] as? Double else { return nil }
-        return "\( String(format: "%.6f", lat) ) \( String(format: "%.6f", lon) )"
-    }
-
     // init? if we want to allow for invalid entries filter out with compactMap
     // init?(id: String, dict: [String: Any]) {
     init(id: String, dict: [String: Any]) {
@@ -77,10 +73,11 @@ struct MediaModel:  Identifiable {
         let uploadCount = dict["uploadCount"] as? Int ?? 0
         let createdAt = dict["createdAt"] as? TimeInterval ?? 0
         let info = dict["info"] as? [String: Any] ?? [:]
-        let ownerRef = dict["ownerRef"] as? [String] ?? []
+        let homeRef = dict["homeRef"] as? [String] ?? []
         let mediaPathFullRez = dict["mediaPathFullRez"] as? String ?? ""
         let storagePathFullRez = dict["storagePathFullRez"] as? String ?? ""
         let createdDate = dict["createdDate"] as? String ?? ""
+        let userGalleryChildId = dict["userGalleryChildId"] as? String ?? ""
         
         self.id = id
         self.uid = uid
@@ -90,9 +87,24 @@ struct MediaModel:  Identifiable {
         self.uploadCount = uploadCount
         self.createdAt = Date(timeIntervalSinceReferenceDate: createdAt);
         self.info = info
-        self.ownerRef = ownerRef
+        self.homeRef = homeRef
         self.mediaPathFullRez = mediaPathFullRez
         self.storagePathFullRez = storagePathFullRez
         self.createdDate = createdDate
+        self.userGalleryChildId = userGalleryChildId
+    }
+}
+
+
+extension MediaModel {
+    var locationDescription: String? {
+        guard let lat = info["lat"] as? Double else { return nil }
+        guard let lon = info["lon"] as? Double else { return nil }
+        return "\( String(format: "%.6f", lat) ) \( String(format: "%.6f", lon) )"
+    }
+    var loc: Location? {
+        guard let lat = info["lat"] as? Double else { return nil }
+        guard let lon = info["lon"] as? Double else { return nil }
+        return Location(id: "photo:", latitude: lat, longitude: lon, label: "photo")
     }
 }

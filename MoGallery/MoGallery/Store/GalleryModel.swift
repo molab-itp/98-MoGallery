@@ -18,7 +18,7 @@ class GalleryModel: ObservableObject {
     var countMine = 0
 
     // mo-gallery
-    private var galleryRef: DatabaseReference? //  = Database.root.child(app.settings.storeGalleryKey)
+    private var galleryRef: DatabaseReference? 
     private var galleryHandle: DatabaseHandle?
     private var storage = Storage.storage()
     
@@ -42,7 +42,7 @@ class GalleryModel: ObservableObject {
     }
     
     func observeStart() {
-        guard let galleryRef = self.galleryRef else { return }
+        guard let galleryRef else { return }
         print("GalleryModel observeStart galleryHandle", galleryHandle ?? "nil")
         if galleryHandle != nil {
             return;
@@ -75,7 +75,7 @@ class GalleryModel: ObservableObject {
     }
     
     func observeStop() {
-        guard let galleryRef = self.galleryRef else { return }
+        guard let galleryRef else { return }
         print("GalleryModel observeStop mediaHandle", galleryHandle ?? "nil")
         if let refHandle = galleryHandle {
             galleryRef.removeObserver(withHandle: refHandle)
@@ -165,6 +165,7 @@ class GalleryModel: ObservableObject {
                 self.createMediaEntry(info: info,
                                       values: values,
                                       galleryRef: self.galleryRef,
+                                      galleryKey: self.app.settings.storeGalleryKey,
                                       user: self.app.lobbyModel.currentUser);
             }
         }
@@ -210,6 +211,7 @@ class GalleryModel: ObservableObject {
             self.createMediaEntry(info: info,
                                   values: nvalues,
                                   galleryRef: self.galleryRef,
+                                  galleryKey: self.app.settings.storeGalleryKey,
                                   user: self.app.lobbyModel.currentUser);
         }
     }
@@ -217,6 +219,7 @@ class GalleryModel: ObservableObject {
     func createMediaEntry(info: [String:Any],
                           values: [AnyHashable : Any],
                           galleryRef: DatabaseReference?,
+                          galleryKey: String,
                           user: UserModel? ) {
         
         // print("createMediaEntry mediaPath", mediaPath)
@@ -226,12 +229,14 @@ class GalleryModel: ObservableObject {
         guard let galleryRef else { return }
         guard let user else { print("createMediaEntry no user"); return }
         
-        var info = info;
-        if info["lat"] == nil, let loc = app.locationManager.lastLocation {
-            print("createMediaEntry loc", loc)
-            info["lat"] = loc.coordinate.latitude;
-            info["lon"] = loc.coordinate.longitude
-        }
+        // !!@ Disabled
+        // var info = info;
+        // Stamp any item with out location info this current location
+//        if info["lat"] == nil, let loc = app.locationManager.lastLocation {
+//            print("createMediaEntry loc", loc)
+//            info["lat"] = loc.coordinate.latitude;
+//            info["lon"] = loc.coordinate.longitude
+//        }
 
         let date = Date()
         var values = values;
@@ -246,6 +251,32 @@ class GalleryModel: ObservableObject {
             print("createMediaEntry no key");
             return
         }
+
+        let userGalleryKey = user.userGalleryKey
+        
+        // If not linked
+        // and not in userGallery, add to userGallery
+        
+        if values["homeRef"] == nil && app.settings.storeGalleryKey != userGalleryKey {
+            let userGalleryRef = dbGalleryRef(key: userGalleryKey)
+            guard let userGalleryRef else {
+                print("createMediaEntry no userGalleryRef")
+                return
+            }
+            guard let userGalleryChildId = userGalleryRef.childByAutoId().key else {
+                print("createMediaEntry no userGalleryChildId")
+                return
+            }
+            var nvalues = values;
+            nvalues["homeRef"] = [galleryKey, key]
+            userGalleryRef.child(userGalleryChildId).updateChildValues(nvalues) { error, ref in
+                if let error = error {
+                    print("createMediaEntry userGalleryRef updateChildValues error: \(error).")
+                }
+            }
+            values["userGalleryChildId"] = userGalleryChildId;
+        }
+        
         galleryRef.child(key).updateChildValues(values) { error, ref in
             if let error = error {
                 print("createMediaEntry updateChildValues error: \(error).")
@@ -254,12 +285,12 @@ class GalleryModel: ObservableObject {
     }
     
     // Add the mediaItem to another gallery named galleryKey
-    //  ownerRef will point to the current source gallery
+    //  homeRef will point to the current source gallery
     //
     func createMediaEntry(galleryKey: String, mediaItem: MediaModel) {
         var values: [AnyHashable : Any] = [:];
-        values["ownerRef"] = [app.settings.storeGalleryKey, mediaItem.id]
-        let ngalleryRef = galleryRef(key: galleryKey)
+        values["homeRef"] = [app.settings.storeGalleryKey, mediaItem.id]
+        let ngalleryRef = dbGalleryRef(key: galleryKey)
         
         values["mediaPath"] = mediaItem.mediaPath;
         values["storagePath"] = mediaItem.storagePath;
@@ -276,10 +307,11 @@ class GalleryModel: ObservableObject {
         createMediaEntry(info: mediaItem.info,
             values: values,
             galleryRef: ngalleryRef,
+            galleryKey: galleryKey,
             user: user)
     }
     
-    func galleryRef(key: String) -> DatabaseReference? {
+    func dbGalleryRef(key: String) -> DatabaseReference? {
         Database.root.child(key)
     }
     
@@ -300,7 +332,7 @@ class GalleryModel: ObservableObject {
     
     func deleteMedia(mediaItem: MediaModel) {
         print("deleteMedia mediaItem \(mediaItem)")
-        guard let galleryRef = self.galleryRef else { return }
+        guard let galleryRef else { return }
         // Delete the media item database entry
         galleryRef.child(mediaItem.id).removeValue {error, ref in
             if let error = error {
@@ -308,8 +340,8 @@ class GalleryModel: ObservableObject {
             }
         }
         // Don't delete media of copied references
-        guard mediaItem.ownerRef.isEmpty else {
-            print("deleteMedia storage no delete ownerRef: \(mediaItem.ownerRef)")
+        guard mediaItem.homeRef.isEmpty else {
+            print("deleteMedia storage no delete homeRef: \(mediaItem.homeRef)")
             return
         }
         // Delete the media low rez file
@@ -325,6 +357,24 @@ class GalleryModel: ObservableObject {
             storageRefFullRez.delete { error in
                 if let error = error {
                     print("deleteMedia storageRefFullRez error: \(error)")
+                }
+            }
+        }
+        
+        // remove userGalleryChildId if present
+        let userGalleryChildId = mediaItem.userGalleryChildId
+        if !userGalleryChildId.isEmpty {
+            guard let user = app.lobbyModel.user(uid: mediaItem.uid) else {
+                print("deleteMedia no user for mediaItem.uid", mediaItem.uid)
+                return
+            }
+            guard let userGalleryRef = dbGalleryRef(key: user.userGalleryKey) else {
+                print("deleteMedia no userGalleryRef userGalleryKey", user.userGalleryKey)
+                return
+            }
+            userGalleryRef.child(userGalleryChildId).removeValue {error, ref in
+                if let error = error {
+                    print("deleteMedia userGalleryRef removeValue error: \(error)")
                 }
             }
         }
@@ -368,14 +418,13 @@ class GalleryModel: ObservableObject {
                 "imageHeight": imageSize.height,
                 "sourceDate": sourceDate,
             ]
-//            if let loc = app.locationManager.lastLocation {
-//                print("getSaveImageData loc", loc)
-//                info["lat"]  = loc.coordinate.latitude;
-//                info["lon"]  = loc.coordinate.longitude
-//            }
             if let fullRezSize {
                 info["fullRezWidth"] = fullRezSize.width
                 info["fullRezHeight"] = fullRezSize.height
+            }
+            if let loc = app.locationManager.lastLocation {
+                info["lat"] = loc.coordinate.latitude;
+                info["lon"] = loc.coordinate.longitude
             }
             uploadImageData(imageData,
                             fullRezData: fullRezData,

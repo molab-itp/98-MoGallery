@@ -53,7 +53,10 @@ struct LoginView: View {
             // }
         }
         .onAppear {
-            print("MainView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
+            print("LoginView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
+        }
+        .onDisappear {
+            print("LoginView onDisappear")
             app.locationManager.requestUse();
         }
     }

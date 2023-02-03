@@ -7,11 +7,12 @@
 import SwiftUI
 
 struct GalleryView: View {
-    
+    @StateObject var lobbyModel: LobbyModel
     @StateObject var galleryModel: GalleryModel
     
     @State private var selection: String?
     @State private var showingAlert = false
+    @State private var showingAddRandomAlert = false
 
     @EnvironmentObject var app: AppModel
     @Environment(\.displayScale) private var displayScale
@@ -36,7 +37,9 @@ struct GalleryView: View {
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(galleryModel.gallery) { item in
                         NavigationLink {
-                            MediaDetailView(item: item, priorSelection: app.settings.storeGalleryKey)
+                            MediaDetailView(lobbyModel: lobbyModel,
+                                            item: item,
+                                            priorSelection: app.settings.storeGalleryKey)
                         } label: {
                             MediaThumbView(item: item, itemSize: Self.itemSize)
                         }
@@ -46,7 +49,7 @@ struct GalleryView: View {
                 }
                 .padding([.vertical], Self.itemSpacing)
             }
-            .navigationTitle( app.settings.storeGalleryKey )
+            .navigationTitle( app.galleyTitle )
             .navigationBarTitleDisplayMode(.inline)
             // .statusBar(hidden: false)
             .toolbar {
@@ -63,7 +66,13 @@ struct GalleryView: View {
                         Image(systemName: "trash")
                     }
                     Button(action: {
-                        addRandomMedia()
+                        if app.settings.allowRandomAdd {
+                            addRandomMedia()
+                        }
+                        else {
+                            showingAddRandomAlert = true
+                        }
+                        // addRandomMedia()
                     }) {
                         Image(systemName: "plus.app.fill")
                     }
@@ -77,6 +86,21 @@ struct GalleryView: View {
                 }
                 Button("Cancel", role: .cancel) {
                     showingAlert = false
+                }
+            }
+            .alert("Are you sure you want to ADD a random photo from your Photo Library?", isPresented:$showingAddRandomAlert) {
+                Button("OK") {
+                    showingAddRandomAlert = false
+                    addRandomMedia()
+                }
+                Button("OK - dont ask again") {
+                    showingAddRandomAlert = false
+                    app.settings.allowRandomAdd = true
+                    app.saveSettings()
+                    addRandomMedia()
+                }
+                Button("Cancel", role: .cancel) {
+                    showingAddRandomAlert = false
                 }
             }
             .onAppear {

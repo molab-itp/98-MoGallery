@@ -11,7 +11,7 @@ class MetaModel: ObservableObject {
     @Published var metas: [MetaEntry] = []
 
     // mo-meta
-    private var metaRef: DatabaseReference? //  = Database.root.child(app.settings.storeGalleryKey)
+    private var metaRef: DatabaseReference? 
     private var metaHandle: DatabaseHandle?
     
     unowned var app: AppModel
@@ -29,7 +29,7 @@ class MetaModel: ObservableObject {
     }
     
     func observeStart() {
-        guard let metaRef = self.metaRef else { return }
+        guard let metaRef else { return }
         print("MetaModel observeStart metaHandle", metaHandle ?? "nil")
         if metaHandle != nil {
             return;
@@ -48,7 +48,7 @@ class MetaModel: ObservableObject {
     }
     
     func observeStop() {
-        guard let metaRef = self.metaRef else { return }
+        guard let metaRef else { return }
         print("MetaModel observeStop metaHandle", metaHandle ?? "nil")
         if let refHandle = metaHandle {
             metaRef.removeObserver(withHandle: refHandle)
@@ -61,13 +61,21 @@ class MetaModel: ObservableObject {
     }
     
     func addMeta(galleryName: String) {
+        guard let user = app.lobbyModel.currentUser else {
+            print("addMeta no currentUser");
+            return
+        }
+        addMeta(galleryName: galleryName, user: user)
+    }
+    
+    func addMeta(galleryName: String, user: UserModel?) {
         print("addMeta galleryName", galleryName);
         let mentry = find(galleryName: galleryName)
         if mentry != nil {
             print("addMeta present uid", mentry!.uid);
             return;
         }
-        guard let user = app.lobbyModel.currentUser else {
+        guard let user else {
             print("addMeta no currentUser");
             return
         }
@@ -76,7 +84,7 @@ class MetaModel: ObservableObject {
         values["uid"] = user.id;
         values["galleryName"] = galleryName;
         
-        guard let metaRef = self.metaRef else { return }
+        guard let metaRef else { return }
         guard let key = metaRef.childByAutoId().key else {
             print("addMeta no key");
             return
@@ -104,7 +112,7 @@ class MetaModel: ObservableObject {
             print("removeMeta NOT owner mentry.uid", mentry.uid, "user.id", user.id)
             return
         }
-        guard let metaRef = self.metaRef else { return }
+        guard let metaRef else { return }
         metaRef.child(mentry.id).removeValue {error, ref in
             if let error = error {
                 print("removeMeta removeValue error: \(error).")

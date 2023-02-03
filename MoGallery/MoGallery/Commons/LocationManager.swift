@@ -25,8 +25,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        //    locationManager.requestWhenInUseAuthorization()
-        //    locationManager.startUpdatingLocation()
+        // locationManager.requestWhenInUseAuthorization()
+        // locationManager.startUpdatingLocation()
     }
     
     func requestUse() {

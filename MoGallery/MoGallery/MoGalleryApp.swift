@@ -31,6 +31,9 @@ struct MoGalleryApp: App {
                     // app.refreshModels()
                     app.lobbyModel.signIn()
                 }
+                .onDisappear {
+                    print("MoGalleryApp onDisappear")
+                }
         }
     }
 }

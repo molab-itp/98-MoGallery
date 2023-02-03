@@ -8,6 +8,7 @@ enum TabTag {
     case gallery
     case photos
     case camera
+    case map
     case settings
 }
 
@@ -18,15 +19,16 @@ struct MainView: View {
     @StateObject var cameraModel: CameraModel
     
     @EnvironmentObject var app: AppModel
-
+    
     var body: some View {
         TabView(selection: $app.selectedTab) {
-            GalleryView(galleryModel: app.galleryModel)
+            GalleryView(lobbyModel: lobbyModel, galleryModel: app.galleryModel)
                 .tabItem {
                     Label("Gallery", systemImage: "photo.stack.fill")
                 }
                 .tag(TabTag.gallery)
-            PhotoCollectionView(photosModel: photosModel, cameraModel: cameraModel)
+            PhotoCollectionView(lobbyModel: lobbyModel,
+                                photosModel: photosModel, cameraModel: cameraModel)
                 .tabItem {
                     Label("Photos", systemImage: "photo.on.rectangle")
                 }
@@ -36,15 +38,20 @@ struct MainView: View {
                     Label("Camera", systemImage: "camera.fill")
                 }
                 .tag(TabTag.camera)
+            // MapViewTab(lobbyModel: lobbyModel)
+            MapViewTab(locs: lobbyModel.mapRegion.locs)
+                .tabItem {
+                    Label("Map", systemImage: "globe")
+                }
+                .tag(TabTag.map)
             settingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "info.circle")
+                    Label("Info", systemImage: "info.circle")
                 }
                 .tag(TabTag.settings)
         }
         .onAppear {
             print("MainView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
-            // app.locationManager.requestUse();
         }
     }
 

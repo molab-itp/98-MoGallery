@@ -25,7 +25,7 @@ struct LobbyView: View {
                     AppSettingView()
                 }
             }
-            .navigationTitle("Settings (\(app.verNum))")
+            .navigationTitle("Info (\(app.verNum))")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -38,6 +38,9 @@ struct LobbyView: View {
                     }
                 }
             }
+        }
+        .onAppear {
+            app.lobbyModel.locsForUsers(firstLoc: nil)
         }
     }
     
@@ -84,6 +87,11 @@ struct LobbyView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 80, height: 80, alignment: .center)
                     // .cornerRadius(8)
+//                        .onTapGesture {
+//                            print("userListView AsyncImage onTapGesture user", user)
+//                            app.setStoreGallery(key: user.userGalleryKey)
+//                            app.selectedTab = .gallery
+//                        }
                     VStack(alignment: .leading) {
                         Text(user.name)
                             .font(.headline)
@@ -97,8 +105,14 @@ struct LobbyView: View {
                             Text(user.activeCountLabel ?? "")
                                 .font(.subheadline)
                         }
+                        LocationRow(lobbyModel: lobbyModel, user: user)
                     }
                     Spacer()
+                }
+                .onTapGesture {
+                    print("userListView onTapGesture user", user)
+                    app.setStoreGallery(key: user.userGalleryKey)
+                    app.selectedTab = .gallery
                 }
             }
         }
@@ -106,8 +120,23 @@ struct LobbyView: View {
     
 }
 
-//struct HomeView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        LobbyView()
-//    }
-//}
+struct LocationRow: View {
+    @StateObject var lobbyModel: LobbyModel
+    var user: UserModel
+    
+    @EnvironmentObject var app: AppModel
+
+    var body: some View {
+        if let locationDescription = user.locationDescription {
+//            NavigationLink {
+////                MapView()
+////                MapView(mapRegion: lobbyModel.mapRegion)
+////                MapView(lobbyModel: lobbyModel)
+//                MapView(locs: lobbyModel.mapRegion.locs)
+//            } label: {
+                Text(locationDescription)
+            }
+//        }
+    }
+}
+

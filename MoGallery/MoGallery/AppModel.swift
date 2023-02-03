@@ -21,6 +21,7 @@ struct Settings: Codable {
     var storeLobbyKey = "mo-lobby"
     
     var showUsers = false
+    var allowRandomAdd = false
     
     var galleryKeys:[String] = ["mo-gallery-1", "mo-gallery-2", "mo-gallery-3"]
 }
@@ -69,6 +70,46 @@ class AppModel: ObservableObject {
         refreshModels()
         //lobbyModel.signOut()
     }
+    
+    func removeGalleryKey(at offsets: IndexSet) {
+        if let index = offsets.first {
+            let name = settings.galleryKeys[index]
+            metaModel.removeMeta(galleryName: name)
+        }
+        settings.galleryKeys.remove(atOffsets: offsets)
+    }
+    
+    func addGalleryKey(name: String) {
+        metaModel.addMeta(galleryName: name)
+        settings.galleryKeys.append(name);
+    }
+    
+    var galleryKeysExcludingCurrent: [String] {
+        let filter: (String) -> String? = { item in
+            if item == self.settings.storeGalleryKey {
+                return nil
+            }
+            return item
+        }
+        return settings.galleryKeys.compactMap( filter )
+    }
+
+    func setStoreGallery(key: String) {
+        settings.storeGalleryKey = key
+        saveSettings()
+        galleryModel.refresh()
+        lobbyModel.refresh()
+    }
+    
+    var galleyTitle: String {
+        var titl = settings.storeGalleryKey
+        // zu-oVFxc052pOWF5qq560qMuBmEsbr2-jht1900@gmail-com
+        if titl.hasPrefix("zu-") {
+            titl = String(titl.dropFirst(32)).replacingOccurrences(of: "-", with: ".")
+        }
+        return titl
+    }
+
 }
 
 extension AppModel {
@@ -94,29 +135,6 @@ extension AppModel {
         } catch {
             print("AppModel saveSettings error", error)
         }
-    }
-    
-    func removeSettings(at offsets: IndexSet) {
-        if let index = offsets.first {
-            let name = settings.galleryKeys[index]
-            metaModel.removeMeta(galleryName: name)
-        }
-        settings.galleryKeys.remove(atOffsets: offsets)
-    }
-    
-    func addSettings(name: String) {
-        metaModel.addMeta(galleryName: name)
-        settings.galleryKeys.append(name);
-    }
-    
-    var galleryKeysExcludingCurrent: [String] {
-        let filter: (String) -> String? = { item in
-            if item == self.settings.storeGalleryKey {
-                return nil
-            }
-            return item
-        }
-        return settings.galleryKeys.compactMap( filter )
     }
 }
 

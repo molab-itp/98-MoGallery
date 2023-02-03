@@ -11,7 +11,7 @@
 import SwiftUI
 
 struct MediaDetailView: View {
-    
+    @StateObject var lobbyModel: LobbyModel
     var item: MediaModel;
     var priorSelection: String
     
@@ -46,13 +46,21 @@ struct MediaDetailView: View {
                     if let sourceDate = item.sourceDate {
                         Text(sourceDate.prefix(19))
                     }
-                    Text("\(item.width) x \(item.height) \(item.ownerRefLabel)" )
+                    Text("\(item.width) x \(item.height) \(item.homeRefLabel)" )
                     if let locationDescription = item.locationDescription {
-                        Text(locationDescription)
+                        Button {
+                            app.selectedTab = .map
+                        } label: {
+                            Text(locationDescription)
+                        }
+//                        NavigationLink {
+//                            MapView(locs: lobbyModel.mapRegion.locs)
+//                        } label: {
+//                            Text(locationDescription)
+//                        }
                     }
                 }
                 .font(.subheadline)
-
             }
             .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
             .background(Color.secondary.colorInvert())
@@ -76,6 +84,10 @@ struct MediaDetailView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 dismiss()
             }
+        }
+        .onAppear {
+            print("MediaDetailView onAppear")
+            lobbyModel.locsForUsers(firstLoc: item.loc)
         }
     }
 }

@@ -41,7 +41,9 @@
 		AB4A7E852954E089005E55CB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = AB4A7E842954E089005E55CB /* GoogleSignInSwift */; };
 		AB4A7E882954FAB2005E55CB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AB4A7E872954FAB2005E55CB /* README.md */; };
 		AB4A7E8A295510DD005E55CB /* MediaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4A7E89295510DD005E55CB /* MediaDetailView.swift */; };
+		AB4DB025298CB6F600F35448 /* MapViewTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4DB024298CB6F600F35448 /* MapViewTab.swift */; };
 		AB560E7929841B8900A3F738 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB560E7829841B8900A3F738 /* LocationManager.swift */; };
+		AB59AABF298AB5AE0077269E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59AABE298AB5AE0077269E /* MapView.swift */; };
 		AB7C0D4E2975DBE200ACC200 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7C0D4D2975DBE200ACC200 /* CameraView.swift */; };
 		ABCDDB90295D1A3F0074CB2F /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */; };
 		ABEA73DF296540F600DC1BF0 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEA73DE296540F600DC1BF0 /* MainView.swift */; };
@@ -84,7 +86,9 @@
 		AB4A7E862954E417005E55CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AB4A7E872954FAB2005E55CB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		AB4A7E89295510DD005E55CB /* MediaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailView.swift; sourceTree = "<group>"; };
+		AB4DB024298CB6F600F35448 /* MapViewTab.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewTab.swift; sourceTree = "<group>"; };
 		AB560E7829841B8900A3F738 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		AB59AABE298AB5AE0077269E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AB7C0D4D2975DBE200ACC200 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
 		ABEA73DE296540F600DC1BF0 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -196,6 +200,8 @@
 				ABEA73E029692D9D00DC1BF0 /* MetaModel.swift */,
 				AB4A7E89295510DD005E55CB /* MediaDetailView.swift */,
 				AB4A7E5C2954DFB4005E55CB /* MediaModel.swift */,
+				AB59AABE298AB5AE0077269E /* MapView.swift */,
+				AB4DB024298CB6F600F35448 /* MapViewTab.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -213,6 +219,7 @@
 		ABCDDB91295F2AD80074CB2F /* Commons */ = {
 			isa = PBXGroup;
 			children = (
+				AB560E7829841B8900A3F738 /* LocationManager.swift */,
 				AB4A7E542954DFB4005E55CB /* ThumbnailView.swift */,
 				ABF81330297C3C2F005198EC /* getElapsedInterval.swift */,
 				AB4A7E522954DFB4005E55CB /* ViewfinderView.swift */,
@@ -220,7 +227,6 @@
 				AB4A7E4D2954DFB4005E55CB /* imageUtils.swift */,
 				AB281C5D2961268F007328EB /* StringMisc.swift */,
 				AB4A7E412954DFB4005E55CB /* GoogleSignInButton.swift */,
-				AB560E7829841B8900A3F738 /* LocationManager.swift */,
 			);
 			path = Commons;
 			sourceTree = "<group>";
@@ -312,10 +318,12 @@
 				AB4A7E6E2954DFB4005E55CB /* ViewfinderView.swift in Sources */,
 				AB4A7E6A2954DFB4005E55CB /* PhotoItemView.swift in Sources */,
 				AB4A7E5E2954DFB4005E55CB /* GoogleSignInButton.swift in Sources */,
+				AB4DB025298CB6F600F35448 /* MapViewTab.swift in Sources */,
 				AB4A7E6B2954DFB4005E55CB /* PhotoCollection.swift in Sources */,
 				AB4A7E682954DFB4005E55CB /* CachedImageManager.swift in Sources */,
 				ABCDDB90295D1A3F0074CB2F /* CameraModel.swift in Sources */,
 				AB4A7E6D2954DFB4005E55CB /* PhotoCollectionView.swift in Sources */,
+				AB59AABF298AB5AE0077269E /* MapView.swift in Sources */,
 				ABF81331297C3C2F005198EC /* getElapsedInterval.swift in Sources */,
 				AB4A7E772954DFB4005E55CB /* GalleryModel.swift in Sources */,
 				AB4A7E692954DFB4005E55CB /* imageUtils.swift in Sources */,
@@ -470,7 +478,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
@@ -504,7 +512,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 23;
+				CURRENT_PROJECT_VERSION = 30;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;

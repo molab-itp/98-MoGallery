@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 
 class UserModel: ObservableObject, Identifiable {
     
@@ -17,10 +18,18 @@ class UserModel: ObservableObject, Identifiable {
     @Published var uploadCount: Int
     @Published var activeCount: Int
     // @Published var activeLapse: TimeInterval
-
+    var info:[AnyHashable : Any] = [:]
+    
     var activeCountLabel: String? {
         if activeCount > 0 { return "signin: "+String(activeCount) }
         return nil
+    }
+    
+    var userGalleryKey: String {
+        let nemail = email.replacingOccurrences(of: ".", with: "-")
+        let str = "zu-\( id )-\( nemail )"
+        // print("userGalleryKey", str)
+        return str
     }
     
     init(id: String, dict: [String: Any]) {
@@ -40,6 +49,19 @@ class UserModel: ObservableObject, Identifiable {
         self.uploadCount = uploadCount
         self.activeCount = activeCount
         // self.activeLapse = activeLapse
+        self.info = dict
     }
 }
 
+extension UserModel {
+    var locationDescription: String? {
+        guard let lat = info["lat"] as? Double else { return nil }
+        guard let lon = info["lon"] as? Double else { return nil }
+        return "\( String(format: "%.6f", lat) ) \( String(format: "%.6f", lon) )"
+    }
+    var loc: Location? {
+        guard let lat = info["lat"] as? Double else { return nil }
+        guard let lon = info["lon"] as? Double else { return nil }
+        return Location(id: email, latitude: lat, longitude: lon, label: email)
+    }
+}
