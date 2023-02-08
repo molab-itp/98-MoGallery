@@ -20,7 +20,17 @@ struct LoginView: View {
                     .font(.system(size: 72, weight: .bold))
                 // Spacer()
                 
-                Text("Welcome to MoGallery (\(app.verNum)).\n\nBy using this app you consent to sharing photos that you select from your Photo Library or Camera to others using the app and possible to the entire web.\n\nPlease give permission to access entire Photo Library.\n\nExperimental alpha software - use at your own risk.\n\nHappy sharing!\n")
+                Text("""
+Welcome to MoGallery v\(app.verNum)
+
+Please give permission to access your entire Photo Library. This does not automatically make your entire library visible to other users of the app. You have to specifically add items to galleries from your Photo Library or Camera to make them visible to other users.
+
+All users are by invitation of the developer only and are visible to each other.
+
+Experimental alpha software - use at your own risk. You can always delete shared items if you change your mind.
+
+Don't worry, be happy sharing!
+""")
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(2)
                 
@@ -29,20 +39,19 @@ struct LoginView: View {
                     .onTapGesture {
                         lobbyModel.signIn()
                     }
-//                    .frame(height: 200)
-                
+                    // .frame(height: 200)
 //                Link("use social media? jht-site#why",
 //                     destination:
 //                        URL(string: "https://github.com/jht1493/jht-site#why")! )
 //                .padding(8)
-//                Link("Mobile Lab Class @ ITP",
-//                     destination:
-//                        URL(string: "https://github.com/mobilelabclass-itp/content-2023")! )
-//                .padding(8)
-                Link("MoGallery git repo",
+                Link("Video overview youtube.com",
+                     destination:
+                        URL(string: "https://jht1493.net/MoGallery/VideoOverView")! )
+                .padding(14)
+                Link("MoGallery github.com",
                      destination:
                         URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
-                .padding(16)
+                .padding(14)
                 
                 // Button("Sign In Anonymously") {
                 //  lobbyModel.signInAnonymously()

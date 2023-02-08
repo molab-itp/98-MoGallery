@@ -9,7 +9,12 @@ import Foundation
 import MapKit
 import SwiftUI
 
-struct MediaModel: Identifiable {
+struct MediaModel: Codable, Equatable, Identifiable {
+    
+    static func == (lhs: MediaModel, rhs: MediaModel) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     
     enum CodingKeys: String, CodingKey {
         case id

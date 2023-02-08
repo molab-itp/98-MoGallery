@@ -76,6 +76,7 @@ struct PhotoDetailView: View {
             }
         }
         .onAppear {
+            print("PhotoDetailView onAppear")
             if let phAsset = asset.phAsset {
                 lobbyModel.locsForUsers(firstLoc: phAsset.loc)
             }
@@ -94,7 +95,7 @@ struct PhotoDetailView: View {
                         // app.path.removeLast()
                         // app.path.append("gallery")
                         dismiss()
-                        app.selectedTab = .gallery
+                        app.toGalleryTab()
                     }
                 }
             } label: {

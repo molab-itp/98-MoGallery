@@ -39,6 +39,7 @@ struct MapViewTab: View {
 //    }
 
     var body: some View {
+        let _ = Self._printChanges()
         ZStack {
             //  Map(coordinateRegion: locationManager.region,
             //  Map(coordinateRegion: $locationManager.region,
@@ -93,6 +94,7 @@ struct MapViewTab: View {
         }
         .onAppear {
             print("MapView onAppear locs", locs)
+            locIndex = 0
             setRegionMain(0);
         }
     }

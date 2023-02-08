@@ -24,6 +24,7 @@ struct AppSettingView: View {
         Form {
             Section {
                 Text("Firebase Storage")
+                Toggle("Add Random Warning", isOn: $app.settings.randomAddWarning)
                 Toggle("Store Camera Capture", isOn: $app.settings.storeAddEnabled)
                 Toggle("Store FullRez", isOn: $app.settings.storeFullRez)
                 HStack {

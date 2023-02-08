@@ -8,6 +8,7 @@ import FirebaseDatabase
 import FirebaseStorage
 import Photos
 import UIKit
+import SwiftUI
 
 // load array of MediaModel items for database
 // sort by createdAt to show most recent first
@@ -16,6 +17,8 @@ class GalleryModel: ObservableObject {
     
     @Published var gallery: [MediaModel] = []
     var countMine = 0
+
+    @Published var path: NavigationPath = NavigationPath()
 
     // mo-gallery
     private var galleryRef: DatabaseReference? 
@@ -27,11 +30,19 @@ class GalleryModel: ObservableObject {
         self.app = app
     }
 
+    func deleteWarning() -> String {
+        "Are you sure you want to delete your \(countMine) photos in this gallery?"
+    }
+    
     func countDisplayText() -> String {
         if countMine != gallery.count {
             return "\(gallery.count) items, mine: \(countMine)"
         }
         return "\(gallery.count) items"
+    }
+    
+    func itemFor(id: String) -> MediaModel? {
+        return gallery.first(where: { $0.id == id } )
     }
     
     func refresh() {
@@ -282,6 +293,9 @@ class GalleryModel: ObservableObject {
                 print("createMediaEntry updateChildValues error: \(error).")
             }
         }
+        
+        // Update user location
+        app.lobbyModel.updateCurrentUser()
     }
     
     // Add the mediaItem to another gallery named galleryKey

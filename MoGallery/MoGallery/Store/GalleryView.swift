@@ -6,6 +6,10 @@
 
 import SwiftUI
 
+let myIconFont = Font
+    .system(size: 12)
+//    .monospaced()
+
 struct GalleryView: View {
     @StateObject var lobbyModel: LobbyModel
     @StateObject var galleryModel: GalleryModel
@@ -31,16 +35,19 @@ struct GalleryView: View {
     ]
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $galleryModel.path) {
             ScrollView {
                 Text(galleryModel.countDisplayText())
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(galleryModel.gallery) { item in
-                        NavigationLink {
-                            MediaDetailView(lobbyModel: lobbyModel,
-                                            item: item,
-                                            priorSelection: app.settings.storeGalleryKey)
-                        } label: {
+                        //  NavigationLink {
+                        //      MediaDetailView(lobbyModel: lobbyModel,
+                        //          item: item,
+                        //              priorSelection: app.settings.storeGalleryKey)
+                        //      } label: {
+                        //          MediaThumbView(item: item, itemSize: Self.itemSize)
+                        //  }
+                        NavigationLink(value: item.id) {
                             MediaThumbView(item: item, itemSize: Self.itemSize)
                         }
                         .buttonStyle(.borderless)
@@ -49,16 +56,20 @@ struct GalleryView: View {
                 }
                 .padding([.vertical], Self.itemSpacing)
             }
-            .navigationTitle( app.galleyTitle )
+            // .navigationTitle( app.galleyTitle )
             .navigationBarTitleDisplayMode(.inline)
             // .statusBar(hidden: false)
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                // ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink {
                         GalleryPickerView(galleryKeys: app.settings.galleryKeys,
                                           selection: $selection)
                     } label: {
-                        Label("Gallery List", systemImage: "rectangle.stack")
+                        Label(app.galleyTitle, systemImage: "rectangle.stack")
+                            .labelStyle(.titleAndIcon)
+                        // Label("Gallery List", systemImage: "rectangle.stack")
+
                     }
                     Button(action: {
                         showingAlert = true
@@ -66,19 +77,23 @@ struct GalleryView: View {
                         Image(systemName: "trash")
                     }
                     Button(action: {
-                        if app.settings.allowRandomAdd {
+                        if !app.settings.randomAddWarning {
                             addRandomMedia()
                         }
                         else {
                             showingAddRandomAlert = true
                         }
-                        // addRandomMedia()
                     }) {
-                        Image(systemName: "plus.app.fill")
+                        // plus.square.fill.on.square.fill plus.diamond.fill
+                        Label("Random", systemImage: "plus.diamond.fill")
+                        // Label("Random", systemImage: "plus.app.fill")
+                        // .labelStyle(.titleAndIcon)
+                        // .font(myIconFont)
+                        // Image(systemName: "plus.app.fill")
                     }
                 }
             }
-            .alert("Are you sure you want to ALL my photos in this gallery?", isPresented:$showingAlert) {
+            .alert(galleryModel.deleteWarning(), isPresented:$showingAlert) {
                 Button("OK") {
                     showingAlert = false
                     galleryModel.deleteAll()
@@ -95,7 +110,7 @@ struct GalleryView: View {
                 }
                 Button("OK - dont ask again") {
                     showingAddRandomAlert = false
-                    app.settings.allowRandomAdd = true
+                    app.settings.randomAddWarning = false
                     app.saveSettings()
                     addRandomMedia()
                 }
@@ -105,6 +120,13 @@ struct GalleryView: View {
             }
             .onAppear {
                 selection = app.settings.storeGalleryKey
+            }
+            .navigationDestination(for: String.self) { id in
+                if let item = galleryModel.itemFor(id: id) {
+                    MediaDetailView(lobbyModel: lobbyModel,
+                                           item: item,
+                                           priorSelection: app.settings.storeGalleryKey)
+                }
             }
         }
     }

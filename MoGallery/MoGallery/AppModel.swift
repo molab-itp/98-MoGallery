@@ -21,7 +21,7 @@ struct Settings: Codable {
     var storeLobbyKey = "mo-lobby"
     
     var showUsers = false
-    var allowRandomAdd = false
+    var randomAddWarning = true
     
     var galleryKeys:[String] = ["mo-gallery-1", "mo-gallery-2", "mo-gallery-3"]
 }
@@ -29,9 +29,6 @@ struct Settings: Codable {
 class AppModel: ObservableObject {
     
     @Published var settings:Settings = AppModel.loadSettings()
-
-    // navigation with app.path
-    // @Published var path = NavigationPath()
 
     @Published var selectedTab = TabTag.gallery
     
@@ -53,7 +50,7 @@ class AppModel: ObservableObject {
         cameraModel.photoInfoProvided = { photoInfo in
             self.photosModel.savePhoto(photoInfo: photoInfo)
             // Exit camera view back to gallery after Camera capture
-            self.selectedTab = .gallery
+            self.toGalleryTab()
         }
         cameraModel.previewImageProvided = { image in
             self.photosModel.viewfinderImage = image
@@ -65,6 +62,12 @@ class AppModel: ObservableObject {
         metaModel.refresh()
     }
     
+    func toGalleryTab() {
+        selectedTab = .gallery
+        if !galleryModel.path.isEmpty {
+            galleryModel.path.removeLast()
+        }
+    }
     func updateSettings() {
         saveSettings()
         refreshModels()

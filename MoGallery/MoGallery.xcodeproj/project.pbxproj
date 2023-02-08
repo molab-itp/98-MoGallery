@@ -200,8 +200,8 @@
 				ABEA73E029692D9D00DC1BF0 /* MetaModel.swift */,
 				AB4A7E89295510DD005E55CB /* MediaDetailView.swift */,
 				AB4A7E5C2954DFB4005E55CB /* MediaModel.swift */,
-				AB59AABE298AB5AE0077269E /* MapView.swift */,
 				AB4DB024298CB6F600F35448 /* MapViewTab.swift */,
+				AB59AABE298AB5AE0077269E /* MapView.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -478,7 +478,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
@@ -512,7 +512,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 35;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;

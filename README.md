@@ -18,6 +18,11 @@ Created for NYU ITP Course:
 - [ITP Mobile App Development Lab course](https://github.com/mobilelabclass-itp/content-2023)
 
 
+## Requirements
+
+- iPhone/iPad running iOS 16+, to run the app
+- macOS 13+, for XCode development
+
 ## Manifesto
 
 Born of a need to share and collaborate free of evil profit-driven corporations.

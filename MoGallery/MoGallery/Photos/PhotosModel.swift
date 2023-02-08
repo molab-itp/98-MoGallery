@@ -33,6 +33,10 @@ final class PhotosModel: ObservableObject {
     var selectionIndex = 0
     var selectionLast = -1
     
+    var photoCollectionTitle: String {
+        photoCollection!.albumName ?? "Photo Library"
+    }
+    
     func nextRandomAsset() -> PhotoAsset? {
         guard let assets = photoCollection?.photoAssets, assets.count > 0 else {
             print("nextRandomAsset no assets")

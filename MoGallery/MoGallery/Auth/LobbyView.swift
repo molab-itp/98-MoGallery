@@ -25,7 +25,7 @@ struct LobbyView: View {
                     AppSettingView()
                 }
             }
-            .navigationTitle("Info (\(app.verNum))")
+            .navigationTitle("Info MoGallery v\(app.verNum)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
@@ -40,6 +40,7 @@ struct LobbyView: View {
             }
         }
         .onAppear {
+            print("LobbyView onAppear")
             app.lobbyModel.locsForUsers(firstLoc: nil)
         }
     }
@@ -112,7 +113,7 @@ struct LobbyView: View {
                 .onTapGesture {
                     print("userListView onTapGesture user", user)
                     app.setStoreGallery(key: user.userGalleryKey)
-                    app.selectedTab = .gallery
+                    app.toGalleryTab()
                 }
             }
         }

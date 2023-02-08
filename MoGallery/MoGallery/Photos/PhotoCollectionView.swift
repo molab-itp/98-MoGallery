@@ -52,15 +52,18 @@ struct PhotoCollectionView: View {
                 }
                 .padding([.vertical], Self.itemSpacing)
             }
-            .navigationTitle( photosModel.photoCollection!.albumName ?? "Photo Library")
+            // .navigationTitle( photosModel.photoCollection!.albumName ?? "Photo Library")
             .navigationBarTitleDisplayMode(.inline)
-//            .statusBar(hidden: false)
+            //  .statusBar(hidden: false)
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                // ToolbarItemGroup(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink {
                         AlbumPickerView(selection: $selection)
                     } label: {
-                        Label("Gallery List", systemImage: "rectangle.stack")
+                        Label(photosModel.photoCollectionTitle , systemImage: "rectangle.stack")
+                            .labelStyle(.titleAndIcon)
+                        // Label("Gallery List", systemImage: "rectangle.stack")
                     }
                 }
             }
