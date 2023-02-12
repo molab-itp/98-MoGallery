@@ -64,6 +64,7 @@ class AppModel: ObservableObject {
     
     func toGalleryTab() {
         selectedTab = .gallery
+        print("toGalleryTab galleryModel.path", galleryModel.path)
         if !galleryModel.path.isEmpty {
             galleryModel.path.removeLast()
         }
@@ -83,7 +84,7 @@ class AppModel: ObservableObject {
     }
     
     func addGalleryKey(name: String) {
-        metaModel.addMeta(galleryName: name)
+        let _ = metaModel.addMeta(galleryName: name)
         settings.galleryKeys.append(name);
     }
     
@@ -105,14 +106,25 @@ class AppModel: ObservableObject {
     }
     
     var galleyTitle: String {
-        var titl = settings.storeGalleryKey
+        displayTitle(galleryName: settings.storeGalleryKey)
+    }
+
+    func displayTitle(galleryName: String) -> String {
+        var titl = galleryName
         // zu-oVFxc052pOWF5qq560qMuBmEsbr2-jht1900@gmail-com
         if titl.hasPrefix("zu-") {
             titl = String(titl.dropFirst(32)).replacingOccurrences(of: "-", with: ".")
         }
         return titl
     }
-
+    
+    func homeRefLabel(item: MediaModel) -> String {
+        var label = ""
+        if !item.homeRef.isEmpty {
+            label = "[\( displayTitle(galleryName: item.homeRef[0]) )]"
+        }
+        return label;
+    }
 }
 
 extension AppModel {

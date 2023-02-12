@@ -17,6 +17,8 @@ class UserModel: ObservableObject, Identifiable {
     @Published var dateIn: Date
     @Published var uploadCount: Int
     @Published var activeCount: Int
+    @Published var status: String
+
     // @Published var activeLapse: TimeInterval
     var info:[AnyHashable : Any] = [:]
     
@@ -39,7 +41,7 @@ class UserModel: ObservableObject, Identifiable {
         let dateIn = dict["dateIn"] as? TimeInterval ?? 0
         let uploadCount = dict["uploadCount"] as? Int ?? 0
         let activeCount = dict["activeCount"] as? Int ?? 0
-        // let activeLapse = dict["activeLapse"] as? TimeInterval ?? 0
+        let status = dict["status"] as? String ?? ""
 
         self.id = id
         self.name = name;
@@ -48,7 +50,7 @@ class UserModel: ObservableObject, Identifiable {
         self.dateIn = Date(timeIntervalSinceReferenceDate: dateIn);
         self.uploadCount = uploadCount
         self.activeCount = activeCount
-        // self.activeLapse = activeLapse
+        self.status = status
         self.info = dict
     }
 }

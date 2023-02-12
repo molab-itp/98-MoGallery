@@ -18,7 +18,6 @@ import SwiftUI
 struct AppSettingView: View {
     
     @EnvironmentObject var app: AppModel
-    @Environment(\.openURL) var openURL
 
     var body: some View {
         Form {

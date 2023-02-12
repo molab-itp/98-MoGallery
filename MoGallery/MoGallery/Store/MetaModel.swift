@@ -60,40 +60,53 @@ class MetaModel: ObservableObject {
         return metas.first(where: { $0.galleryName == galleryName })
     }
     
-    func addMeta(galleryName: String) {
-        guard let user = app.lobbyModel.currentUser else {
-            print("addMeta no currentUser");
-            return
+    func fetch(galleryName: String) -> MetaEntry?  {
+        if let metaEntry = find(galleryName: galleryName) {
+            return metaEntry
         }
-        addMeta(galleryName: galleryName, user: user)
+        guard let user = app.lobbyModel.currentUser else {
+            print("addMeta no currentUser")
+            return nil
+        }
+        return addMeta(galleryName: galleryName, user: user)
     }
     
-    func addMeta(galleryName: String, user: UserModel?) {
+    func addMeta(galleryName: String) -> MetaEntry? {
+        guard let user = app.lobbyModel.currentUser else {
+            print("addMeta no currentUser")
+            return nil
+        }
+        return addMeta(galleryName: galleryName, user: user)
+    }
+    
+    func addMeta(galleryName: String, user: UserModel?) -> MetaEntry? {
         print("addMeta galleryName", galleryName);
         let mentry = find(galleryName: galleryName)
-        if mentry != nil {
-            print("addMeta present uid", mentry!.uid);
-            return;
+        if let mentry  {
+            print("addMeta present uid", mentry.uid);
+            return mentry;
         }
         guard let user else {
-            print("addMeta no currentUser");
-            return
+            print("addMeta no currentUser")
+            return nil
         }
-
-        var values:[AnyHashable : Any] = [:];
+        guard let metaRef else {
+            print("addMeta no metaRef")
+            return nil
+        }
+        guard let key = metaRef.childByAutoId().key else {
+            print("addMeta no key")
+            return nil
+        }
+        var values:[String : Any] = [:];
         values["uid"] = user.id;
         values["galleryName"] = galleryName;
-        
-        guard let metaRef else { return }
-        guard let key = metaRef.childByAutoId().key else {
-            print("addMeta no key");
-            return
-        }
         metaRef.child(key).updateChildValues(values) { error, ref in
             if let error = error {
                 print("addMeta updateChildValues error: \(error).")
             }
         }
+        return MetaEntry(id: key, dict: values)
     }
     
     func removeMeta(galleryName: String) {
@@ -119,19 +132,16 @@ class MetaModel: ObservableObject {
             }
         }
     }
-}
-
-struct MetaEntry:  Identifiable {
-    var id: String
-    var uid: String
-    var galleryName: String
     
-    init(id: String, dict: [String: Any]) {
-        let uid = dict["uid"] as? String ?? ""
-        let galleryName = dict["galleryName"] as? String ?? ""
-
-        self.id = id
-        self.uid = uid
-        self.galleryName = galleryName
+    func update(metaEntry: MetaEntry) {
+        guard let metaRef else { return }
+        var values:[AnyHashable : Any] = [:];
+        values["status"] = metaEntry.status;
+        metaRef.child(metaEntry.id).updateChildValues(values) { error, ref in
+            if let error = error {
+                print("update metaEntry updateChildValues error: \(error).")
+            }
+        }
     }
 }
+

@@ -37,39 +37,38 @@ struct GalleryView: View {
     var body: some View {
         NavigationStack(path: $galleryModel.path) {
             ScrollView {
-                Text(galleryModel.countDisplayText())
+                let galleryName = app.settings.storeGalleryKey
+                if let metaEntry = app.metaModel.fetch(galleryName: galleryName) {
+                    NavigationLink {
+                        MetaDetailView(metaModel: app.metaModel,
+                                       metaEntry: metaEntry)
+                    } label: {
+                        VStack {
+                            Text(galleryModel.countDisplayText())
+                            if  !metaEntry.status.isEmpty {
+                                Text(metaEntry.status)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                }
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(galleryModel.gallery) { item in
-                        //  NavigationLink {
-                        //      MediaDetailView(lobbyModel: lobbyModel,
-                        //          item: item,
-                        //              priorSelection: app.settings.storeGalleryKey)
-                        //      } label: {
-                        //          MediaThumbView(item: item, itemSize: Self.itemSize)
-                        //  }
                         NavigationLink(value: item.id) {
                             MediaThumbView(item: item, itemSize: Self.itemSize)
                         }
                         .buttonStyle(.borderless)
-                        // .accessibilityLabel(asset.accessibilityLabel)
                     }
                 }
                 .padding([.vertical], Self.itemSpacing)
             }
-            // .navigationTitle( app.galleyTitle )
             .navigationBarTitleDisplayMode(.inline)
             // .statusBar(hidden: false)
             .toolbar {
-                // ToolbarItemGroup(placement: .navigationBarTrailing) {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
-                    NavigationLink {
-                        GalleryPickerView(galleryKeys: app.settings.galleryKeys,
-                                          selection: $selection)
-                    } label: {
+                    NavigationLink(value: "") {
                         Label(app.galleyTitle, systemImage: "rectangle.stack")
                             .labelStyle(.titleAndIcon)
-                        // Label("Gallery List", systemImage: "rectangle.stack")
-
                     }
                     Button(action: {
                         showingAlert = true
@@ -86,10 +85,6 @@ struct GalleryView: View {
                     }) {
                         // plus.square.fill.on.square.fill plus.diamond.fill
                         Label("Random", systemImage: "plus.diamond.fill")
-                        // Label("Random", systemImage: "plus.app.fill")
-                        // .labelStyle(.titleAndIcon)
-                        // .font(myIconFont)
-                        // Image(systemName: "plus.app.fill")
                     }
                 }
             }
@@ -122,7 +117,12 @@ struct GalleryView: View {
                 selection = app.settings.storeGalleryKey
             }
             .navigationDestination(for: String.self) { id in
-                if let item = galleryModel.itemFor(id: id) {
+                if id.isEmpty {
+                    GalleryPickerView(galleryKeys: app.settings.galleryKeys,
+                                      selection: $selection)
+
+                }
+                else if let item = galleryModel.itemFor(id: id) {
                     MediaDetailView(lobbyModel: lobbyModel,
                                            item: item,
                                            priorSelection: app.settings.storeGalleryKey)
@@ -151,13 +151,13 @@ struct MediaThumbView: View {
         { image in
             image.resizable()
                 .scaledToFill()
-//                .scaledToFit()
+                // .scaledToFit()
 
         } placeholder: {
             ProgressView()
         }
         .aspectRatio(contentMode: .fill)
-//        .aspectRatio(contentMode: .fit)
+        // .aspectRatio(contentMode: .fit)
         .frame(width: itemSize.width, height: itemSize.height)
         .clipped()
     }
@@ -169,4 +169,23 @@ struct MediaThumbView: View {
 //    }
 //}
 
+//                    NavigationLink(value: "") {
+//                        Label(app.galleyTitle, systemImage: "rectangle.stack")
 
+//                    NavigationLink {
+//                        GalleryPickerView(galleryKeys: app.settings.galleryKeys,
+//                                          selection: $selection)
+//                    } label: {
+//                        Label(app.galleyTitle, systemImage: "rectangle.stack")
+//                            .labelStyle(.titleAndIcon)
+//                        // Label("Gallery List", systemImage: "rectangle.stack")
+//
+//                    }
+
+//  NavigationLink {
+//      MediaDetailView(lobbyModel: lobbyModel,
+//          item: item,
+//              priorSelection: app.settings.storeGalleryKey)
+//      } label: {
+//          MediaThumbView(item: item, itemSize: Self.itemSize)
+//  }

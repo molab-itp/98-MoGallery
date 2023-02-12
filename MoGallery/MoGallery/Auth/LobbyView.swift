@@ -47,27 +47,7 @@ struct LobbyView: View {
     
     private func userHeaderView() -> some View {
         VStack {
-            HStack {
-                if let currentUser = lobbyModel.currentUser {
-                    // AsyncImage(url: URL(string: currentUser.profileImg))
-                    // .aspectRatio(contentMode: .fit)
-                    // .frame(width: 80, height: 80, alignment: .center)
-                    VStack(alignment: .leading) {
-                        // Text(currentUser.name )
-                        // .font(.headline)
-                        Text(currentUser.email )
-                            .font(.subheadline)
-                        Text(currentUser.id )
-                            .font(.subheadline)
-                        // Text(gApp.settings.storeLobbyKey )
-                        // .font(.subheadline)
-                    }
-                }
-                Spacer()
-            }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color(.secondarySystemBackground))
+            userDetailRow()
             Button(action: lobbyModel.signOut) {
                 Text("Sign Out")
                     .foregroundColor(.white)
@@ -80,25 +60,45 @@ struct LobbyView: View {
         }
     }
     
+    private func userDetailRow() -> some View {
+        HStack {
+            if let currentUser = lobbyModel.currentUser {
+                NavigationLink {
+                    UserDetailView(lobbyModel: lobbyModel, user: currentUser )
+                } label: {
+                    VStack(alignment: .leading) {
+                        Text(currentUser.name)
+                            .font(.headline)
+                        Text(currentUser.email)
+                            .font(.subheadline)
+                         Text(currentUser.status)
+                            .lineLimit(1)
+                          .font(.subheadline)
+                    }
+                }
+            }
+            Spacer()
+        }
+        .padding()
+        .frame(maxWidth: .infinity)
+        .background(Color(.secondarySystemBackground))
+    }
+    
     private func userListView() -> some View {
         List {
+            Text("\(lobbyModel.users.count) users")
+            // .frame(alignment: .leading)
+            // .multilineTextAlignment(.trailing)
             ForEach(lobbyModel.users) { user in
                 HStack {
                     AsyncImage(url: URL(string: user.profileImg))
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 80, height: 80, alignment: .center)
-                    // .cornerRadius(8)
-//                        .onTapGesture {
-//                            print("userListView AsyncImage onTapGesture user", user)
-//                            app.setStoreGallery(key: user.userGalleryKey)
-//                            app.selectedTab = .gallery
-//                        }
                     VStack(alignment: .leading) {
                         Text(user.name)
                             .font(.headline)
                         Text(user.email)
                             .font(.subheadline)
-                        // Text(user.dateIn.description)
                         HStack {
                             Text(user.dateIn.getElapsedInterval())
                                 .font(.subheadline)
@@ -106,7 +106,9 @@ struct LobbyView: View {
                             Text(user.activeCountLabel ?? "")
                                 .font(.subheadline)
                         }
-                        LocationRow(lobbyModel: lobbyModel, user: user)
+                        Text(user.status)
+                            .font(.subheadline)
+                            .lineLimit(1)
                     }
                     Spacer()
                 }
@@ -129,15 +131,22 @@ struct LocationRow: View {
 
     var body: some View {
         if let locationDescription = user.locationDescription {
-//            NavigationLink {
-////                MapView()
-////                MapView(mapRegion: lobbyModel.mapRegion)
-////                MapView(lobbyModel: lobbyModel)
-//                MapView(locs: lobbyModel.mapRegion.locs)
-//            } label: {
                 Text(locationDescription)
             }
 //        }
     }
 }
 
+//            NavigationLink {
+//                MapView()
+//                 MapView(mapRegion: lobbyModel.mapRegion)
+//                MapView(lobbyModel: lobbyModel)
+//                MapView(locs: lobbyModel.mapRegion.locs)
+//            } label: {
+
+// .cornerRadius(8)
+// .onTapGesture {
+//      print("userListView AsyncImage onTapGesture user", user)
+//      app.setStoreGallery(key: user.userGalleryKey)
+//      app.selectedTab = .gallery
+//  }

@@ -1,4 +1,4 @@
-# MoGallery
+# [98-MoGallery](https://github.com/mobilelabclass-itp/98-MoGallery)
 
 MoGallery is a mobile app for students to quickly create their own mobile multi user experiences. It builds on the Apple SwiftUI tutorial that demonstrates access to the iOS Photo library and adds Google Firebase for multi user cloud storage features.
 
@@ -17,15 +17,15 @@ Created for NYU ITP Course:
 
 - [ITP Mobile App Development Lab course](https://github.com/mobilelabclass-itp/content-2023)
 
-
 ## Requirements
 
 - iPhone/iPad running iOS 16+, to run the app
-- macOS 13+, for XCode development
+- macOS 13+, for Xcode development
 
 ## Manifesto
 
 Born of a need to share and collaborate free of evil profit-driven corporations.
+
 - [use social media?](https://github.com/jht1493/jht-site#facts)
 
 ## References

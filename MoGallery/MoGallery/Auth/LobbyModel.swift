@@ -202,6 +202,19 @@ class LobbyModel: ObservableObject {
         }
     }
     
+    func updateUser(user: UserModel) {
+        print("updateUser updateUser", updateUser)
+        guard let lobbyRef else { return }
+        
+        var values:[String : Any] = [:];
+        values["status"] = user.status
+        lobbyRef.child(user.id).updateChildValues(values) { error, ref in
+            if let error = error {
+                print("updateUser updateChildValues error: \(error).")
+            }
+        }
+    }
+    
     func observeStart() {
         guard let lobbyRef else { return }
         print("observeUsersStart usersHandle", lobbyHandle ?? "nil")

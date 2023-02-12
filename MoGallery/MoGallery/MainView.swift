@@ -24,7 +24,7 @@ struct MainView: View {
         TabView(selection: $app.selectedTab) {
             GalleryView(lobbyModel: lobbyModel, galleryModel: app.galleryModel)
                 .tabItem {
-                    Label("Gallery", systemImage: "photo.stack.fill")
+                    Label("Gallery", systemImage: "rectangle.stack")
                 }
                 .tag(TabTag.gallery)
             PhotoCollectionView(lobbyModel: lobbyModel,

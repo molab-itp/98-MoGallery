@@ -11,22 +11,6 @@ import SwiftUI
 
 struct MediaModel: Identifiable {
     
-    enum CodingKeys: String, CodingKey {
-        case id
-        case uid
-        case authorEmail
-        case mediaPath
-        case storagePath
-        case uploadCount
-        case createdAt
-        case info
-        case homeRef
-        case mediaPathFullRez
-        case storagePathFullRez
-        case createdDate
-        case userGalleryChildId
-    }
-
     var id: String
     var uid: String
     var authorEmail: String
@@ -41,9 +25,9 @@ struct MediaModel: Identifiable {
     var createdDate: String
     var userGalleryChildId: String
     
-    var homeRefLabel: String {
-        homeRef.isEmpty ? "": "[\( homeRef[0] )]"
-    }
+//    var homeRefLabel: String {
+//        homeRef.isEmpty ? "": "[\( homeRef[0] )]"
+//    }
     
     var fullRezWidth: Int {
         info["fullRezWidth"] as? Int ?? -1
@@ -125,3 +109,19 @@ extension MediaModel {
         return Location(id: "photo:", latitude: lat, longitude: lon, label: "photo")
     }
 }
+
+//    enum CodingKeys: String, CodingKey {
+//        case id
+//        case uid
+//        case authorEmail
+//        case mediaPath
+//        case storagePath
+//        case uploadCount
+//        case createdAt
+//        case info
+//        case homeRef
+//        case mediaPathFullRez
+//        case storagePathFullRez
+//        case createdDate
+//        case userGalleryChildId
+//    }

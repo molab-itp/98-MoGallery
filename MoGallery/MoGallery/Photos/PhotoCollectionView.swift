@@ -61,9 +61,8 @@ struct PhotoCollectionView: View {
                     NavigationLink {
                         AlbumPickerView(selection: $selection)
                     } label: {
-                        Label(photosModel.photoCollectionTitle , systemImage: "rectangle.stack")
+                        Label(photosModel.photoCollectionTitle , systemImage: "photo.on.rectangle")
                             .labelStyle(.titleAndIcon)
-                        // Label("Gallery List", systemImage: "rectangle.stack")
                     }
                 }
             }
@@ -111,16 +110,16 @@ struct AlbumPickerView: View {
 
     var body: some View {
         Group {
-            HStack {
-                Button(action: dismissPicker) {
-                    Image(systemName: "chevron.left")
-                }
-                Spacer()
-                let str = selection ?? ""
-                Text("Selected album: \(str)")
-                Spacer()
-            }
-            .padding(20)
+//            HStack {
+//                Button(action: dismissPicker) {
+//                    Image(systemName: "chevron.left")
+//                }
+//                Spacer()
+//                let str = selection ?? ""
+//                Text("Selected album: \(str)")
+//                Spacer()
+//            }
+//            .padding(20)
             VStack {
                 List(app.photosModel.albumNames, id: \.self,
                      selection: $selection)
@@ -134,6 +133,12 @@ struct AlbumPickerView: View {
                 }
             }
         }
+        // .navigationTitle( photosModel.photoCollection!.albumName ?? "Photo Library")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Select Album")
+//        Label("Select Album", systemImage: "photo.on.rectangle")
+//            .labelStyle(.titleAndIcon)
+
     }
     
     private func dismissPicker() {
