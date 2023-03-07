@@ -46,6 +46,13 @@ class AppModel: ObservableObject {
         return String(describing: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)
     }
     
+    func initRefresh() {
+        // metaModel is not dependent on login status or selected gallery
+        // on need to refresh once per app launch
+        metaModel.refresh()
+        refreshModels()
+    }
+    
     func refreshModels() {
         cameraModel.photoInfoProvided = { photoInfo in
             self.photosModel.savePhoto(photoInfo: photoInfo)
@@ -59,7 +66,6 @@ class AppModel: ObservableObject {
         lobbyModel.refresh()
         galleryModel.refresh()
         photosModel.refresh()
-        metaModel.refresh()
     }
     
     func toGalleryTab() {
@@ -69,10 +75,11 @@ class AppModel: ObservableObject {
             galleryModel.path.removeLast()
         }
     }
+    
     func updateSettings() {
         saveSettings()
         refreshModels()
-        //lobbyModel.signOut()
+        // lobbyModel.signOut()
     }
     
     func removeGalleryKey(at offsets: IndexSet) {

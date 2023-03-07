@@ -11,14 +11,14 @@ import Firebase
 struct MoGalleryApp: App {
     
 // !!@ register app delegate for Firebase setup
-//    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+// @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
     var app = AppModel();
 
     init() {
         UINavigationBar.applyCustomAppearance()
         FirebaseApp.configure()
-        app.refreshModels()
+        app.initRefresh()
     }
     
     var body: some Scene {

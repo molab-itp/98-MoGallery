@@ -119,7 +119,7 @@ class LobbyModel: ObservableObject {
             // galleryModel countMine depends on current user uid
             app.lobbyModel.refresh()
             app.galleryModel.refresh()
-            app.metaModel.refresh()
+            // app.metaModel.refresh()
         }
     }
     
