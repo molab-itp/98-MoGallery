@@ -207,7 +207,7 @@ class LobbyModel: ObservableObject {
         guard let lobbyRef else { return }
         
         var values:[String : Any] = [:];
-        values["status"] = user.status
+        values["caption"] = user.caption
         lobbyRef.child(user.id).updateChildValues(values) { error, ref in
             if let error = error {
                 print("updateUser updateChildValues error: \(error).")
@@ -255,18 +255,14 @@ class LobbyModel: ObservableObject {
     
     func locsForUsers(firstLoc: Location?) {
         print("locsForUsers firstLoc", firstLoc ?? "-nil-")
-//        guard let currentUser else { return }
-//        let uid = currentUser.id
         var locs = [Location]()
         if let firstLoc {
             locs.append(firstLoc)
         }
         users.forEach { user in
-//            if user.id != uid {
-                if let loc = user.loc {
-                    locs.append( loc )
-                }
-//            }
+            if let loc = user.loc {
+                locs.append( loc )
+            }
         }
         if let last = app.locationManager.lastLocation {
             let center = last.coordinate

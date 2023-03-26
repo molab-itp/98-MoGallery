@@ -4,23 +4,31 @@ See the License.txt file for this sample’s licensing information.
 
 import SwiftUI
 import Photos
+import AVKit
 
 // view single 1024x1024 image
 // async load using CachedImageManager.requestImage
 
 struct PhotoDetailView: View {
-    @StateObject var lobbyModel: LobbyModel
+    
     var asset: PhotoAsset
     var cache: CachedImageManager?
     
-    @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var app: AppModel
     
+    @Environment(\.dismiss) var dismiss
+
     @State private var image: Image?
     @State private var imageRequestID: PHImageRequestID?
     
+    @State private var showInfo = false
+    
     private let imageSize = CGSize(width: 1024, height: 1024)
     
+    // @State private var playerItem: AVPlayerItem?
+    // @State private var player: AVPlayer?
+
     var body: some View {
         Group {
             if let image = image {
@@ -28,17 +36,28 @@ struct PhotoDetailView: View {
                     .resizable()
                     .scaledToFit()
                     .accessibilityLabel(asset.accessibilityLabel)
+            }
+            else if let player = app.videoPlayer {
+                // AVPlayer(playerItem: playerItem)
+                // VideoPlayer(player: AVPlayer(url:  URL(string: "https://bit.ly/swswift")!))
+                VideoPlayer(player: player)
             } else {
                 ProgressView()
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea()
+        // .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // .ignoresSafeArea()
         .background(Color.secondary)
-        .navigationTitle("Photo")
+        // .navigationTitle("Photo")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button {
+                    showInfo.toggle()
+                } label: {
+                    Label("Info", systemImage: showInfo ? "info.circle.fill" : "info.circle")
+                }
                 Button {
                     Task {
                         await asset.delete()
@@ -61,7 +80,9 @@ struct PhotoDetailView: View {
                         app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
                         await MainActor.run {
                             dismiss()
-                            app.toGalleryTab()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                app.toGalleryTab()
+                            }
                         }
                     }
                 } label: {
@@ -70,7 +91,7 @@ struct PhotoDetailView: View {
             }
         }
         .overlay(alignment: .top) {
-            if let phAsset = asset.phAsset {
+            if let phAsset = asset.phAsset, showInfo {
                 VStack {
                     Text( (phAsset.creationDate?.description ?? "").prefix(19) )
                     Text( "\(phAsset.pixelWidth) x \(phAsset.pixelHeight)" )
@@ -92,10 +113,16 @@ struct PhotoDetailView: View {
         //        }
         .task {
             guard image == nil, let cache = cache else { return }
-            imageRequestID = await cache.requestImage(for: asset, targetSize: imageSize) { result in
-                Task {
-                    if let result = result {
-                        self.image = result.image
+            print("PhotoDetailView isVideoMediaType", asset.isVideoMediaType)
+            if let phAsset = asset.phAsset, asset.isVideoMediaType {
+                app.playVideo(phAsset: phAsset)
+            }
+            else {
+                imageRequestID = await cache.requestImage(for: asset, targetSize: imageSize) { result in
+                    Task {
+                        if let result = result {
+                            self.image = result.image
+                        }
                     }
                 }
             }
@@ -105,6 +132,10 @@ struct PhotoDetailView: View {
             if let phAsset = asset.phAsset {
                 lobbyModel.locsForUsers(firstLoc: phAsset.loc)
             }
+        }
+        .onDisappear {
+            print("PhotoDetailView onDisappear")
+            app.stopVideo()
         }
     }
 }

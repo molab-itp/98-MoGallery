@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct MetaDetailView: View {
-    @StateObject var metaModel: MetaModel
-    @StateObject var metaEntry: MetaEntry
-        
+    
+    @ObservedObject var metaEntry: MetaEntry
+
+    @EnvironmentObject var metaModel: MetaModel
     @EnvironmentObject var app: AppModel
 
     var body: some View {
@@ -20,8 +21,8 @@ struct MetaDetailView: View {
         }
         Form {
             Section {
-                Text("Status")
-                TextField("", text: $metaEntry.status, axis: .vertical)
+                Text("Caption")
+                TextField("", text: $metaEntry.caption, axis: .vertical)
                     .textFieldStyle(.roundedBorder)
             }
         }

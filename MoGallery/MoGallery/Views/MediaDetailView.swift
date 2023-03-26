@@ -9,91 +9,94 @@
 //  + button to delete
 
 import SwiftUI
+import AVKit
+import Photos
+import YouTubePlayerKit
 
 struct MediaDetailView: View {
-    @StateObject var lobbyModel: LobbyModel
-    var item: MediaModel;
+    
+    @ObservedObject var item: MediaModel;
     var priorSelection: String
     
+    @EnvironmentObject var lobbyModel: LobbyModel
+    @EnvironmentObject var galleryModel: GalleryModel
     @EnvironmentObject var app: AppModel
     @Environment(\.dismiss) var dismiss
     
     @State private var showingAlert = false
-    @State private var thumbImage:Image?
-    @State private var selection: String?
+    @State private var showInfo = false
     @State private var isSharing = false
+
+    @State private var selection: String?
     @State private var imageThumb: UIImage?
+    
+    
+    @State private var priorYouTubeId: String?
+    @State private var priorCaption: String?
+    @State private var priorVideoUrl: String?
+    @State private var priorTryVideo: Bool?
 
     var body: some View {
-        VStack {
-            AsyncImage(url: URL(string: item.mediaPathDetail))
-            { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-                
-            } placeholder: {
-                ProgressView()
+        Group {
+            VStack {
+                // if showInfo {
+                //  showInfoOverlay()
+                // }
+                if let player = app.youTubePlayer {
+                    YouTubePlayerView(player) { state in
+                        switch state {
+                        case .idle:
+                            ProgressView()
+                        case .ready:
+                            EmptyView()
+                        case .error(let error):
+                            Text(verbatim: "YouTube player error \(error)")
+                        }
+                    }
+                }
+                else if let player = app.videoPlayer {
+                    VideoPlayer(player: player)
+                }
+                else {
+                    let imageURL = URL(string: item.mediaPathDetail)
+                    AsyncImage(url: imageURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                        
+                    } placeholder: {
+                        ProgressView()
+                    }
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .ignoresSafeArea()
+         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // .ignoresSafeArea()
         .background(Color.secondary)
-        .navigationTitle("Media")
+        // .navigationTitle("Media")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             // navigationBarLeading
             ToolbarItemGroup(placement: .navigationBarTrailing) {
-                Button(action: {
-                    isSharing = true
-                }) {
-                    Image(systemName: "square.and.arrow.up")
-                }.sheet(isPresented: $isSharing) {
-                    ShareSheet(
-                        activityItems: activityItems(), // ["Place Holder" as Any],
-                        excludedActivityTypes: [])
-                }
-                Button {
-                    showingAlert = true
-                } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-                // MediaDetailView EditButtons Add Photo
-                NavigationLink {
-                    GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
-                                      selection: $selection,
-                                      mediaItem: item)
-                } label: {
-                    Label("Add Photo", systemImage: "plus.app.fill")
-                }
+                topButtons()
             }
         }
         .overlay(alignment: .top) {
-            VStack {
-                Text(item.authorEmail)
-                Group {
-                    if let sourceDate = item.sourceDate {
-                        Text(sourceDate.prefix(19))
-                    }
-                    let homeRefLabel = app.homeRefLabel(item: item)
-                    Text("\(item.width) x \(item.height) \(homeRefLabel)" )
-                    if let locationDescription = item.locationDescription {
-                        Button {
-                            app.selectedTab = .map
-                        } label: {
-                            Text(locationDescription)
-                        }
-                    }
-                }
-                .font(.subheadline)
+            if showInfo {
+                showInfoOverlay()
             }
-            .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
-            .background(Color.secondary.colorInvert())
         }
-//        .overlay(alignment: .bottom) {
-//            EditButtons(showingAlert: $showingAlert, selection: $selection, item: item)
-//                .offset(x: 0, y: -50)
-//        }
+        .overlay(alignment: .bottom) {
+            if !item.caption.isEmpty {
+                Text(item.caption)
+                    .frame(width: app.geometrySize.width)
+                    .padding()
+                    .foregroundColor(.white)
+                    // .background(Color(.lightGray))
+                    .background(Color.secondary.colorInvert())
+            }
+        }
         .alert("Are you sure you want to delete this photo?", isPresented:$showingAlert) {
             Button("OK") {
                 showingAlert = false
@@ -113,13 +116,129 @@ struct MediaDetailView: View {
         .onAppear {
             print("MediaDetailView onAppear")
             lobbyModel.locsForUsers(firstLoc: item.loc)
+            priorCaption = item.caption
+            priorVideoUrl = item.videoUrl
+        }
+        .onDisappear {
+            print("MediaDetailView onDisappear")
+            app.stopVideo()
+            var changed = false
+            if let priorCaption, priorCaption != item.caption {
+                changed = true
+            }
+            if let priorVideoUrl, priorVideoUrl != item.videoUrl {
+                changed = true
+            }
+            if changed {
+                Task {
+                    app.galleryModel.updateMedia(media: item)
+                }
+            }
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
-            print("imageStash", imageThumb ?? "-nil-")
+            print("imageThumb", imageThumb ?? "-nil-")
+            if !item.videoUrl.isEmpty  {
+                app.playVideo(url: item.videoUrl)
+            }
+            else if let sourceId = item.sourceId, item.isVideoMediaType {
+                let asset = PhotoAsset(identifier: sourceId)
+                guard let phAsset = asset.phAsset else {
+                    print("MediaDetailView !!@ Missing sourceId", sourceId)
+                    return
+                }
+                app.playVideo(phAsset: phAsset)
+            }
         }
     }
     
+    func showInfoOverlay() -> some View {
+        VStack {
+            Text(item.authorEmail)
+            Group {
+                if let sourceDate = item.sourceDate {
+                    Text(sourceDate.prefix(19))
+                }
+                let homeRefLabel = app.homeRefLabel(item: item)
+                Text("\(item.width) x \(item.height) \(homeRefLabel)" )
+                if let locationDescription = item.locationDescription {
+                    Button {
+                        app.selectedTab = .map
+                    } label: {
+                        Text(locationDescription)
+                    }
+                }
+                Form {
+                    Section {
+                        Text("Caption")
+                        TextField("", text: $item.caption, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                    Section {
+                        Text("Video url")
+                        TextField("", text: $item.videoUrl, axis: .vertical)
+                            .textFieldStyle(.roundedBorder)
+                    }
+                }
+                .frame(maxHeight: app.geometrySize.height * 0.4 )
+            }
+            .font(.subheadline)
+        }
+        .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
+        .background(Color.secondary.colorInvert())
+    }
+
+    func topButtons() -> some View {
+        Group {
+            Button {
+                showInfo.toggle()
+            } label: {
+                Label("Info", systemImage: showInfo ? "info.circle.fill" : "info.circle")
+            }
+            Button {
+                showingAlert = true
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+            Button(action: {
+                isSharing = true
+            }) {
+                Image(systemName: "square.and.arrow.up")
+            }
+            .sheet(isPresented: $isSharing) {
+                ShareSheet(
+                    activityItems: activityItems(), // ["Place Holder" as Any],
+                    excludedActivityTypes: [])
+            }
+            Button {
+                Task {
+                    // var newItem = item;
+                    item.isFavorite = !item.isFavorite
+                    self.app.galleryModel.updateMedia(media: item)
+                }
+            } label: {
+                Label("Favorite", systemImage: item.isFavorite ? "heart.fill" : "heart")
+            }
+            // MediaDetailView topButtons Move Photo
+            NavigationLink {
+                GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
+                                  selection: $selection,
+                                  mediaItem: item,
+                                  moveItem: true)
+            } label: {
+                Label("Move Photo", systemImage: "minus.square.fill")
+            }
+            // MediaDetailView topButtons Add Photo
+            NavigationLink {
+                GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
+                                  selection: $selection,
+                                  mediaItem: item)
+            } label: {
+                Label("Add Photo", systemImage: "plus.app.fill")
+            }
+        }
+    }
+        
     func imageFor(string str: String) async -> UIImage? {
         guard let url = URL(string: str) else { return nil }
         guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
@@ -134,6 +253,12 @@ struct MediaDetailView: View {
         items.append("mediaPath: "+item.mediaPath)
         if !item.mediaPathFullRez.isEmpty {
             items.append("mediaPathFullRez: "+item.mediaPathFullRez)
+        }
+        if !item.videoUrl.isEmpty {
+            items.append("videoUrl: "+item.videoUrl)
+        }
+        if !item.caption.isEmpty {
+            items.append("caption: "+item.caption)
         }
         if let fullRezHeight = item.info["fullRezHeight"] as? Int {
             items.append("info.fullRezHeight: "+String(fullRezHeight))
@@ -158,6 +283,9 @@ struct MediaDetailView: View {
         }
         if let sourceId = item.info["sourceId"] as? String {
             items.append("info.sourceId: "+sourceId)
+        }
+        if let mediaType = item.info["mediaType"] as? String {
+            items.append("info.mediaType: "+mediaType)
         }
         let str = items.joined(separator: "\n")
         return [self.imageThumb as Any, str];

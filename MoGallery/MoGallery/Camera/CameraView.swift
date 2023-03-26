@@ -6,9 +6,8 @@ import SwiftUI
 
 struct CameraView: View {
     
-    @StateObject var photosModel: PhotosModel
-    @StateObject var cameraModel: CameraModel
-    
+    @EnvironmentObject var photosModel: PhotosModel
+    @EnvironmentObject var cameraModel: CameraModel
     @EnvironmentObject var app: AppModel
 
     private static let barHeightFactor = 0.15

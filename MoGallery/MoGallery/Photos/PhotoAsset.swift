@@ -21,6 +21,10 @@ struct PhotoAsset: Identifiable {
         phAsset?.mediaType ?? .unknown
     }
     
+    var isVideoMediaType: Bool {
+        mediaType == .video
+    }
+    
     var accessibilityLabel: String {
         "Photo\(isFavorite ? ", Favorite" : "")"
     }

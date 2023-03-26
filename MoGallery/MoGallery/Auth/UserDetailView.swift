@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct UserDetailView: View {
-    @StateObject var lobbyModel: LobbyModel
-    @StateObject var user: UserModel
-        
+    
+    @ObservedObject var user: UserModel
+    
+    @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var app: AppModel
 
     var body: some View {
@@ -19,27 +20,38 @@ struct UserDetailView: View {
             AsyncImage(url: URL(string: user.profileImg))
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 80, height: 80, alignment: .center)
+                .padding(2)
             Text(user.name )
                 .font(.headline)
             Text(user.email )
-                .font(.subheadline)
-            Text(user.id )
-                .font(.subheadline)
-//            if let locationDescription = user.locationDescription {
-//                Text(locationDescription)
-//            }
+                .font(.headline)
+            // Text(user.id )
+            //    .font(.subheadline)
             if let locationDescription = user.locationDescription {
                 Button {
-                    app.selectedTab = .map
+                    app.toMapTab()
                 } label: {
                     Text(locationDescription)
+                        .padding(1)
                 }
             }
         }
+        Button(action: {
+            app.selectGallery(key: user.userGalleryKey)
+        }) {
+            Text("Photos")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                // .frame(maxWidth: .infinity)
+                .background(Color(.systemIndigo))
+                .cornerRadius(12)
+                .padding(5)
+        }
         Form {
             Section {
-                Text("Status")
-                TextField("", text: $user.status, axis: .vertical)
+                Text("Caption")
+                TextField("", text: $user.caption, axis: .vertical)
                     .textFieldStyle(.roundedBorder)
             }
         }

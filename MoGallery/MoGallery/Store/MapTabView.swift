@@ -14,7 +14,7 @@ let locationFont = Font
 
 let delta = 0.001
 
-struct MapViewTab: View {
+struct MapTabView: View {
     // !!@ causes flood of Publishing changes from within view updates
 //    @StateObject var lobbyModel: LobbyModel
 

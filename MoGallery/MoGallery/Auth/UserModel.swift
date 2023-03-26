@@ -1,6 +1,6 @@
 //
 //  UserViewModel.swift
-//  CaptureCameraStorage
+//  MoGallery
 //
 //  Created by jht2 on 12/19/22.
 //
@@ -10,17 +10,17 @@ import MapKit
 
 class UserModel: ObservableObject, Identifiable {
     
-    @Published var id: String
-    @Published var name: String
-    @Published var email: String
-    @Published var profileImg: String
-    @Published var dateIn: Date
-    @Published var uploadCount: Int
-    @Published var activeCount: Int
-    @Published var status: String
+    var id: String
+    var name: String
+    var email: String
+    var profileImg: String
+    var dateIn: Date
+    var uploadCount: Int
+    var activeCount: Int
+    @Published var caption: String
 
     // @Published var activeLapse: TimeInterval
-    var info:[AnyHashable : Any] = [:]
+    var info:[String: Any] = [:]
     
     var activeCountLabel: String? {
         if activeCount > 0 { return "signin: "+String(activeCount) }
@@ -41,7 +41,7 @@ class UserModel: ObservableObject, Identifiable {
         let dateIn = dict["dateIn"] as? TimeInterval ?? 0
         let uploadCount = dict["uploadCount"] as? Int ?? 0
         let activeCount = dict["activeCount"] as? Int ?? 0
-        let status = dict["status"] as? String ?? ""
+        let caption = dict["caption"] as? String ?? ""
 
         self.id = id
         self.name = name;
@@ -50,8 +50,10 @@ class UserModel: ObservableObject, Identifiable {
         self.dateIn = Date(timeIntervalSinceReferenceDate: dateIn);
         self.uploadCount = uploadCount
         self.activeCount = activeCount
-        self.status = status
+        self.caption = caption
         self.info = dict
+        // info["lat
+        // info["lon
     }
 }
 

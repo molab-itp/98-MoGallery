@@ -14,32 +14,30 @@ enum TabTag {
 
 struct MainView: View {
     
-    @StateObject var photosModel: PhotosModel
-    @StateObject var lobbyModel: LobbyModel
-    @StateObject var cameraModel: CameraModel
+    @EnvironmentObject var lobbyModel: LobbyModel
+    @EnvironmentObject var photosModel: PhotosModel
+    @EnvironmentObject var cameraModel: CameraModel
     
     @EnvironmentObject var app: AppModel
     
     var body: some View {
         TabView(selection: $app.selectedTab) {
-            GalleryView(lobbyModel: lobbyModel, galleryModel: app.galleryModel)
+            GalleryTabView()
                 .tabItem {
                     Label("Gallery", systemImage: "rectangle.stack")
                 }
                 .tag(TabTag.gallery)
-            PhotoCollectionView(lobbyModel: lobbyModel,
-                                photosModel: photosModel, cameraModel: cameraModel)
+            PhotoCollectionView()
                 .tabItem {
                     Label("Photos", systemImage: "photo.on.rectangle")
                 }
                 .tag(TabTag.photos)
-            CameraView(photosModel: photosModel, cameraModel: cameraModel)
+            CameraView()
                 .tabItem {
                     Label("Camera", systemImage: "camera.fill")
                 }
                 .tag(TabTag.camera)
-            // MapViewTab(lobbyModel: lobbyModel)
-            MapViewTab(locs: lobbyModel.mapRegion.locs)
+            MapTabView(locs: lobbyModel.mapRegion.locs)
                 .tabItem {
                     Label("Map", systemImage: "globe")
                 }
@@ -58,10 +56,10 @@ struct MainView: View {
     func settingsView() -> some View {
         Group {
             if lobbyModel.currentUser == nil {
-                LoginView(lobbyModel: lobbyModel)
+                LoginView()
             }
             else {
-                LobbyView(lobbyModel: lobbyModel)
+                LobbyView()
             }
         }
     }

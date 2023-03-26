@@ -5,6 +5,7 @@ See the License.txt file for this sample’s licensing information.
 import Photos
 
 class PhotoAssetCollection: RandomAccessCollection {
+    
     private(set) var fetchResult: PHFetchResult<PHAsset>
     private var iteratorIndex: Int = 0
     
@@ -23,8 +24,10 @@ class PhotoAssetCollection: RandomAccessCollection {
         }
         // !!@ Getting null obj exception here sometimes
         // print("PhotoAssetCollection subscript", position, "count", fetchResult.count)
-        if position < 0 || position >= fetchResult.count { return PhotoAsset(identifier: "") }
-        
+        if position < 0 || position >= fetchResult.count {
+            print("PhotoAssetCollection subscript", position, "count", fetchResult.count)
+            return PhotoAsset(identifier: "")
+        }
         let asset = PhotoAsset(phAsset: fetchResult.object(at: position), index: position)
         cache[position] = asset
         return asset
@@ -45,11 +48,9 @@ extension PhotoAssetCollection: Sequence, IteratorProtocol {
         if iteratorIndex >= count {
             return nil
         }
-        
         defer {
             iteratorIndex += 1
         }
-        
         return self[iteratorIndex]
     }
 }

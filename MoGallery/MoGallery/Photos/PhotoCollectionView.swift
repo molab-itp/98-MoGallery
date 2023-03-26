@@ -9,20 +9,21 @@ import os.log
 // photos link to details which allows for set favorite and delete
 
 struct PhotoCollectionView: View {
-    @StateObject var lobbyModel: LobbyModel
-    @StateObject var photosModel: PhotosModel
-    @StateObject var cameraModel: CameraModel
+    
+    @EnvironmentObject var lobbyModel: LobbyModel
+    @EnvironmentObject var photosModel: PhotosModel
+    @EnvironmentObject var cameraModel: CameraModel
+    @EnvironmentObject var app: AppModel
 
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var app: AppModel
 
     @State private var selection: String?
 
     // private static let itemSpacing = 12.0
-    private static let itemSpacing = 6.0
-    private static let itemCornerRadius = 15.0
-    private static let itemSize = CGSize(width: 90, height: 90)
+    // private static let itemCornerRadius = 15.0
+    private static let itemSpacing = 2.0
+    private static let itemSize = CGSize(width: 94, height: 94)
     
     private var imageSize: CGSize {
         return CGSize(width: Self.itemSize.width * min(displayScale, 2),
@@ -40,8 +41,7 @@ struct PhotoCollectionView: View {
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(photosModel.photoCollection!.photoAssets) { asset in
                         NavigationLink {
-                            PhotoDetailView(lobbyModel: lobbyModel,
-                                            asset: asset,
+                            PhotoDetailView(asset: asset,
                                             cache: photosModel.photoCollection!.cache)
                         } label: {
                             photoItemView(asset: asset, cache: photosModel.photoCollection!.cache)
@@ -81,12 +81,21 @@ struct PhotoCollectionView: View {
             .clipped()
         // .cornerRadius(Self.itemCornerRadius)
             .overlay(alignment: .bottomLeading) {
-                if asset.isFavorite {
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
-                        .font(.callout)
-                        .offset(x: 4, y: -4)
+                HStack {
+                    if asset.isFavorite {
+                        Image(systemName: "heart.fill")
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+                            .font(.callout)
+                            .offset(x: 4, y: -4)
+                    }
+                    if asset.isVideoMediaType {
+                        Image(systemName: "video.fill")
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+                            .font(.callout)
+                            .offset(x: 4, y: -4)
+                    }
                 }
             }
             .onAppear {

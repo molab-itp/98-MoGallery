@@ -10,21 +10,23 @@ let myIconFont = Font
     .system(size: 12)
 //    .monospaced()
 
-struct GalleryView: View {
-    @StateObject var lobbyModel: LobbyModel
-    @StateObject var galleryModel: GalleryModel
+struct GalleryTabView: View {
     
     @State private var selection: String?
     @State private var showingAlert = false
     @State private var showingAddRandomAlert = false
 
+    @EnvironmentObject var lobbyModel: LobbyModel
+    @EnvironmentObject var galleryModel: GalleryModel
+    @EnvironmentObject var metaModel: MetaModel
     @EnvironmentObject var app: AppModel
+    
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss
 
-    private static let itemSpacing = 0.0
     // private static let itemCornerRadius = 15.0
-    private static let itemSize = CGSize(width: 96, height: 96)
+    private static let itemSpacing = 2.0
+    private static let itemSize = CGSize(width: 94, height: 94)
     private var imageSize: CGSize {
         return CGSize(width: Self.itemSize.width * min(displayScale, 2),
                       height: Self.itemSize.height * min(displayScale, 2))
@@ -37,16 +39,16 @@ struct GalleryView: View {
     var body: some View {
         NavigationStack(path: $galleryModel.path) {
             ScrollView {
-                let galleryName = app.settings.storeGalleryKey
-                if let metaEntry = app.metaModel.fetch(galleryName: galleryName) {
+                // !!@ metaEntry update no seen when GalleryHeaderView used
+                // GalleryHeaderView(metaModel: metaModel, metaEntry: metaEntry)
+                if let metaEntry = app.galleryModel.currentMeta {
                     NavigationLink {
-                        MetaDetailView(metaModel: app.metaModel,
-                                       metaEntry: metaEntry)
+                        MetaDetailView(metaEntry: metaEntry)
                     } label: {
                         VStack {
                             Text(galleryModel.countDisplayText())
-                            if  !metaEntry.status.isEmpty {
-                                Text(metaEntry.status)
+                            if  !metaEntry.caption.isEmpty {
+                                Text(metaEntry.caption)
                                     .lineLimit(1)
                             }
                         }
@@ -123,9 +125,8 @@ struct GalleryView: View {
 
                 }
                 else if let item = galleryModel.itemFor(id: id) {
-                    MediaDetailView(lobbyModel: lobbyModel,
-                                           item: item,
-                                           priorSelection: app.settings.storeGalleryKey)
+                    MediaDetailView(item: item,
+                                    priorSelection: app.settings.storeGalleryKey)
                 }
             }
         }
@@ -142,8 +143,30 @@ struct GalleryView: View {
     }
 }
 
+// GalleryHeaderView
+struct GalleryHeaderView: View {
+    var metaModel: MetaModel;
+    var metaEntry: MetaEntry;
+
+    @EnvironmentObject var app: AppModel
+
+    var body: some View {
+        NavigationLink {
+            MetaDetailView(metaEntry: metaEntry)
+        } label: {
+            VStack {
+                Text(app.galleryModel.countDisplayText())
+                if  !metaEntry.caption.isEmpty {
+                    Text(metaEntry.caption)
+                        .lineLimit(1)
+                }
+            }
+        }
+    }
+}
+
 struct MediaThumbView: View {
-    var item: MediaModel;
+    var item: MediaModel
     var itemSize: CGSize
     
     var body: some View {
@@ -160,6 +183,33 @@ struct MediaThumbView: View {
         // .aspectRatio(contentMode: .fit)
         .frame(width: itemSize.width, height: itemSize.height)
         .clipped()
+        .overlay(alignment: .bottomLeading) {
+            HStack {
+                if item.isFavorite {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+                        .font(.callout)
+                        .offset(x: 4, y: -4)
+                }
+                if item.isVideoMediaType {
+                    Image(systemName: "video.fill")
+                        .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+                        .font(.callout)
+                        .offset(x: 4, y: -4)
+                }
+                if !item.caption.isEmpty {
+                    let lines = item.caption.split(separator: "\n")
+                    let str = lines[0]
+                    Text(str)
+                        .font(.footnote)
+                        .padding(2)
+                        .foregroundColor(.white)
+                        .background(Color(.lightGray))
+                }
+            }
+        }
     }
 }
 

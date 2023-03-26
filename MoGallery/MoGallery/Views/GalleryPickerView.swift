@@ -11,7 +11,8 @@ struct GalleryPickerView: View {
     var galleryKeys: [String]
     @Binding var selection: String?
     var mediaItem: MediaModel?
-
+    var moveItem: Bool = false
+    
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var app: AppModel
     
@@ -26,9 +27,6 @@ struct GalleryPickerView: View {
                         Text(item)
                             .font(.title)
                             .frame(width: 400, height: 40)
-                        // .background( item == selection ? .gray : .white)
-                        // Support dark mode hilight of selection
-                        // https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors
                             .background( item == selection ?
                                          Color(uiColor:UIColor.tintColor)
                                          : Color(uiColor:UIColor.systemFill))
@@ -71,7 +69,7 @@ struct GalleryPickerView: View {
             }
         }
         .navigationBarItems(trailing: EditButton())
-        .navigationTitle( "Select Gallery" )
+        .navigationTitle( moveItem ? "Move To" : "Copy To" )
         .navigationBarTitleDisplayMode(.inline)
         // .onDisappear {
         //  print("GalleryPickerView onDisappear")
@@ -86,7 +84,12 @@ struct GalleryPickerView: View {
         print("GalleryPickerView storeGalleryKey", app.settings.storeGalleryKey )
         if let selection {
             if let mediaItem, selection != app.settings.storeGalleryKey {
-                app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem)
+                if moveItem {
+                    app.galleryModel.moveMediaEntry(galleryKey: selection, mediaItem: mediaItem)
+                }
+                else {
+                    app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem)
+                }
             }
             app.setStoreGallery(key: selection)
         }
@@ -100,3 +103,9 @@ struct GalleryPickerView: View {
 //        GalleryViewDetail()
 //    }
 //}
+
+// Support dark mode hilight of selection
+// https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors
+//    .background( item == selection ?
+//                 Color(uiColor:UIColor.tintColor)
+//                 : Color(uiColor:UIColor.systemFill))

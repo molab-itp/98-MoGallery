@@ -9,8 +9,7 @@ import SwiftUI
 
 struct LobbyView: View {
 
-    @StateObject var lobbyModel: LobbyModel
-    
+    @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var app: AppModel
     
     var body: some View {
@@ -52,7 +51,7 @@ struct LobbyView: View {
                 Text("Sign Out")
                     .foregroundColor(.white)
                     .padding()
-                    .frame(maxWidth: .infinity)
+                    // .frame(maxWidth: .infinity)
                     .background(Color(.systemIndigo))
                     .cornerRadius(12)
                     .padding(5)
@@ -64,14 +63,14 @@ struct LobbyView: View {
         HStack {
             if let currentUser = lobbyModel.currentUser {
                 NavigationLink {
-                    UserDetailView(lobbyModel: lobbyModel, user: currentUser )
+                    UserDetailView(user: currentUser )
                 } label: {
                     VStack(alignment: .leading) {
                         Text(currentUser.name)
                             .font(.headline)
                         Text(currentUser.email)
                             .font(.subheadline)
-                         Text(currentUser.status)
+                         Text(currentUser.caption)
                             .lineLimit(1)
                           .font(.subheadline)
                     }
@@ -80,7 +79,7 @@ struct LobbyView: View {
             Spacer()
         }
         .padding()
-        .frame(maxWidth: .infinity)
+        // .frame(maxWidth: .infinity)
         .background(Color(.secondarySystemBackground))
     }
     
@@ -90,50 +89,56 @@ struct LobbyView: View {
             // .frame(alignment: .leading)
             // .multilineTextAlignment(.trailing)
             ForEach(lobbyModel.users) { user in
-                HStack {
-                    AsyncImage(url: URL(string: user.profileImg))
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 80, height: 80, alignment: .center)
-                    VStack(alignment: .leading) {
-                        Text(user.name)
-                            .font(.headline)
-                        Text(user.email)
-                            .font(.subheadline)
-                        HStack {
-                            Text(user.dateIn.getElapsedInterval())
-                                .font(.subheadline)
-                            Spacer()
-                            Text(user.activeCountLabel ?? "")
-                                .font(.subheadline)
-                        }
-                        Text(user.status)
-                            .font(.subheadline)
-                            .lineLimit(1)
-                    }
-                    Spacer()
-                }
-                .onTapGesture {
-                    print("userListView onTapGesture user", user)
-                    app.setStoreGallery(key: user.userGalleryKey)
-                    app.toGalleryTab()
+                NavigationLink {
+                    UserDetailView(user: user )
+                } label: {
+                    userRowView(user: user)
                 }
             }
         }
     }
     
+    private func userRowView(user: UserModel) -> some View {
+        HStack {
+            AsyncImage(url: URL(string: user.profileImg))
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 80, height: 80, alignment: .center)
+            VStack(alignment: .leading) {
+                Text(user.name)
+                    .font(.headline)
+                Text(user.email)
+                    .font(.subheadline)
+                HStack {
+                    Text(user.dateIn.getElapsedInterval())
+                        .font(.subheadline)
+                    Spacer()
+                    Text(user.activeCountLabel ?? "")
+                        .font(.subheadline)
+                }
+                Text(user.caption)
+                    .font(.subheadline)
+                    .lineLimit(1)
+            }
+            Spacer()
+        }
+//        .onTapGesture {
+//            print("userListView onTapGesture user", user)
+//            app.setStoreGallery(key: user.userGalleryKey)
+//            app.toGalleryTab()
+//        }
+    }
 }
 
 struct LocationRow: View {
-    @StateObject var lobbyModel: LobbyModel
     var user: UserModel
     
+    @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var app: AppModel
-
+    
     var body: some View {
         if let locationDescription = user.locationDescription {
-                Text(locationDescription)
-            }
-//        }
+            Text(locationDescription)
+        }
     }
 }
 

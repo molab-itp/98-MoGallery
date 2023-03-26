@@ -6,6 +6,9 @@
 
 import FirebaseDatabase
 
+//private var moMetaKey = "mo-meta1"
+private var moMetaKey = "mo-meta"
+
 class MetaModel: ObservableObject {
     
     @Published var metas: [MetaEntry] = []
@@ -13,18 +16,20 @@ class MetaModel: ObservableObject {
     // mo-meta
     private var metaRef: DatabaseReference? 
     private var metaHandle: DatabaseHandle?
-    
+    var loaded: Bool = false
+    var cleaned: Bool = true
+
     unowned var app: AppModel
     init(_ app:AppModel) {
         print("MetaModel init")
         self.app = app
-        metaRef = Database.root.child("mo-meta")
+        metaRef = Database.root.child(moMetaKey)
     }
     
     func refresh() {
         print("MetaModel refresh")
         observeStop()
-        metaRef = Database.root.child("mo-meta")
+        metaRef = Database.root.child(moMetaKey)
         observeStart()
     }
     
@@ -38,13 +43,43 @@ class MetaModel: ObservableObject {
             guard let snapItems = snapshot.value as? [String: [String: Any]] else {
                 print("MetaModel meta EMPTY")
                 self.metas = []
+                self.loaded = true
                 return
             }
             let items = snapItems.compactMap { MetaEntry(id: $0, dict: $1) }
             let sortedItems = items.sorted(by: { $0.galleryName > $1.galleryName })
             self.metas = sortedItems;
             print("MetaModel metas count", self.metas.count)
+            // if (self.metas.count > 1000 && !self.cleaned) {
+            if !self.cleaned {
+                self.cleaned = true
+                self.removeAllMetas()
+            }
+            self.loaded = true
         })
+    }
+    
+    func removeAllMetas() {
+        print("removeAllMetas metaRef", metaRef ?? "-nil-")
+        guard let metaRef else { return }
+//        metaRef.removeValue { error, ref in
+//            if let error = error {
+//                print("removeMeta removeValue error: \(error).")
+//            }
+//        }
+        var count = 0
+        for mentry in metas {
+            if count % 1000 == 0 {
+                print(count, "removeAllMetas mentry.id ", mentry.id)
+            }
+            count += 1
+            metaRef.child(mentry.id).removeValue {error, ref in
+                if let error = error {
+                    print("removeAllMetas removeValue error: \(error).")
+                }
+            }
+        }
+        metas = []
     }
     
     func observeStop() {
@@ -81,6 +116,10 @@ class MetaModel: ObservableObject {
     
     func addMeta(galleryName: String, user: UserModel?) -> MetaEntry? {
         print("addMeta galleryName", galleryName);
+        print("addMeta loaded", loaded);
+        // return nil; // !!@
+        guard loaded else { return nil }
+        
         let mentry = find(galleryName: galleryName)
         if let mentry  {
             print("addMeta present uid", mentry.uid);
@@ -106,7 +145,9 @@ class MetaModel: ObservableObject {
                 print("addMeta updateChildValues error: \(error).")
             }
         }
-        return MetaEntry(id: key, dict: values)
+        let newEnt = MetaEntry(id: key, dict: values)
+        metas.append( newEnt )
+        return newEnt
     }
     
     func removeMeta(galleryName: String) {
@@ -133,10 +174,11 @@ class MetaModel: ObservableObject {
         }
     }
     
+    // update the caption property
     func update(metaEntry: MetaEntry) {
         guard let metaRef else { return }
-        var values:[AnyHashable : Any] = [:];
-        values["status"] = metaEntry.status;
+        var values:[String: Any] = [:];
+        values["caption"] = metaEntry.caption;
         metaRef.child(metaEntry.id).updateChildValues(values) { error, ref in
             if let error = error {
                 print("update metaEntry updateChildValues error: \(error).")

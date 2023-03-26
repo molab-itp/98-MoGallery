@@ -1,6 +1,6 @@
 //
 //  MediaModel.swift
-//  CaptureCameraStorage
+//  MoGallery
 //
 //  Created by jht2 on 12/20/22.
 //
@@ -9,25 +9,30 @@ import Foundation
 import MapKit
 import SwiftUI
 
-struct MediaModel: Identifiable {
+class MediaModel: ObservableObject, Identifiable {
     
     var id: String
     var uid: String
+    var userGalleryChildId: String
     var authorEmail: String
-    var mediaPath: String
-    var storagePath: String
     var uploadCount: Int
     var createdAt: Date
+    var createdDate: String
     var info: [String: Any]
+    
     var homeRef: [String]
+    var mediaPath: String
+    var storagePath: String
     var mediaPathFullRez: String
     var storagePathFullRez: String
-    var createdDate: String
-    var userGalleryChildId: String
-    
-//    var homeRefLabel: String {
-//        homeRef.isEmpty ? "": "[\( homeRef[0] )]"
-//    }
+
+    var isFavorite: Bool
+    var caption: String
+    var videoUrl: String
+
+    var isVideoMediaType: Bool {
+        (info["mediaType"] as? String ?? "") == "video"
+    }
     
     var fullRezWidth: Int {
         info["fullRezWidth"] as? Int ?? -1
@@ -79,6 +84,9 @@ struct MediaModel: Identifiable {
         let storagePathFullRez = dict["storagePathFullRez"] as? String ?? ""
         let createdDate = dict["createdDate"] as? String ?? ""
         let userGalleryChildId = dict["userGalleryChildId"] as? String ?? ""
+        let isFavorite = dict["isFavorite"] as? Bool ?? (info["isFavorite"] as? Bool ?? false)
+        let caption = dict["caption"] as? String ?? ""
+        let videoUrl = dict["videoUrl"] as? String ?? ""
         
         self.id = id
         self.uid = uid
@@ -93,9 +101,11 @@ struct MediaModel: Identifiable {
         self.storagePathFullRez = storagePathFullRez
         self.createdDate = createdDate
         self.userGalleryChildId = userGalleryChildId
+        self.isFavorite = isFavorite
+        self.caption = caption
+        self.videoUrl = videoUrl
     }
 }
-
 
 extension MediaModel {
     var locationDescription: String? {
