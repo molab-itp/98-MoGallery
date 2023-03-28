@@ -12,6 +12,7 @@ import SwiftUI
 import AVKit
 import Photos
 import YouTubePlayerKit
+import WebKit
 
 struct MediaDetailView: View {
     
@@ -56,6 +57,10 @@ struct MediaDetailView: View {
                 }
                 else if let player = app.videoPlayer {
                     VideoPlayer(player: player)
+                }
+                else if item.videoUrl.hasPrefix("https://") {
+                    let url = URL(string: item.videoUrl)!
+                    WebView(request: URLRequest(url: url))
                 }
                 else {
                     let imageURL = URL(string: item.mediaPathDetail)
@@ -336,3 +341,16 @@ struct MediaDetailView: View {
 
 // https://www.hackingwithswift.com/books/ios-swiftui/sending-and-receiving-codable-data-with-urlsession-and-swiftui
 
+struct WebView : UIViewRepresentable {
+    
+    let request: URLRequest
+    
+    func makeUIView(context: Context) -> WKWebView  {
+        return WKWebView()
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        uiView.load(request)
+    }
+    
+}

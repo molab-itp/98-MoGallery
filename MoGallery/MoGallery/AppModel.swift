@@ -41,7 +41,7 @@ class AppModel: ObservableObject {
         else if !ref.hasPrefix("https://") {
             playVideo(youTubeId: ref)
         }
-        else {
+        else if ref.hasSuffix(".mp4") {
             guard let url = URL(string: ref) else {
                 print("playVideo url failed")
                 return
