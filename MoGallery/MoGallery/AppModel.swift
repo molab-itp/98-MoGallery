@@ -57,7 +57,8 @@ class AppModel: ObservableObject {
         youTubePlayer = YouTubePlayer(
             source: .video(id: ref),
             configuration: .init(
-                autoPlay: true
+                autoPlay: true,
+                loopEnabled: true
             )
         )
     }
@@ -69,7 +70,8 @@ class AppModel: ObservableObject {
         youTubePlayer = YouTubePlayer(
             source: .url(ref),
             configuration: .init(
-                autoPlay: true
+                autoPlay: true,
+                loopEnabled: true
             )
         )
     }
@@ -138,18 +140,29 @@ class AppModel: ObservableObject {
     }
     
     func removeGalleryKey(at offsets: IndexSet) {
-        if let index = offsets.first {
-            let name = settings.galleryKeys[index]
-            metaModel.removeMeta(galleryName: name)
+        if settings.hardGalleryDelete {
+            if let index = offsets.first {
+                let name = settings.galleryKeys[index]
+                metaModel.removeMeta(galleryName: name)
+            }
         }
         settings.galleryKeys.remove(atOffsets: offsets)
     }
     
+    // Add a gallery by name
+    // If not already present, add and save settings
     func addGalleryKey(name: String) {
         let _ = metaModel.addMeta(galleryName: name)
-        settings.galleryKeys.append(name);
+        if !present(galleryName: name) {
+            settings.galleryKeys.append(name);
+            saveSettings()
+        }
     }
     
+    func present(galleryName: String) -> Bool {
+        settings.galleryKeys.contains(galleryName)
+    }
+
     var galleryKeysExcludingCurrent: [String] {
         let filter: (String) -> String? = { item in
             if item == self.settings.storeGalleryKey {
@@ -173,6 +186,7 @@ class AppModel: ObservableObject {
 
     func displayTitle(galleryName: String) -> String {
         var titl = galleryName
+        // 12345678901234567890123456789012
         // zu-oVFxc052pOWF5qq560qMuBmEsbr2-jht1900@gmail-com
         if titl.hasPrefix("zu-") {
             titl = String(titl.dropFirst(32)).replacingOccurrences(of: "-", with: ".")

@@ -23,4 +23,7 @@ struct Settings: Codable {
     var randomAddWarning = true
     
     var galleryKeys:[String] = ["mo-gallery-1", "mo-gallery-2", "mo-gallery-3"]
+    
+    var hardGalleryDelete = false
+
 }

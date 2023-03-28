@@ -26,6 +26,12 @@ class MetaModel: ObservableObject {
         metaRef = Database.root.child(moMetaKey)
     }
     
+    func allGalleryKeys() -> [String] {
+        metas.map( { item in
+            item.galleryName
+        })
+    }
+    
     func refresh() {
         print("MetaModel refresh")
         observeStop()
@@ -47,7 +53,7 @@ class MetaModel: ObservableObject {
                 return
             }
             let items = snapItems.compactMap { MetaEntry(id: $0, dict: $1) }
-            let sortedItems = items.sorted(by: { $0.galleryName > $1.galleryName })
+            let sortedItems = items.sorted(by: { $0.galleryName < $1.galleryName })
             self.metas = sortedItems;
             print("MetaModel metas count", self.metas.count)
             // if (self.metas.count > 1000 && !self.cleaned) {
@@ -117,6 +123,7 @@ class MetaModel: ObservableObject {
     func addMeta(galleryName: String, user: UserModel?) -> MetaEntry? {
         print("addMeta galleryName", galleryName);
         print("addMeta loaded", loaded);
+        
         // return nil; // !!@
         guard loaded else { return nil }
         

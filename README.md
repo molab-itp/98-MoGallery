@@ -45,8 +45,12 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
   - [Firebase Cloud Storage Quickstart](https://github.com/firebase/quickstart-ios/blob/master/storage/README.md)
 
 - for google signin
+
   - [GoogleSignIn-iOS repo](https://github.com/google/GoogleSignIn-iOS)
   - [example project for Google Sign-In & Firebase Authentication Using SwiftUI](https://github.com/jht1493/Ellifit)
+
+- YouTubePlayerKit
+  - [YouTubePlayerKit](https://github.com/SvenTiigi/YouTubePlayerKit)
 
 ```
 

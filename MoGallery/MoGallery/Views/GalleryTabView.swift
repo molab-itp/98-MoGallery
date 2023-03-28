@@ -117,6 +117,9 @@ struct GalleryTabView: View {
             }
             .onAppear {
                 selection = app.settings.storeGalleryKey
+                if let selection {
+                    app.addGalleryKey(name: selection)
+                }
             }
             .navigationDestination(for: String.self) { id in
                 if id.isEmpty {

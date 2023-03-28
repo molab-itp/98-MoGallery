@@ -8,23 +8,26 @@
 import SwiftUI
 
 struct GalleryPickerView: View {
-    var galleryKeys: [String]
+    @State var galleryKeys: [String]
     @Binding var selection: String?
     var mediaItem: MediaModel?
-    var moveItem: Bool = false
+    var mode = "Select"
     
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var app: AppModel
     
     @State var newGallery = ""
-    @State var editMode: EditMode = .inactive
+//    @State var editMode: EditMode = .inactive
+    @Environment(\.editMode) private var editMode
+    @State var showAll = false
+    @State var galleryKeysSettings: [String] = []
     
     var body: some View {
         Group {
             VStack {
                 List {
                     ForEach(galleryKeys, id: \.self) { item in
-                        Text(item)
+                        Text(app.displayTitle(galleryName: item) )
                             .font(.title)
                             .frame(width: 400, height: 40)
                             .background( item == selection ?
@@ -37,29 +40,33 @@ struct GalleryPickerView: View {
                     }
                     .onDelete { (indices) in
                         print("onDelete", indices)
-                        app.removeGalleryKey(at: indices);
+                        app.removeGalleryKey(at: indices)
                         app.saveSettings()
+                        galleryKeys = app.settings.galleryKeys
+                        // selection = nil
                     }
                 }
-                HStack {
-                    TextField("new", text: $newGallery)
-                        .autocapitalization(.none)
-                        .padding(.all)
-                        .border(Color(UIColor.separator))
-                        .padding(.all)
-                    Button(action: {
-                        var name = newGallery;
-                        if newGallery.isEmpty {
-                            name = String(app.settings.galleryKeys.count + 1)
+                if !showAll {
+                    HStack {
+                        TextField("new", text: $newGallery)
+                            .autocapitalization(.none)
+                            .padding(.all)
+                            .border(Color(UIColor.separator))
+                            .padding(.all)
+                        Button(action: {
+                            var name = newGallery;
+                            if newGallery.isEmpty {
+                                name = String(app.settings.galleryKeys.count + 1)
+                            }
+                            name = "mo-gallery-" + name
+                            app.addGalleryKey(name: name)
+                            // app.saveSettings()
+                            selection = name
+                        }) {
+                            Text("Add")
                         }
-                        name = "mo-gallery-" + name
-                        app.addGalleryKey(name: name)
-                        app.saveSettings()
-                        selection = name
-                    }) {
-                        Text("Add")
+                        .padding()
                     }
-                    .padding()
                 }
             }
             .onChange(of: selection) { newState in
@@ -68,8 +75,31 @@ struct GalleryPickerView: View {
                 }
             }
         }
-        .navigationBarItems(trailing: EditButton())
-        .navigationTitle( moveItem ? "Move To" : "Copy To" )
+        // .navigationBarItems(trailing: EditButton())
+        .toolbar {
+            ToolbarItemGroup(placement: .navigationBarTrailing) {
+                Button(action: {
+                    print("Show All action")
+                    if !showAll {
+                        galleryKeysSettings = galleryKeys
+                        galleryKeys = app.metaModel.allGalleryKeys()
+                    }
+                    else {
+                        galleryKeys = galleryKeysSettings
+                    }
+                    showAll.toggle()
+                    if showAll {
+                        editMode?.wrappedValue = .inactive
+                    }
+                }) {
+                    Text(showAll ? "Less" : "More")
+                }
+                if !showAll && mediaItem == nil {
+                    EditButton()
+                }
+            }
+        }
+        .navigationTitle( mode )
         .navigationBarTitleDisplayMode(.inline)
         // .onDisappear {
         //  print("GalleryPickerView onDisappear")
@@ -78,19 +108,19 @@ struct GalleryPickerView: View {
     
     // GalleryPickerView dismissPicker
     private func dismissPicker() {
-        //        showPicker = false
         print("GalleryPickerView selection", selection ?? "-none-")
         print("GalleryPickerView mediaItem", mediaItem ?? "-none-")
         print("GalleryPickerView storeGalleryKey", app.settings.storeGalleryKey )
         if let selection {
             if let mediaItem, selection != app.settings.storeGalleryKey {
-                if moveItem {
+                if mode == "Move to" {
                     app.galleryModel.moveMediaEntry(galleryKey: selection, mediaItem: mediaItem)
                 }
                 else {
                     app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem)
                 }
             }
+            // app.addGalleryKey(name: selection)
             app.setStoreGallery(key: selection)
         }
         dismiss()

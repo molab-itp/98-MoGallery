@@ -88,7 +88,8 @@ struct MediaDetailView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            if !item.caption.isEmpty {
+            // Dont show caption overlay if videoUrl is present
+            if !item.caption.isEmpty && item.videoUrl.isEmpty {
                 Text(item.caption)
                     .frame(width: app.geometrySize.width)
                     .padding()
@@ -224,7 +225,7 @@ struct MediaDetailView: View {
                 GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
                                   selection: $selection,
                                   mediaItem: item,
-                                  moveItem: true)
+                                  mode: "Move to")
             } label: {
                 Label("Move Photo", systemImage: "minus.square.fill")
             }
@@ -232,7 +233,8 @@ struct MediaDetailView: View {
             NavigationLink {
                 GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
                                   selection: $selection,
-                                  mediaItem: item)
+                                  mediaItem: item,
+                                  mode: "Copy to")
             } label: {
                 Label("Add Photo", systemImage: "plus.app.fill")
             }
