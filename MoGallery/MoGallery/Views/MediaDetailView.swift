@@ -174,6 +174,9 @@ struct MediaDetailView: View {
                         Text(locationDescription)
                     }
                 }
+                if item.duration > 0 {
+                    Text(app.string(duration: item.duration))
+                }
                 Form {
                     Section {
                         Text("Caption")

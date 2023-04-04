@@ -17,6 +17,10 @@ struct PhotoAsset: Identifiable {
         phAsset?.isFavorite ?? false
     }
     
+    var duration: Double {
+        phAsset?.duration ?? 0.0
+    }
+    
     var mediaType: MediaType {
         phAsset?.mediaType ?? .unknown
     }

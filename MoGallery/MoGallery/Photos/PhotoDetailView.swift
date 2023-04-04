@@ -26,9 +26,6 @@ struct PhotoDetailView: View {
     
     private let imageSize = CGSize(width: 1024, height: 1024)
     
-    // @State private var playerItem: AVPlayerItem?
-    // @State private var player: AVPlayer?
-
     var body: some View {
         Group {
             if let image = image {
@@ -38,7 +35,6 @@ struct PhotoDetailView: View {
                     .accessibilityLabel(asset.accessibilityLabel)
             }
             else if let player = app.videoPlayer {
-                // AVPlayer(playerItem: playerItem)
                 // VideoPlayer(player: AVPlayer(url:  URL(string: "https://bit.ly/swswift")!))
                 VideoPlayer(player: player)
             } else {
@@ -101,6 +97,9 @@ struct PhotoDetailView: View {
                         } label: {
                             Text(locationDescription)
                         }
+                    }
+                    if phAsset.duration > 0 {
+                        Text(app.string(duration: phAsset.duration))
                     }
                 }
                 .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))

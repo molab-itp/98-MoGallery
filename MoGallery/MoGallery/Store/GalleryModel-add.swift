@@ -182,17 +182,18 @@ extension GalleryModel {
         info["mediaType"] = mediaType
         print("requestImageUpload mediaType", mediaType)
         if phAsset.isFavorite {
-            // info["comment"] = "♥︎"
             info["isFavorite"] = true
+        }
+        if phAsset.duration > 0 {
+            info["duration"] = phAsset.duration
         }
         self.uploadImageData(imageData,
                              fullRezData: fullRezData,
                              info: info)
-        
-        if phAsset.mediaType == .video {
-            // !!@ Disabled
+        // !!@ Disabled
+        // if phAsset.mediaType == .video {
             // export(phAsset: phAsset)
-        }
+        // }
     }
 
 } // extension GalleryModel

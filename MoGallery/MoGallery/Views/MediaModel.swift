@@ -30,6 +30,10 @@ class MediaModel: ObservableObject, Identifiable {
     var caption: String
     var videoUrl: String
 
+    var duration: Double {
+        info["duration"] as? Double ?? 0.0
+    }
+    
     var isVideoMediaType: Bool {
         (info["mediaType"] as? String ?? "") == "video"
     }

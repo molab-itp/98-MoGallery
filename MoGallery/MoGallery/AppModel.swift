@@ -28,8 +28,17 @@ class AppModel: ObservableObject {
     var locationManager = LocationManager()
     var geometrySize = CGSize.zero
 
+    var dateFormatter = DateComponentsFormatter()
+
     lazy var verNum = Self.bundleVersion()
 
+    func string(duration: Double) -> String {
+        if let str = dateFormatter.string(from: duration) {
+            return str
+        }
+        return ""
+    }
+    
     func playVideo(url ref: String) {
         // https://bit.ly/swswift
         // https://jht1493.net/macr/mov/sample_640x360.mp4
