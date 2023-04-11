@@ -17,7 +17,6 @@ struct GalleryPickerView: View {
     @EnvironmentObject var app: AppModel
     
     @State var newGallery = ""
-//    @State var editMode: EditMode = .inactive
     @Environment(\.editMode) private var editMode
     @State var showAll = false
     @State var galleryKeysSettings: [String] = []
