@@ -17,6 +17,7 @@ class UserModel: ObservableObject, Identifiable {
     var dateIn: Date
     var uploadCount: Int
     var activeCount: Int
+    var stats: [String:Any];
     @Published var caption: String
 
     // @Published var activeLapse: TimeInterval
@@ -42,7 +43,8 @@ class UserModel: ObservableObject, Identifiable {
         let uploadCount = dict["uploadCount"] as? Int ?? 0
         let activeCount = dict["activeCount"] as? Int ?? 0
         let caption = dict["caption"] as? String ?? ""
-
+        let stats = dict["stats"] as? [String:Any] ?? [String:Any]()
+        
         self.id = id
         self.name = name;
         self.email = email
@@ -51,6 +53,8 @@ class UserModel: ObservableObject, Identifiable {
         self.uploadCount = uploadCount
         self.activeCount = activeCount
         self.caption = caption
+        self.stats = stats
+        
         self.info = dict
         // info["lat
         // info["lon

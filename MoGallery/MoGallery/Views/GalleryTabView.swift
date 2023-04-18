@@ -15,7 +15,7 @@ struct GalleryTabView: View {
     @State private var selection: String?
     @State private var showingAlert = false
     @State private var showingAddRandomAlert = false
-
+    
     @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var galleryModel: GalleryModel
     @EnvironmentObject var metaModel: MetaModel
@@ -23,7 +23,7 @@ struct GalleryTabView: View {
     
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss
-
+    
     // private static let itemCornerRadius = 15.0
     private static let itemSpacing = 2.0
     private static let itemSize = CGSize(width: 94, height: 94)
@@ -117,22 +117,32 @@ struct GalleryTabView: View {
             }
             .onAppear {
                 selection = app.settings.storeGalleryKey
-//                if let selection {
-//                    app.addGalleryKey(name: selection)
-//                }
+                //                if let selection {
+                //                    app.addGalleryKey(name: selection)
+                //                }
             }
             .navigationDestination(for: String.self) { id in
                 if id.isEmpty {
                     GalleryPickerView(galleryKeys: app.settings.galleryKeys,
                                       selection: $selection)
-
+                    
                 }
                 else if let item = galleryModel.itemFor(id: id) {
                     MediaDetailView(item: item,
+//                                    editItem: mediaItemForDetail(item),
                                     priorSelection: app.settings.storeGalleryKey)
                 }
             }
         }
+    }
+    
+    func mediaItemForDetail(_ item :MediaModel) -> MediaModel {
+        MediaModel(id: item.id,
+                   dict: [
+                    "caption": item.caption,
+                    "previewUrl": item.previewUrl,
+                    "loadPreviewUrl": item.loadPreviewUrl
+                   ])
     }
     
     private func addRandomMedia() {
@@ -150,9 +160,9 @@ struct GalleryTabView: View {
 struct GalleryHeaderView: View {
     var metaModel: MetaModel;
     var metaEntry: MetaEntry;
-
+    
     @EnvironmentObject var app: AppModel
-
+    
     var body: some View {
         NavigationLink {
             MetaDetailView(metaEntry: metaEntry)
@@ -177,8 +187,8 @@ struct MediaThumbView: View {
         { image in
             image.resizable()
                 .scaledToFill()
-                // .scaledToFit()
-
+            // .scaledToFit()
+            
         } placeholder: {
             ProgressView()
         }

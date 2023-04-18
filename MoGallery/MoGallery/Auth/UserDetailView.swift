@@ -13,10 +13,10 @@ struct UserDetailView: View {
     
     @EnvironmentObject var lobbyModel: LobbyModel
     @EnvironmentObject var app: AppModel
-
+    
     var body: some View {
         VStack() {
-        // VStack(alignment: .leading) {
+            // VStack(alignment: .leading) {
             AsyncImage(url: URL(string: user.profileImg))
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 80, height: 80, alignment: .center)
@@ -35,24 +35,30 @@ struct UserDetailView: View {
                         .padding(1)
                 }
             }
-        }
-        Button(action: {
-            app.selectGallery(key: user.userGalleryKey)
-        }) {
-            Text("Photos")
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
+            Button(action: {
+                app.selectGallery(key: user.userGalleryKey)
+            }) {
+                Text("Photos")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
                 // .frame(maxWidth: .infinity)
-                .background(Color(.systemIndigo))
-                .cornerRadius(12)
-                .padding(5)
-        }
-        Form {
-            Section {
-                Text("Caption")
-                TextField("", text: $user.caption, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
+                    .background(Color(.systemIndigo))
+                    .cornerRadius(12)
+                    .padding(5)
+            }
+            if let init_lapse = user.stats["init_lapse"] as? Double {
+                Text("init_lapse: " + String(init_lapse))
+            }
+            if let load_lapse = user.stats["load_lapse"] as? Double {
+                Text("load_lapse: " + String(load_lapse))
+            }
+            Form {
+                Section {
+                    Text("Caption")
+                    TextField("", text: $user.caption, axis: .vertical)
+                        .textFieldStyle(.roundedBorder)
+                }
             }
         }
         .onAppear {

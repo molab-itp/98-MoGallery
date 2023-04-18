@@ -208,6 +208,7 @@ class LobbyModel: ObservableObject {
         
         var values:[String : Any] = [:];
         values["caption"] = user.caption
+        values["stats"] = user.stats
         lobbyRef.child(user.id).updateChildValues(values) { error, ref in
             if let error = error {
                 print("updateUser updateChildValues error: \(error).")

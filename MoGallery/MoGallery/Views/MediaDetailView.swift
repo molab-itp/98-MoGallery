@@ -12,11 +12,11 @@ import SwiftUI
 import AVKit
 import Photos
 import YouTubePlayerKit
-import WebKit
 
 struct MediaDetailView: View {
     
     @ObservedObject var item: MediaModel;
+//    @ObservedObject var editItem: MediaModel
     var priorSelection: String
     
     @EnvironmentObject var lobbyModel: LobbyModel
@@ -31,11 +31,9 @@ struct MediaDetailView: View {
     @State private var selection: String?
     @State private var imageThumb: UIImage?
     
-    
-    @State private var priorYouTubeId: String?
-    @State private var priorCaption: String?
-    @State private var priorVideoUrl: String?
-    @State private var priorTryVideo: Bool?
+//    @State private var priorCaption: String?
+//    @State private var priorPreviewUrl: String?
+//    @State private var priorLoadPreviewUrl: Bool?
 
     var body: some View {
         Group {
@@ -58,8 +56,9 @@ struct MediaDetailView: View {
                 else if let player = app.videoPlayer {
                     VideoPlayer(player: player)
                 }
-                else if item.videoUrl.hasPrefix("https://") {
-                    let url = URL(string: item.videoUrl)!
+                else if item.previewUrl.hasPrefix("https://") && item.loadPreviewUrl {
+                    // load web site
+                    let url = URL(string: item.previewUrl)!
                     WebView(request: URLRequest(url: url))
                 }
                 else {
@@ -93,8 +92,8 @@ struct MediaDetailView: View {
             }
         }
         .overlay(alignment: .bottom) {
-            // Dont show caption overlay if videoUrl is present
-            if !item.caption.isEmpty && item.videoUrl.isEmpty {
+            // Dont show caption overlay if previewUrl is present
+            if !item.caption.isEmpty && item.previewUrl.isEmpty {
                 Text(item.caption)
                     .frame(width: app.geometrySize.width)
                     .padding()
@@ -122,32 +121,41 @@ struct MediaDetailView: View {
         .onAppear {
             print("MediaDetailView onAppear")
             lobbyModel.locsForUsers(firstLoc: item.loc)
-            priorCaption = item.caption
-            priorVideoUrl = item.videoUrl
+//            priorCaption = item.caption
+//            priorPreviewUrl = item.previewUrl
+//            priorLoadPreviewUrl = item.loadPreviewUrl
         }
         .onDisappear {
             print("MediaDetailView onDisappear")
             app.stopVideo()
-            var changed = false
-            if let priorCaption, priorCaption != item.caption {
-                changed = true
+            Task {
+                app.galleryModel.updateMedia(media: item)
             }
-            if let priorVideoUrl, priorVideoUrl != item.videoUrl {
-                changed = true
-            }
-            if changed {
-                Task {
-                    app.galleryModel.updateMedia(media: item)
-                }
-            }
+//            var changed = false
+//            if let priorCaption, priorCaption != item.caption {
+//                changed = true
+//            }
+//            if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
+//                changed = true
+//            }
+//            if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
+//                changed = true
+//            }
+//            if changed {
+//                Task {
+//                    app.galleryModel.updateMedia(media: item)
+//                }
+//            }
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
             print("imageThumb", imageThumb ?? "-nil-")
-            if !item.videoUrl.isEmpty  {
-                app.playVideo(url: item.videoUrl)
+            if !item.previewUrl.isEmpty  && item.loadPreviewUrl {
+                // Play remote video
+                app.playVideo(url: item.previewUrl)
             }
             else if let sourceId = item.sourceId, item.isVideoMediaType {
+                // Play local movie video
                 let asset = PhotoAsset(identifier: sourceId)
                 guard let phAsset = asset.phAsset else {
                     print("MediaDetailView !!@ Missing sourceId", sourceId)
@@ -178,18 +186,20 @@ struct MediaDetailView: View {
                     Text(app.string(duration: item.duration))
                 }
                 Form {
+//                    Button("Save") {
+//                        app.galleryModel.updateMedia(media: item)
+//                        dismiss()
+//                    }
                     Section {
                         Text("Caption")
                         TextField("", text: $item.caption, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
-                    }
-                    Section {
-                        Text("Video url")
-                        TextField("", text: $item.videoUrl, axis: .vertical)
+                        Toggle("Preview url", isOn: $item.loadPreviewUrl)
+                        TextField("", text: $item.previewUrl, axis: .vertical)
                             .textFieldStyle(.roundedBorder)
                     }
                 }
-                .frame(maxHeight: app.geometrySize.height * 0.4 )
+                .frame(maxHeight: app.geometrySize.height * 0.5 )
             }
             .font(.subheadline)
         }
@@ -264,8 +274,9 @@ struct MediaDetailView: View {
         if !item.mediaPathFullRez.isEmpty {
             items.append("mediaPathFullRez: "+item.mediaPathFullRez)
         }
-        if !item.videoUrl.isEmpty {
-            items.append("videoUrl: "+item.videoUrl)
+        if !item.previewUrl.isEmpty {
+            items.append("previewUrl: "+item.previewUrl)
+            items.append("loadPreviewUrl: "+String(item.loadPreviewUrl))
         }
         if !item.caption.isEmpty {
             items.append("caption: "+item.caption)
@@ -344,16 +355,3 @@ struct MediaDetailView: View {
 
 // https://www.hackingwithswift.com/books/ios-swiftui/sending-and-receiving-codable-data-with-urlsession-and-swiftui
 
-struct WebView : UIViewRepresentable {
-    
-    let request: URLRequest
-    
-    func makeUIView(context: Context) -> WKWebView  {
-        return WKWebView()
-    }
-    
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        uiView.load(request)
-    }
-    
-}

@@ -153,7 +153,8 @@ extension GalleryModel {
         guard let galleryRef else { return }
         var values: [String: Any] = [:];
         values["caption"] = media.caption;
-        values["videoUrl"] = media.videoUrl;
+        values["previewUrl"] = media.previewUrl;
+        values["loadPreviewUrl"] = media.loadPreviewUrl;
         values["isFavorite"] = media.isFavorite;
         galleryRef.child(media.id).updateChildValues(values) { error, ref in
             if let error = error {
@@ -247,8 +248,9 @@ extension GalleryModel {
         
         values["isFavorite"] = mediaItem.isFavorite;
         values["caption"] = mediaItem.caption;
-        values["videoUrl"] = mediaItem.videoUrl;
-        
+        values["previewUrl"] = mediaItem.previewUrl;
+        values["loadPreviewUrl"] = mediaItem.loadPreviewUrl;
+
         // media copy reference is tagged with current user
         let user = app.lobbyModel.currentUser
         // let user = app.lobbyModel.user(uid: mediaItem.uid)

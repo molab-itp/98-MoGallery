@@ -28,8 +28,10 @@ class MediaModel: ObservableObject, Identifiable {
 
     var isFavorite: Bool
     var caption: String
-    var videoUrl: String
-
+//    var videoUrl: String
+    var previewUrl: String
+    var loadPreviewUrl: Bool
+    
     var duration: Double {
         info["duration"] as? Double ?? 0.0
     }
@@ -91,6 +93,8 @@ class MediaModel: ObservableObject, Identifiable {
         let isFavorite = dict["isFavorite"] as? Bool ?? (info["isFavorite"] as? Bool ?? false)
         let caption = dict["caption"] as? String ?? ""
         let videoUrl = dict["videoUrl"] as? String ?? ""
+        let previewUrl = dict["previewUrl"] as? String ?? ""
+        let loadPreviewUrl = dict["loadPreviewUrl"] as? Bool ?? false
         
         self.id = id
         self.uid = uid
@@ -107,7 +111,12 @@ class MediaModel: ObservableObject, Identifiable {
         self.userGalleryChildId = userGalleryChildId
         self.isFavorite = isFavorite
         self.caption = caption
-        self.videoUrl = videoUrl
+//        self.videoUrl = videoUrl
+        self.previewUrl = previewUrl
+        self.loadPreviewUrl = loadPreviewUrl
+        if previewUrl.isEmpty {
+            self.previewUrl = videoUrl
+        }
     }
 }
 

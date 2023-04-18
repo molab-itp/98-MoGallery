@@ -50,6 +50,7 @@
 		AB59AABF298AB5AE0077269E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59AABE298AB5AE0077269E /* MapView.swift */; };
 		AB7C0D4E2975DBE200ACC200 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7C0D4D2975DBE200ACC200 /* CameraView.swift */; };
 		ABCDDB90295D1A3F0074CB2F /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */; };
+		ABCF7C3129ECB3E000F3527B /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCF7C3029ECB3E000F3527B /* WebView.swift */; };
 		ABEA5B972995DC95005E7148 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEA5B962995DC95005E7148 /* UserDetailView.swift */; };
 		ABEA5B992995EF2A005E7148 /* MetaEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEA5B982995EF2A005E7148 /* MetaEntry.swift */; };
 		ABEA5B9B2995F165005E7148 /* MetaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEA5B9A2995F165005E7148 /* MetaDetailView.swift */; };
@@ -102,6 +103,7 @@
 		AB59AABE298AB5AE0077269E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AB7C0D4D2975DBE200ACC200 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
+		ABCF7C3029ECB3E000F3527B /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		ABEA5B962995DC95005E7148 /* UserDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
 		ABEA5B982995EF2A005E7148 /* MetaEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaEntry.swift; sourceTree = "<group>"; };
 		ABEA5B9A2995F165005E7148 /* MetaDetailView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaDetailView.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 				ABEA73DE296540F600DC1BF0 /* MainView.swift */,
 				AB4A7E5B2954DFB4005E55CB /* GalleryTabView.swift */,
 				AB4A7E89295510DD005E55CB /* MediaDetailView.swift */,
+				ABCF7C3029ECB3E000F3527B /* WebView.swift */,
 				AB4A7E5C2954DFB4005E55CB /* MediaModel.swift */,
 				ABEA73E7296B363F00DC1BF0 /* GalleryPickerView.swift */,
 				ABEA5BB829980809005E7148 /* ShareSheet.swift */,
@@ -369,6 +372,7 @@
 				AB7C0D4E2975DBE200ACC200 /* CameraView.swift in Sources */,
 				AB281C5E2961268F007328EB /* StringMisc.swift in Sources */,
 				ABEA73E8296B363F00DC1BF0 /* GalleryPickerView.swift in Sources */,
+				ABCF7C3129ECB3E000F3527B /* WebView.swift in Sources */,
 				AB4A7E6F2954DFB4005E55CB /* PhotoAsset.swift in Sources */,
 				ABEA5B972995DC95005E7148 /* UserDetailView.swift in Sources */,
 				AB560E7929841B8900A3F738 /* LocationManager.swift in Sources */,
@@ -518,14 +522,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MoGallery/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Usage";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera usage";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location usage";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo Library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -552,14 +557,15 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 66;
+				CURRENT_PROJECT_VERSION = 68;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MoGallery/Info.plist;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera Usage";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Camera usage";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Location usage";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Photo Library";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
