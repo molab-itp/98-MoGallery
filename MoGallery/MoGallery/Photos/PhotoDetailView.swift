@@ -88,7 +88,7 @@ struct PhotoDetailView: View {
         }
         .overlay(alignment: .top) {
             if let phAsset = asset.phAsset, showInfo {
-                VStack {
+                Form {
                     Text( (phAsset.creationDate?.description ?? "").prefix(19) )
                     Text( "\(phAsset.pixelWidth) x \(phAsset.pixelHeight)" )
                     if let locationDescription = phAsset.locationDescription {
@@ -102,6 +102,7 @@ struct PhotoDetailView: View {
                         Text(app.string(duration: phAsset.duration))
                     }
                 }
+                .frame(maxHeight: app.geometrySize.height * 0.25 )
                 .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
                 .background(Color.secondary.colorInvert())
             }

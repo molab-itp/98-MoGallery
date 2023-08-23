@@ -16,7 +16,7 @@ import YouTubePlayerKit
 struct MediaDetailView: View {
     
     @ObservedObject var item: MediaModel;
-//    @ObservedObject var editItem: MediaModel
+    //    @ObservedObject var editItem: MediaModel
     var priorSelection: String
     
     @EnvironmentObject var lobbyModel: LobbyModel
@@ -27,14 +27,15 @@ struct MediaDetailView: View {
     @State private var showingAlert = false
     @State private var showInfo = false
     @State private var isSharing = false
-
+    
     @State private var selection: String?
     @State private var imageThumb: UIImage?
     
-//    @State private var priorCaption: String?
-//    @State private var priorPreviewUrl: String?
-//    @State private var priorLoadPreviewUrl: Bool?
-
+    // @State private var priorCaption: String?
+    // @State private var priorPreviewUrl: String?
+    // @State private var priorLoadPreviewUrl: Bool?
+    @State private var deleted = false
+    
     var body: some View {
         Group {
             VStack {
@@ -74,7 +75,7 @@ struct MediaDetailView: View {
                 }
             }
         }
-         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         // .ignoresSafeArea()
         .background(Color.secondary)
         // .navigationTitle("Media")
@@ -98,7 +99,7 @@ struct MediaDetailView: View {
                     .frame(width: app.geometrySize.width)
                     .padding()
                     .foregroundColor(.white)
-                    // .background(Color(.lightGray))
+                // .background(Color(.lightGray))
                     .background(Color.secondary.colorInvert())
             }
         }
@@ -107,6 +108,7 @@ struct MediaDetailView: View {
                 showingAlert = false
                 dismiss()
                 app.galleryModel.deleteMedia(mediaItem: item)
+                deleted = true
             }
             Button("Cancel", role: .cancel) {
                 showingAlert = false
@@ -121,31 +123,33 @@ struct MediaDetailView: View {
         .onAppear {
             print("MediaDetailView onAppear")
             lobbyModel.locsForUsers(firstLoc: item.loc)
-//            priorCaption = item.caption
-//            priorPreviewUrl = item.previewUrl
-//            priorLoadPreviewUrl = item.loadPreviewUrl
+            // priorCaption = item.caption
+            // priorPreviewUrl = item.previewUrl
+            // priorLoadPreviewUrl = item.loadPreviewUrl
         }
         .onDisappear {
             print("MediaDetailView onDisappear")
             app.stopVideo()
-            Task {
-                app.galleryModel.updateMedia(media: item)
+            if !deleted {
+                Task {
+                    app.galleryModel.updateMedia(media: item)
+                }
             }
-//            var changed = false
-//            if let priorCaption, priorCaption != item.caption {
-//                changed = true
-//            }
-//            if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
-//                changed = true
-//            }
-//            if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
-//                changed = true
-//            }
-//            if changed {
-//                Task {
-//                    app.galleryModel.updateMedia(media: item)
-//                }
-//            }
+            // var changed = false
+            // if let priorCaption, priorCaption != item.caption {
+            //  changed = true
+            // }
+            // if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
+            // changed = true
+            // }
+            // if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
+            // changed = true
+            // }
+            // if changed {
+            //  Task {
+            //      app.galleryModel.updateMedia(media: item)
+            // }
+            // }
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
@@ -167,46 +171,42 @@ struct MediaDetailView: View {
     }
     
     func showInfoOverlay() -> some View {
-        VStack {
+        Form {
             Text(item.authorEmail)
-            Group {
-                if let sourceDate = item.sourceDate {
-                    Text(sourceDate.prefix(19))
-                }
-                let homeRefLabel = app.homeRefLabel(item: item)
-                Text("\(item.width) x \(item.height) \(homeRefLabel)" )
-                if let locationDescription = item.locationDescription {
-                    Button {
-                        app.selectedTab = .map
-                    } label: {
-                        Text(locationDescription)
-                    }
-                }
-                if item.duration > 0 {
-                    Text(app.string(duration: item.duration))
-                }
-                Form {
-//                    Button("Save") {
-//                        app.galleryModel.updateMedia(media: item)
-//                        dismiss()
-//                    }
-                    Section {
-                        Text("Caption")
-                        TextField("", text: $item.caption, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
-                        Toggle("Preview url", isOn: $item.loadPreviewUrl)
-                        TextField("", text: $item.previewUrl, axis: .vertical)
-                            .textFieldStyle(.roundedBorder)
-                    }
-                }
-                .frame(maxHeight: app.geometrySize.height * 0.5 )
+            if let sourceDate = item.sourceDate {
+                Text(sourceDate.prefix(19))
             }
-            .font(.subheadline)
+            let homeRefLabel = app.homeRefLabel(item: item)
+            Text("\(item.width) x \(item.height) \(homeRefLabel)" )
+            if let locationDescription = item.locationDescription {
+                Button {
+                    app.selectedTab = .map
+                } label: {
+                    Text(locationDescription)
+                }
+            }
+            if item.duration > 0 {
+                Text(app.string(duration: item.duration))
+            }
+            //  Button("Save") {
+            //      app.galleryModel.updateMedia(media: item)
+            //      dismiss()
+            //  }
+            Section {
+                Text("Caption")
+                TextField("", text: $item.caption, axis: .vertical)
+                    .textFieldStyle(.roundedBorder)
+                Toggle("Preview url", isOn: $item.loadPreviewUrl)
+                TextField("", text: $item.previewUrl, axis: .vertical)
+                    .textFieldStyle(.roundedBorder)
+            }
         }
+        .frame(maxHeight: app.geometrySize.height * 0.6 )
+        .font(.subheadline)
         .padding(EdgeInsets(top: 5, leading: 30, bottom: 5, trailing: 30))
         .background(Color.secondary.colorInvert())
     }
-
+    
     func topButtons() -> some View {
         Group {
             Button {
@@ -258,13 +258,13 @@ struct MediaDetailView: View {
             }
         }
     }
-        
+    
     func imageFor(string str: String) async -> UIImage? {
         guard let url = URL(string: str) else { return nil }
         guard let (data, _) = try? await URLSession.shared.data(from: url) else { return nil }
         return UIImage(data:data)
     }
-
+    
     func activityItems() -> [Any] {
         var items: [String] = []
         items.append("authorEmail: "+item.authorEmail)

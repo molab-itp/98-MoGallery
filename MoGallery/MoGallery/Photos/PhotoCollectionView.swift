@@ -3,7 +3,8 @@ See the License.txt file for this sample’s licensing information.
 */
 
 import SwiftUI
-import os.log
+//import os.log
+import PhotosUI
 
 // Display a grid of photos from album
 // photos link to details which allows for set favorite and delete
@@ -19,6 +20,7 @@ struct PhotoCollectionView: View {
     @Environment(\.dismiss) var dismiss
 
     @State private var selection: String?
+    @State var showLimitedPicker: Bool = true
 
     // private static let itemSpacing = 12.0
     // private static let itemCornerRadius = 15.0
@@ -59,7 +61,12 @@ struct PhotoCollectionView: View {
                 // ToolbarItemGroup(placement: .navigationBarTrailing) {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink {
-                        AlbumPickerView(selection: $selection)
+                        if app.photoLibLimited {
+                            LimitedPicker(isPresented: $showLimitedPicker);
+                        }
+                        else {
+                            AlbumPickerView(selection: $selection)
+                        }
                     } label: {
                         Label(photosModel.photoCollectionTitle , systemImage: "photo.on.rectangle")
                             .labelStyle(.titleAndIcon)
@@ -71,6 +78,7 @@ struct PhotoCollectionView: View {
             }
             .onDisappear {
                 cameraModel.isPreviewPaused = false
+                showLimitedPicker = true
             }
         }
     }
@@ -111,6 +119,28 @@ struct PhotoCollectionView: View {
     }
 }
 
+// https://stackoverflow.com/questions/63870238/how-to-call-phphotolibrary-presentlimitedlibrarypicker-from-swiftui
+// >> LimitedPicker nav view stays up after selection
+
+struct LimitedPicker: UIViewControllerRepresentable {
+    @Binding var isPresented: Bool
+    @Environment(\.dismiss) var dismiss
+
+    func makeUIViewController(context: Context) -> UIViewController {
+        UIViewController()
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        if isPresented {
+            PHPhotoLibrary.shared().presentLimitedLibraryPicker(from: uiViewController)
+            DispatchQueue.main.async {
+                isPresented = false
+                dismiss();
+            }
+        }
+    }
+}
+
 struct AlbumPickerView: View {
     @Binding var selection: String?
 
@@ -119,16 +149,16 @@ struct AlbumPickerView: View {
 
     var body: some View {
         Group {
-//            HStack {
-//                Button(action: dismissPicker) {
-//                    Image(systemName: "chevron.left")
-//                }
-//                Spacer()
-//                let str = selection ?? ""
-//                Text("Selected album: \(str)")
-//                Spacer()
-//            }
-//            .padding(20)
+// HStack {
+//     Button(action: dismissPicker) {
+//         Image(systemName: "chevron.left")
+//     }
+//     Spacer()
+//     let str = selection ?? ""
+//     Text("Selected album: \(str)")
+//     Spacer()
+// }
+// .padding(20)
             VStack {
                 List(app.photosModel.albumNames, id: \.self,
                      selection: $selection)
@@ -145,8 +175,8 @@ struct AlbumPickerView: View {
         // .navigationTitle( photosModel.photoCollection!.albumName ?? "Photo Library")
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle("Select Album")
-//        Label("Select Album", systemImage: "photo.on.rectangle")
-//            .labelStyle(.titleAndIcon)
+        // Label("Select Album", systemImage: "photo.on.rectangle")
+        //  .labelStyle(.titleAndIcon)
 
     }
     

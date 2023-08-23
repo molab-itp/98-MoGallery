@@ -36,7 +36,9 @@ struct UserDetailView: View {
                 }
             }
             Button(action: {
-                app.selectGallery(key: user.userGalleryKey)
+                let key = user.userGalleryKey
+                // let key = app.userGalleryKey(user: user)
+                app.selectGallery(key: key)
             }) {
                 Text("Photos")
                     .font(.headline)

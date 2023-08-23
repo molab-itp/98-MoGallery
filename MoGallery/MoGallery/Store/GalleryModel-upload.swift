@@ -190,11 +190,13 @@ extension GalleryModel {
         }
         
         let userGalleryKey = user.userGalleryKey
-        
+        // let userGalleryKey = app.userGalleryKey(user: user)
+
         // If not linked and not in userGallery
         //  add to userGallery
         
         if values["homeRef"] == nil && app.settings.storeGalleryKey != userGalleryKey {
+            
             let userGalleryRef = dbGalleryRef(key: userGalleryKey)
             guard let userGalleryRef else {
                 print("createMediaEntry no userGalleryRef")
@@ -233,7 +235,6 @@ extension GalleryModel {
         if setHomeRef {
             values["homeRef"] = [app.settings.storeGalleryKey, mediaItem.id]
         }
-        
         let ngalleryRef = dbGalleryRef(key: galleryKey)
         
         values["mediaPath"] = mediaItem.mediaPath;

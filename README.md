@@ -56,10 +56,30 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 ## Plan:
 
->> Avoid PAAccessLogger] Failed to log access with error
-Replace fileprivate let logger = Logger(subsystem:
+>> LimitedPicker nav view stays up after selection
+
+>> trigger limited selection view when in limited mode
+https://developer.apple.com/documentation/photokit/phphotolibrary/3752108-presentlimitedlibrarypicker
+
+https://stackoverflow.com/questions/63870238/how-to-call-phphotolibrary-presentlimitedlibrarypicker-from-swiftui
+
 
 ## Log
+
+[x] return tuple (authorized, limited) from PhotoLibrary.checkAuthorization
+print("Photo library access limited. 2023")
+let authorized = await PhotoLibrary.checkAuthorization()
+    var photoLibLimited = false;
+
+[x] no update if media item deleted
+    struct MediaDetailView
+    private var deleted = false
+    
+[x] store prefix mo- --> mo-1/
+>> store names mo-gallery --> mo-1/gallery
+
+[x] Avoid PAAccessLogger] Failed to log access with error
+Replace fileprivate let logger = Logger(subsystem:
 
 class Camera: NSObject {
 // !!@ force jpeg

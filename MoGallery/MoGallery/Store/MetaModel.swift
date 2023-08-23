@@ -7,28 +7,35 @@
 import FirebaseDatabase
 
 //private var moMetaKey = "mo-meta1"
-private var moMetaKey = "mo-meta"
+//private var moMetaKey = "mo-meta"
 
 class MetaModel: ObservableObject {
     
     @Published var metas: [MetaEntry] = []
 
     // mo-meta
+    private var moMetaKey = "mo-meta"
     private var metaRef: DatabaseReference? 
     private var metaHandle: DatabaseHandle?
     var loaded: Bool = false
     var cleaned: Bool = true
-
+    
     unowned var app: AppModel
     init(_ app:AppModel) {
         print("MetaModel init")
         self.app = app
+        moMetaKey = app.settings.storePrefix + "meta"
         metaRef = Database.root.child(moMetaKey)
     }
     
     func allGalleryKeys() -> [String] {
         metas.map( { item in
-            item.galleryName
+            var ngalleryName = item.galleryName
+            let pre = app.settings.storePrefix
+            if item.galleryName.hasPrefix(pre) {
+                ngalleryName = String(ngalleryName.dropFirst(pre.count))
+            }
+            return ngalleryName
         })
     }
     
@@ -102,6 +109,7 @@ class MetaModel: ObservableObject {
     }
     
     func fetch(galleryName: String) -> MetaEntry?  {
+        print("fetch galleryName", galleryName);
         if let metaEntry = find(galleryName: galleryName) {
             return metaEntry
         }
@@ -113,6 +121,7 @@ class MetaModel: ObservableObject {
     }
     
     func addMeta(galleryName: String) -> MetaEntry? {
+        print("addMeta galleryName", galleryName);
         guard let user = app.lobbyModel.currentUser else {
             print("addMeta no currentUser")
             return nil
@@ -121,7 +130,7 @@ class MetaModel: ObservableObject {
     }
     
     func addMeta(galleryName: String, user: UserModel?) -> MetaEntry? {
-        print("addMeta galleryName", galleryName);
+        print("addMeta user galleryName", galleryName);
         print("addMeta loaded", loaded);
         
         // return nil; // !!@

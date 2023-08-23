@@ -22,6 +22,12 @@ struct AppSettingView: View {
     var body: some View {
         Form {
             Section {
+                Link("MoGallery git repo",
+                     destination:
+                        URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
+                .padding(8)
+            }
+            Section {
                 Text("Firebase Storage")
                 Toggle("Add Random Warning", isOn: $app.settings.randomAddWarning)
                 Toggle("Store Camera Capture", isOn: $app.settings.storeAddEnabled)
@@ -31,16 +37,6 @@ struct AppSettingView: View {
                         // .bold()
                         .frame(width:160)
                     TextField("", text: $app.settings.storePhotoSize)
-                }
-                HStack {
-                    Text("Gallery Key")
-                        .frame(width:160)
-                    TextField("", text: $app.settings.storeGalleryKey)
-                }
-                HStack {
-                    Text("Lobby Key")
-                        .frame(width:160)
-                    TextField("", text: $app.settings.storeLobbyKey)
                 }
             }
             Section {
@@ -59,10 +55,21 @@ struct AppSettingView: View {
                 }
             }
             Section {
-                Link("MoGallery git repo",
-                     destination:
-                        URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
-                .padding(8)
+                HStack {
+                    Text("Gallery Key")
+                        .frame(width:160)
+                    TextField("", text: $app.settings.storeGalleryKey)
+                }
+                HStack {
+                    Text("Lobby Key")
+                        .frame(width:160)
+                    TextField("", text: $app.settings.storeLobbyKey)
+                }
+                HStack {
+                    Text("StorePrefix")
+                        .frame(width:160)
+                    TextField("", text: $app.settings.storePrefix)
+                }
             }
         }
         .onDisappear {

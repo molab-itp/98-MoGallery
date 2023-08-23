@@ -66,12 +66,14 @@ final class PhotosModel: ObservableObject {
         selectionIndices = nil
         let albumName = app.settings.photoAlbum
         print("PhotosModel refresh photoAlbum", albumName)
-        if albumName == "-Photo Library-" {
+        // !!@ app.photoLibLimited
+        if albumName == "-Photo Library-" || app.photoLibLimited {
             photoCollection = PhotoCollection(self, smartAlbum: .smartAlbumUserLibrary)
+            // photoCollection = PhotoCollection(self, smartAlbum: .any)
         }
         else {
-            // photoCollection = PhotoCollection(albumNamed: albumName, createIfNotFound: true)
             photoCollection = PhotoCollection(self, albumNamed: albumName, createIfNotFound: false)
+            // photoCollection = PhotoCollection(albumNamed: albumName, createIfNotFound: true)
         }
         isPhotosLoaded = false
         
@@ -127,10 +129,11 @@ final class PhotosModel: ObservableObject {
         }
         
         let authorized = await PhotoLibrary.checkAuthorization()
-        guard authorized else {
+        guard authorized.0 else {
             print("Photo library access was not authorized.")
             return
         }
+        app.photoLibLimited = authorized.1 == .limited
         
         Task {
             do {

@@ -16,14 +16,19 @@ struct Settings: Codable {
     var storePhotoSize = "500"
     var storeAddEnabled = true;
     var storeFullRez = true;
-    var storeGalleryKey = "mo-gallery-1"
-    var storeLobbyKey = "mo-lobby"
-    
+    var storePrefix = "mo-1/";
+    // var storePrefix = "mo-";
+    var storeGalleryKey = "gallery-1"
+    // var storeGalleryKey = "mo-gallery-1"
+    var storeLobbyKey = "lobby-@r-"
+    // var storeLobbyKey = "mo-lobby"
+
     var showUsers = false
     var randomAddWarning = true
     
-    var galleryKeys:[String] = ["mo-gallery-1", "mo-gallery-2", "mo-gallery-3"]
-    
+    var galleryKeys:[String] = ["gallery-1", "gallery-2", "gallery-3"]
+    // var galleryKeys:[String] = ["mo-gallery-1", "mo-gallery-2", "mo-gallery-3"]
+
     var hardGalleryDelete = false
 
 }

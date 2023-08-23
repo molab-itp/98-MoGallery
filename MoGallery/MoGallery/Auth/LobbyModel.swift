@@ -48,7 +48,8 @@ class LobbyModel: ObservableObject {
 
     func refresh() {
         observeStop()
-        lobbyRef = Database.root.child(app.settings.storeLobbyKey)
+        let nstoreLobbyKey = app.settings.storePrefix + app.settings.storeLobbyKey
+        lobbyRef = Database.root.child(nstoreLobbyKey)
         observeStart()
         albumName = app.settings.photoAlbum
     }

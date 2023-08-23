@@ -51,8 +51,9 @@ class GalleryModel: ObservableObject {
     func refresh() {
         print("GalleryModel refresh storeGalleryKey", app.settings.storeGalleryKey)
         let galleryName = app.settings.storeGalleryKey
+        let ngalleryName = app.settings.storePrefix + app.settings.storeGalleryKey
         observeStop()
-        galleryRef = Database.root.child(galleryName)
+        galleryRef = Database.root.child(ngalleryName)
         observeStart()
         currentMeta = app.metaModel.fetch(galleryName: galleryName)
     }
@@ -69,6 +70,7 @@ class GalleryModel: ObservableObject {
     }
     
     func receiveSnapShot(_ snapshot: DataSnapshot) {
+        print("GalleryModel receiveSnapShot snapshot \(snapshot)")
         guard let snapItems = snapshot.value as? [String: [String: Any]] else {
             print("GalleryModel gallery EMPTY")
             gallery = []
@@ -100,7 +102,9 @@ class GalleryModel: ObservableObject {
     }
     
     func dbGalleryRef(key: String) -> DatabaseReference? {
-        Database.root.child(key)
+        print("dbGalleryRef key", key)
+        let nkey = app.settings.storePrefix + key
+        return Database.root.child(nkey)
     }
     
     func deleteAll() {
@@ -157,10 +161,14 @@ class GalleryModel: ObservableObject {
     
     // Delete the media entry from its gallery
     func deleteMediaEntry(mediaItem: MediaModel) {
-        print("deleteMediaEntry mediaItem \(mediaItem)")
-        guard let galleryRef else { return }
+        print("deleteMediaEntry mediaItem.id \(mediaItem.id)")
+        guard let galleryRef else {
+            print("deleteMediaEntry !! NO \(String(describing: galleryRef))")
+            return
+        }
         // Delete the media item database entry
-        galleryRef.child(mediaItem.id).removeValue {error, ref in
+        galleryRef.child(mediaItem.id).removeValue { error, ref in
+            print("deleteMediaEntry error \(String(describing: error)) ref \(ref)")
             if let error = error {
                 print("deleteMediaEntry removeValue error: \(error)")
             }
@@ -175,8 +183,10 @@ class GalleryModel: ObservableObject {
                 print("deleteMedia no user for mediaItem.uid", mediaItem.uid)
                 return
             }
-            guard let userGalleryRef = dbGalleryRef(key: user.userGalleryKey) else {
-                print("deleteMedia no userGalleryRef userGalleryKey", user.userGalleryKey)
+            let key = user.userGalleryKey
+            // let key = app.userGalleryKey(user: user);
+            guard let userGalleryRef = dbGalleryRef(key: key) else {
+                print("deleteMedia no userGalleryRef userGalleryKey", key)
                 return
             }
             userGalleryRef.child(userGalleryChildId).removeValue {error, ref in

@@ -57,7 +57,9 @@ struct GalleryPickerView: View {
                             if newGallery.isEmpty {
                                 name = String(app.settings.galleryKeys.count + 1)
                             }
-                            name = "mo-gallery-" + name
+                            name = "gallery-" + name
+                            // name = app.settings.storePrefix + "gallery-" + name
+                            // name = "mo-gallery-" + name
                             app.addGalleryKey(name: name)
                             // app.saveSettings()
                             selection = name

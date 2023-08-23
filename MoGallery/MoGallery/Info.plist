@@ -26,5 +26,7 @@
 		<key>UISceneConfigurations</key>
 		<dict/>
 	</dict>
+    <key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+    <string>YES</string>
 </dict>
 </plist>
