@@ -70,7 +70,7 @@ class GalleryModel: ObservableObject {
     }
     
     func receiveSnapShot(_ snapshot: DataSnapshot) {
-        print("GalleryModel receiveSnapShot snapshot \(snapshot)")
+        // print("GalleryModel receiveSnapShot snapshot \(snapshot)")
         guard let snapItems = snapshot.value as? [String: [String: Any]] else {
             print("GalleryModel gallery EMPTY")
             gallery = []

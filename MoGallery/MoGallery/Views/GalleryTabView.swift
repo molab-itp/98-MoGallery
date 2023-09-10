@@ -129,21 +129,20 @@ struct GalleryTabView: View {
                 }
                 else if let item = galleryModel.itemFor(id: id) {
                     MediaDetailView(item: item,
-//                                    editItem: mediaItemForDetail(item),
                                     priorSelection: app.settings.storeGalleryKey)
                 }
             }
         }
     }
     
-    func mediaItemForDetail(_ item :MediaModel) -> MediaModel {
-        MediaModel(id: item.id,
-                   dict: [
-                    "caption": item.caption,
-                    "previewUrl": item.previewUrl,
-                    "loadPreviewUrl": item.loadPreviewUrl
-                   ])
-    }
+//    func mediaItemForDetail(_ item :MediaModel) -> MediaModel {
+//        MediaModel(id: item.id,
+//                   dict: [
+//                    "caption": item.caption,
+//                    "previewUrl": item.previewUrl,
+//                    "loadPreviewUrl": item.loadPreviewUrl
+//                   ])
+//    }
     
     private func addRandomMedia() {
         Task {

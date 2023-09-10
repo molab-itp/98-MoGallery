@@ -31,17 +31,11 @@ struct MediaDetailView: View {
     @State private var selection: String?
     @State private var imageThumb: UIImage?
     
-    // @State private var priorCaption: String?
-    // @State private var priorPreviewUrl: String?
-    // @State private var priorLoadPreviewUrl: Bool?
-    @State private var deleted = false
+//    @State private var deleted = false
     
     var body: some View {
         Group {
             VStack {
-                // if showInfo {
-                //  showInfoOverlay()
-                // }
                 if let player = app.youTubePlayer {
                     YouTubePlayerView(player) { state in
                         switch state {
@@ -108,7 +102,7 @@ struct MediaDetailView: View {
                 showingAlert = false
                 dismiss()
                 app.galleryModel.deleteMedia(mediaItem: item)
-                deleted = true
+                // deleted = true
             }
             Button("Cancel", role: .cancel) {
                 showingAlert = false
@@ -130,26 +124,11 @@ struct MediaDetailView: View {
         .onDisappear {
             print("MediaDetailView onDisappear")
             app.stopVideo()
-            if !deleted {
-                Task {
-                    app.galleryModel.updateMedia(media: item)
-                }
-            }
-            // var changed = false
-            // if let priorCaption, priorCaption != item.caption {
-            //  changed = true
-            // }
-            // if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
-            // changed = true
-            // }
-            // if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
-            // changed = true
-            // }
-            // if changed {
-            //  Task {
-            //      app.galleryModel.updateMedia(media: item)
-            // }
-            // }
+//            if !deleted {
+//                Task {
+//                    app.galleryModel.updateMedia(media: item)
+//                }
+//            }
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
@@ -188,10 +167,6 @@ struct MediaDetailView: View {
             if item.duration > 0 {
                 Text(app.string(duration: item.duration))
             }
-            //  Button("Save") {
-            //      app.galleryModel.updateMedia(media: item)
-            //      dismiss()
-            //  }
             Section {
                 Text("Caption")
                 TextField("", text: $item.caption, axis: .vertical)
@@ -211,6 +186,9 @@ struct MediaDetailView: View {
         Group {
             Button {
                 showInfo.toggle()
+                if !showInfo {
+                    app.galleryModel.updateMedia(media: item)
+                }
             } label: {
                 Label("Info", systemImage: showInfo ? "info.circle.fill" : "info.circle")
             }
@@ -355,3 +333,23 @@ struct MediaDetailView: View {
 
 // https://www.hackingwithswift.com/books/ios-swiftui/sending-and-receiving-codable-data-with-urlsession-and-swiftui
 
+// var changed = false
+// if let priorCaption, priorCaption != item.caption {
+//  changed = true
+// }
+// if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
+// changed = true
+// }
+// if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
+// changed = true
+// }
+// if changed {
+//  Task {
+//      app.galleryModel.updateMedia(media: item)
+// }
+// }
+
+//  Button("Save") {
+//      app.galleryModel.updateMedia(media: item)
+//      dismiss()
+//  }

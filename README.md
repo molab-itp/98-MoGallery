@@ -58,13 +58,16 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 >> LimitedPicker nav view stays up after selection
 
->> trigger limited selection view when in limited mode
-https://developer.apple.com/documentation/photokit/phphotolibrary/3752108-presentlimitedlibrarypicker
-
-https://stackoverflow.com/questions/63870238/how-to-call-phphotolibrary-presentlimitedlibrarypicker-from-swiftui
 
 
 ## Log
+
+[x] fix move leaving stray media item
+
+[x] trigger limited selection view when in limited mode
+https://developer.apple.com/documentation/photokit/phphotolibrary/3752108-presentlimitedlibrarypicker
+
+https://stackoverflow.com/questions/63870238/how-to-call-phphotolibrary-presentlimitedlibrarypicker-from-swiftui
 
 [x] return tuple (authorized, limited) from PhotoLibrary.checkAuthorization
 print("Photo library access limited. 2023")
