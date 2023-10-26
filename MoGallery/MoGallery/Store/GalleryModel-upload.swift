@@ -42,13 +42,14 @@ extension GalleryModel {
         metadata.contentType = "image/jpeg"
         metadata.cacheControl = "public,max-age=300"
         
-        let filePath = uid + "/\(user.uploadCount).jpeg"
+        let filePathPre = "-mo/\(app.settings.storePrefix)/\(uid)/\(user.uploadCount)"
+        let filePath = "\(filePathPre).jpeg"
         let storageRef = storage.reference(withPath: filePath)
         
         // fullRezData
         // + mediaPathFullRez
         // + storagePathFullRez
-        let filePathFullRez = uid + "/\(user.uploadCount)z.jpeg"
+        let filePathFullRez = "/\(filePathPre)z.jpeg"
         
         storageRef.putData(imageData, metadata: metadata) { metadata, error in
             guard let metad = metadata else {

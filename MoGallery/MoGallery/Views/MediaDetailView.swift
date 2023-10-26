@@ -151,7 +151,13 @@ struct MediaDetailView: View {
     
     func showInfoOverlay() -> some View {
         Form {
-            Text(item.authorEmail)
+            NavigationLink {
+                if let user = lobbyModel.user(uid: item.uid) {
+                    UserDetailView(user: user )
+                }
+            } label: {
+                Text(item.authorEmail)
+            }
             if let sourceDate = item.sourceDate {
                 Text(sourceDate.prefix(19))
             }

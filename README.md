@@ -58,9 +58,12 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 >> LimitedPicker nav view stays up after selection
 
-
-
 ## Log
+
+[x] UserDetailView in MediaDetailView showInfoOverlay on authorEmail
+[x] image upload storage prefixed with -mo/storePrefix
+    uploadImageData
+    let filePathPre = "-mo/\(app.settings.storePrefix)/\(uid)/\(user.uploadCount)"
 
 [x] fix move leaving stray media item
 
