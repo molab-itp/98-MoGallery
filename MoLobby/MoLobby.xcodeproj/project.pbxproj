@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AB07BC4129BD68000079C149 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB07BC4029BD68000079C149 /* Settings.swift */; };
+		AB15F50E2AF32C95003FA2BC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AB15F50D2AF32C95003FA2BC /* README.md */; };
 		AB281C5E2961268F007328EB /* StringMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB281C5D2961268F007328EB /* StringMisc.swift */; };
 		AB4A7E332954DB79005E55CB /* MoLobby.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4A7E322954DB79005E55CB /* MoLobby.swift */; };
 		AB4A7E372954DB7A005E55CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB4A7E362954DB7A005E55CB /* Assets.xcassets */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		AB07BC4029BD68000079C149 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		AB15F50D2AF32C95003FA2BC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		AB281C5D2961268F007328EB /* StringMisc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMisc.swift; sourceTree = "<group>"; };
 		AB4A7E2F2954DB79005E55CB /* MoLobby.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoLobby.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB4A7E322954DB79005E55CB /* MoLobby.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoLobby.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 		AB4A7E262954DB79005E55CB = {
 			isa = PBXGroup;
 			children = (
+				AB15F50D2AF32C95003FA2BC /* README.md */,
 				AB4A7E312954DB79005E55CB /* MoLobby */,
 				AB4A7E302954DB79005E55CB /* Products */,
 			);
@@ -230,6 +233,7 @@
 			files = (
 				AB4A7E3A2954DB7A005E55CB /* Preview Assets.xcassets in Resources */,
 				AB4A7E742954DFB4005E55CB /* GoogleService-Info.plist in Resources */,
+				AB15F50E2AF32C95003FA2BC /* README.md in Resources */,
 				AB4A7E372954DB7A005E55CB /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
