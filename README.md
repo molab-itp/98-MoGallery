@@ -11,11 +11,11 @@ MoGallery is an iOS mobile template app for students to build on these features:
 
 p5js demo scripts to view Firebase storage in any web browser
 
-- [98-MoGallery-p5js](https://github.com/mobilelabclass-itp/98-MoGallery-p5js)
+- [98-MoGallery-p5js](https://github.com/molab-itp/98-MoGallery-p5js)
 
 Created for NYU ITP Course:
 
-- [ITP Mobile App Development Lab course](https://github.com/mobilelabclass-itp/content-2023)
+- [ITP Mobile App Development Lab course](https://github.com/molab-itp/content-2023-fa)
 
 ## Requirements
 
