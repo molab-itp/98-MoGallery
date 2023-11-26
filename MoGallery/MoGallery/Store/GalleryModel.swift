@@ -28,10 +28,12 @@ class GalleryModel: ObservableObject {
     var galleryHandle: DatabaseHandle?
     var storage = Storage.storage()
     
-    unowned var app: AppModel
-    init(_ app:AppModel) {
-        self.app = app
-    }
+    static let main = GalleryModel()
+    lazy var app = AppModel.main;
+//    unowned var app: AppModel
+//    init(_ app:AppModel) {
+//        self.app = app
+//    }
     
     func deleteWarning() -> String {
         "Are you sure you want to delete your \(countMine) photos in this gallery?"

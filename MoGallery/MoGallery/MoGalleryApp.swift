@@ -15,7 +15,7 @@ struct MoGalleryApp: App {
 // register app delegate for Firebase setup
 // @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
 
-    var app = AppModel();
+    var app = AppModel.main;
 
     init() {
         UINavigationBar.applyCustomAppearance()
@@ -26,12 +26,13 @@ struct MoGalleryApp: App {
     var body: some Scene {
         WindowGroup {
             LoginCheckView()
-                .environmentObject(app)
-                .environmentObject(app.cameraModel)
-                .environmentObject(app.lobbyModel)
-                .environmentObject(app.galleryModel)
-                .environmentObject(app.photosModel)
-                .environmentObject(app.metaModel)
+                .environmentObject(AppModel.main)
+                .environmentObject(CameraModel.main)
+                .environmentObject(LobbyModel.main)
+                .environmentObject(GalleryModel.main)
+                .environmentObject(PhotosModel.main)
+                .environmentObject(MetaModel.main)
+                .environmentObject(LocationModel.main)
                 .onAppear {
                     print("MoGalleryApp onAppear")
                     // For UIApplicationDelegateAdaptor must refreshModels here

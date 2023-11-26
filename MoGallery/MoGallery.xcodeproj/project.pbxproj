@@ -45,10 +45,10 @@
 		AB4A7E852954E089005E55CB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = AB4A7E842954E089005E55CB /* GoogleSignInSwift */; };
 		AB4A7E882954FAB2005E55CB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = AB4A7E872954FAB2005E55CB /* README.md */; };
 		AB4A7E8A295510DD005E55CB /* MediaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4A7E89295510DD005E55CB /* MediaDetailView.swift */; };
-		AB4DB025298CB6F600F35448 /* MapTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4DB024298CB6F600F35448 /* MapTabView.swift */; };
 		AB560E7929841B8900A3F738 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB560E7829841B8900A3F738 /* LocationManager.swift */; };
-		AB59AABF298AB5AE0077269E /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB59AABE298AB5AE0077269E /* MapView.swift */; };
 		AB7C0D4E2975DBE200ACC200 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7C0D4D2975DBE200ACC200 /* CameraView.swift */; };
+		AB7F18AF2B1127CE008C2905 /* MapTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7F18AD2B1127CE008C2905 /* MapTabView.swift */; };
+		AB7F18B02B1127CE008C2905 /* LocationModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB7F18AE2B1127CE008C2905 /* LocationModel.swift */; };
 		ABBA1C552A91278A00ABE377 /* AppModel_video.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABBA1C542A91278A00ABE377 /* AppModel_video.swift */; };
 		ABBA1C572A91287600ABE377 /* AppModel_gallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABBA1C562A91287600ABE377 /* AppModel_gallery.swift */; };
 		ABCDDB90295D1A3F0074CB2F /* CameraModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */; };
@@ -100,10 +100,10 @@
 		AB4A7E862954E417005E55CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AB4A7E872954FAB2005E55CB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		AB4A7E89295510DD005E55CB /* MediaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaDetailView.swift; sourceTree = "<group>"; };
-		AB4DB024298CB6F600F35448 /* MapTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTabView.swift; sourceTree = "<group>"; };
 		AB560E7829841B8900A3F738 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		AB59AABE298AB5AE0077269E /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		AB7C0D4D2975DBE200ACC200 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		AB7F18AD2B1127CE008C2905 /* MapTabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapTabView.swift; sourceTree = "<group>"; };
+		AB7F18AE2B1127CE008C2905 /* LocationModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationModel.swift; sourceTree = "<group>"; };
 		ABBA1C542A91278A00ABE377 /* AppModel_video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel_video.swift; sourceTree = "<group>"; };
 		ABBA1C562A91287600ABE377 /* AppModel_gallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel_gallery.swift; sourceTree = "<group>"; };
 		ABCDDB8F295D1A3F0074CB2F /* CameraModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraModel.swift; sourceTree = "<group>"; };
@@ -161,13 +161,11 @@
 			isa = PBXGroup;
 			children = (
 				AB4A7E322954DB79005E55CB /* MoGalleryApp.swift */,
-				ABEF9FAB2955419800F1CD90 /* AppModel.swift */,
-				ABBA1C542A91278A00ABE377 /* AppModel_video.swift */,
-				ABBA1C562A91287600ABE377 /* AppModel_gallery.swift */,
-				AB07BC4029BD68000079C149 /* Settings.swift */,
-				AB4A7E402954DFB4005E55CB /* Auth */,
-				ABEA5BBA299808E4005E7148 /* Views */,
+				AB7F18AB2B0FEF64008C2905 /* Models */,
 				AB4A7E5A2954DFB4005E55CB /* Store */,
+				ABEA5BBA299808E4005E7148 /* Views */,
+				AB7F18AC2B1127CE008C2905 /* Map */,
+				AB4A7E402954DFB4005E55CB /* Auth */,
 				AB4A7E482954DFB4005E55CB /* Photos */,
 				AB7C0D4F2976279100ACC200 /* Camera */,
 				ABCDDB91295F2AD80074CB2F /* Commons */,
@@ -192,11 +190,9 @@
 			isa = PBXGroup;
 			children = (
 				ABEF9FAD295546E200F1CD90 /* AppSettingView.swift */,
-				AB4A7E422954DFB4005E55CB /* LobbyView.swift */,
-				AB4A7E442954DFB4005E55CB /* LobbyModel.swift */,
 				ABEF9FAF2956124500F1CD90 /* LoginCheckView.swift */,
+				AB4A7E422954DFB4005E55CB /* LobbyView.swift */,
 				AB4A7E432954DFB4005E55CB /* LoginView.swift */,
-				AB4A7E452954DFB4005E55CB /* UserModel.swift */,
 				ABEA5B962995DC95005E7148 /* UserDetailView.swift */,
 			);
 			path = Auth;
@@ -225,9 +221,6 @@
 				AB07BC3C29BD180F0079C149 /* GalleryModel-upload.swift */,
 				ABEA73E029692D9D00DC1BF0 /* MetaModel.swift */,
 				ABEA5B982995EF2A005E7148 /* MetaEntry.swift */,
-				ABEA5B9A2995F165005E7148 /* MetaDetailView.swift */,
-				AB4DB024298CB6F600F35448 /* MapTabView.swift */,
-				AB59AABE298AB5AE0077269E /* MapView.swift */,
 			);
 			path = Store;
 			sourceTree = "<group>";
@@ -240,6 +233,29 @@
 				AB4A7E502954DFB4005E55CB /* CameraCapture.swift */,
 			);
 			path = Camera;
+			sourceTree = "<group>";
+		};
+		AB7F18AB2B0FEF64008C2905 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ABEF9FAB2955419800F1CD90 /* AppModel.swift */,
+				ABBA1C542A91278A00ABE377 /* AppModel_video.swift */,
+				ABBA1C562A91287600ABE377 /* AppModel_gallery.swift */,
+				AB07BC4029BD68000079C149 /* Settings.swift */,
+				AB4A7E442954DFB4005E55CB /* LobbyModel.swift */,
+				AB4A7E452954DFB4005E55CB /* UserModel.swift */,
+				AB4A7E5C2954DFB4005E55CB /* MediaModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AB7F18AC2B1127CE008C2905 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				AB7F18AD2B1127CE008C2905 /* MapTabView.swift */,
+				AB7F18AE2B1127CE008C2905 /* LocationModel.swift */,
+			);
+			path = Map;
 			sourceTree = "<group>";
 		};
 		ABCDDB91295F2AD80074CB2F /* Commons */ = {
@@ -264,8 +280,8 @@
 				AB4A7E5B2954DFB4005E55CB /* GalleryTabView.swift */,
 				AB4A7E89295510DD005E55CB /* MediaDetailView.swift */,
 				ABCF7C3029ECB3E000F3527B /* WebView.swift */,
-				AB4A7E5C2954DFB4005E55CB /* MediaModel.swift */,
 				ABEA73E7296B363F00DC1BF0 /* GalleryPickerView.swift */,
+				ABEA5B9A2995F165005E7148 /* MetaDetailView.swift */,
 				ABEA5BB829980809005E7148 /* ShareSheet.swift */,
 			);
 			path = Views;
@@ -308,7 +324,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1420;
-				LastUpgradeCheck = 1420;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					AB4A7E2E2954DB79005E55CB = {
 						CreatedOnToolsVersion = 14.2;
@@ -360,14 +376,12 @@
 				AB4A7E6E2954DFB4005E55CB /* ViewfinderView.swift in Sources */,
 				AB4A7E6A2954DFB4005E55CB /* PhotoItemView.swift in Sources */,
 				AB4A7E5E2954DFB4005E55CB /* GoogleSignInButton.swift in Sources */,
-				AB4DB025298CB6F600F35448 /* MapTabView.swift in Sources */,
 				AB07BC4129BD68000079C149 /* Settings.swift in Sources */,
 				AB4A7E6B2954DFB4005E55CB /* PhotoCollection.swift in Sources */,
 				AB4A7E682954DFB4005E55CB /* CachedImageManager.swift in Sources */,
 				AB07BC3D29BD180F0079C149 /* GalleryModel-upload.swift in Sources */,
 				ABCDDB90295D1A3F0074CB2F /* CameraModel.swift in Sources */,
 				AB4A7E6D2954DFB4005E55CB /* PhotoCollectionView.swift in Sources */,
-				AB59AABF298AB5AE0077269E /* MapView.swift in Sources */,
 				ABF81331297C3C2F005198EC /* getElapsedInterval.swift in Sources */,
 				AB4A7E772954DFB4005E55CB /* GalleryModel.swift in Sources */,
 				AB4A7E692954DFB4005E55CB /* imageUtils.swift in Sources */,
@@ -394,8 +408,10 @@
 				ABEA5B992995EF2A005E7148 /* MetaEntry.swift in Sources */,
 				ABEA5BB929980809005E7148 /* ShareSheet.swift in Sources */,
 				AB4A7E602954DFB4005E55CB /* LoginView.swift in Sources */,
+				AB7F18AF2B1127CE008C2905 /* MapTabView.swift in Sources */,
 				AB07BC3F29BD18FF0079C149 /* GalleryModel-add.swift in Sources */,
 				ABBA1C572A91287600ABE377 /* AppModel_gallery.swift in Sources */,
+				AB7F18B02B1127CE008C2905 /* LocationModel.swift in Sources */,
 				AB4A7E6C2954DFB4005E55CB /* CameraCapture.swift in Sources */,
 				AB4A7E762954DFB4005E55CB /* MediaModel.swift in Sources */,
 				AB4A7E612954DFB4005E55CB /* LobbyModel.swift in Sources */,
@@ -445,6 +461,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -505,6 +522,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -530,7 +548,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
@@ -565,7 +583,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 85;
+				CURRENT_PROJECT_VERSION = 87;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;

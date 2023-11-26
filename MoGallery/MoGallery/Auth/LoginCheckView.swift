@@ -27,6 +27,17 @@ struct LoginCheckView: View {
     }
 }
 
+#Preview {
+    LoginCheckView()
+        .environmentObject(AppModel.main)
+        .environmentObject(CameraModel.main)
+        .environmentObject(LobbyModel.main)
+        .environmentObject(GalleryModel.main)
+        .environmentObject(PhotosModel.main)
+        .environmentObject(MetaModel.main)
+}
+
+
 //struct LoginCheckView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        LoginCheckView()

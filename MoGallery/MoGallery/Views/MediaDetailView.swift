@@ -16,7 +16,6 @@ import YouTubePlayerKit
 struct MediaDetailView: View {
     
     @ObservedObject var item: MediaModel;
-    //    @ObservedObject var editItem: MediaModel
     var priorSelection: String
     
     @EnvironmentObject var lobbyModel: LobbyModel
@@ -30,9 +29,7 @@ struct MediaDetailView: View {
     
     @State private var selection: String?
     @State private var imageThumb: UIImage?
-    
-//    @State private var deleted = false
-    
+        
     var body: some View {
         Group {
             VStack {
@@ -297,65 +294,15 @@ struct MediaDetailView: View {
     }
 }
 
-//    struct EditButtons: View {
-//        @Binding var showingAlert: Bool;
-//        @Binding var selection: String?
-//        var item: MediaModel
-//
-//        @EnvironmentObject var app: AppModel
-//
-//        var body: some View {
-//            HStack(spacing: 60) {
-//                Button {
-//                    showingAlert = true
-//                } label: {
-//                    Label("Delete", systemImage: "trash")
-//                        .font(.system(size: 24))
-//                }
-//                // MediaDetailView EditButtons Add Photo
-//                NavigationLink {
-//                    GalleryPickerView(galleryKeys: app.galleryKeysExcludingCurrent,
-//                                      selection: $selection,
-//                                      mediaItem: item)
-//                } label: {
-//                    Label("Add Photo", systemImage: "plus.app.fill")
-//                        .font(.system(size: 24))
-//                }
-//            }
-//            .buttonStyle(.plain)
-//            .labelStyle(.iconOnly)
-//            .padding(EdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30))
-//            .background(Color.secondary.colorInvert())
-//            .cornerRadius(15)
-//        }
-//    }
-
-//                        NavigationLink {
-//                            MapView(locs: lobbyModel.mapRegion.locs)
-//                        } label: {
-//                            Text(locationDescription)
-//                        }
-
-
 // https://www.hackingwithswift.com/books/ios-swiftui/sending-and-receiving-codable-data-with-urlsession-and-swiftui
 
-// var changed = false
-// if let priorCaption, priorCaption != item.caption {
-//  changed = true
-// }
-// if let priorPreviewUrl, priorPreviewUrl != item.previewUrl {
-// changed = true
-// }
-// if let priorLoadPreviewUrl, priorLoadPreviewUrl != item.loadPreviewUrl {
-// changed = true
-// }
-// if changed {
-//  Task {
-//      app.galleryModel.updateMedia(media: item)
-// }
-// }
-
-//  Button("Save") {
-//      app.galleryModel.updateMedia(media: item)
-//      dismiss()
-//  }
+//#Preview {
+//    MediaDetailView(item: MediaModel(id:"", dict: [:]), priorSelection: "")
+//        .environmentObject(AppModel.main)
+//        .environmentObject(CameraModel.main)
+//        .environmentObject(LobbyModel.main)
+//        .environmentObject(GalleryModel.main)
+//        .environmentObject(PhotosModel.main)
+//        .environmentObject(MetaModel.main)
+//        .environmentObject(LocationModel.main)
+//}

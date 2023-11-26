@@ -23,10 +23,8 @@ final class PhotosModel: ObservableObject {
 
     var isPhotosLoaded = false
 
-    unowned var app: AppModel
-    init(_ app:AppModel) {
-        self.app = app
-    }
+    static let main = PhotosModel()
+    lazy var app = AppModel.main;
 
     // Array of randomly shuffled indices for non-repeating selection from nextRandomAsset
     var selectionIndices: [Int]?

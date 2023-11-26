@@ -49,7 +49,7 @@ Don't worry, be sharing happy!
                 .padding(14)
                 Link("MoGallery github.com",
                      destination:
-                        URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
+                        URL(string: "https://github.com/molab-itp/98-MoGallery")! )
                 .padding(14)
                 
             }

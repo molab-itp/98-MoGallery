@@ -24,7 +24,7 @@ struct AppSettingView: View {
             Section {
                 Link("MoGallery git repo",
                      destination:
-                        URL(string: "https://github.com/mobilelabclass-itp/98-MoGallery")! )
+                        URL(string: "https://github.com/molab-itp/98-MoGallery")! )
                 .padding(8)
             }
             Section {

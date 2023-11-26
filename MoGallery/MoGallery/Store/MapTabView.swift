@@ -108,12 +108,6 @@ struct MapTabView: View {
     
     func setRegionState(_ offset: Int) {
         print("MapView setRegionState offset", offset)
-//        if locIndex >= locs.count || locs.count < 1 { return }
-//        locIndex = (locIndex + offset ) % locs.count
-//        let loc = locs[locIndex]
-//        regionLabel = loc.label
-//        region = MKCoordinateRegion(center: loc.coordinate, span: MKCoordinateSpan(latitudeDelta: delta, longitudeDelta: delta))
-//        print("MapView setRegionState offset", offset, "loc", loc, "locIndex", locIndex)
         if locIndex >= locs.count || locs.count < 1 { return }
         locIndex = (locIndex + offset ) % locs.count
         let loc = locs[locIndex]

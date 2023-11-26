@@ -8,6 +8,8 @@ import SwiftUI
 
 final class CameraModel: ObservableObject {
     
+    static let main = CameraModel()
+
     var photoInfoProvided: ((PhotoInfo) -> ())?
     var previewImageProvided: ((Image?) -> ())?
     

@@ -12,7 +12,7 @@ import MapKit
 //    .system(size: 20)
 //    .monospaced()
 //
-//let delta = 0.001
+let delta = 0.001
 
 struct MapView: View {
     // !!@ fails with crash when passing

@@ -20,10 +20,11 @@ class MetaModel: ObservableObject {
     var loaded: Bool = false
     var cleaned: Bool = true
     
-    unowned var app: AppModel
-    init(_ app:AppModel) {
+    static let main = MetaModel()
+    lazy var app = AppModel.main;
+
+    init() {
         print("MetaModel init")
-        self.app = app
         moMetaKey = app.settings.storePrefix + "meta"
         metaRef = Database.root.child(moMetaKey)
     }

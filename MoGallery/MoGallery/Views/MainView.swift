@@ -15,8 +15,8 @@ enum TabTag {
 struct MainView: View {
     
     @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var photosModel: PhotosModel
-    @EnvironmentObject var cameraModel: CameraModel
+//    @EnvironmentObject var photosModel: PhotosModel
+//    @EnvironmentObject var cameraModel: CameraModel
     
     @EnvironmentObject var app: AppModel
     
@@ -37,7 +37,7 @@ struct MainView: View {
                     Label("Camera", systemImage: "camera.fill")
                 }
                 .tag(TabTag.camera)
-            MapTabView(locs: lobbyModel.mapRegion.locs)
+            MapTabView()
                 .tabItem {
                     Label("Map", systemImage: "globe")
                 }
@@ -64,6 +64,19 @@ struct MainView: View {
         }
     }
         
+}
+
+#Preview {
+    MainView()
+        .environmentObject(AppModel.main)
+        .environmentObject(CameraModel.main)
+        .environmentObject(LobbyModel.main)
+        .environmentObject(GalleryModel.main)
+        .environmentObject(PhotosModel.main)
+        .environmentObject(MetaModel.main)
+        .environmentObject(LocationModel.main)
+}
+
 //    func signInAnonymously() async {
 //        // Using Cloud Storage for Firebase requires the user be authenticated. Here we are using
 //        // anonymous authentication.
@@ -79,8 +92,6 @@ struct MainView: View {
 //            }
 //        }
 //    }
-
-}
 
 // navigation with app.path
 

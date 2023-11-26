@@ -1,4 +1,4 @@
-# [98-MoGallery](https://github.com/mobilelabclass-itp/98-MoGallery)
+# [98-MoGallery](https://github.com/molab-itp/98-MoGallery)
 
 MoGallery is a mobile app for students to quickly create their own mobile multi user experiences. It builds on the Apple SwiftUI tutorial that demonstrates access to the iOS Photo library and adds Google Firebase for multi user cloud storage features.
 
@@ -54,11 +54,21 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 ```
 
-## Plan:
+## Plan-Issues:
+
+[] Gallery does not refresh correctly on launch
 
 >> LimitedPicker nav view stays up after selection
 
 ## Log
+
+[x] Fix #Preview in MainView, need all environmentObject from MoGalleryApp
+
+[x] MapTabView, LocationModel
+[x] singleton pattern for accessing model classes
+    let cameraModel = CameraModel.main
+    lazy var lobbyModel = LobbyModel.main
+    ...
 
 [x] UserDetailView in MediaDetailView showInfoOverlay on authorEmail
 [x] image upload storage prefixed with -mo/storePrefix

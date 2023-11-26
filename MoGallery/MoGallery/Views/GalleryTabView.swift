@@ -225,29 +225,13 @@ struct MediaThumbView: View {
     }
 }
 
-//struct MediaCollectionView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        GalleryView()
-//    }
-//}
-
-//                    NavigationLink(value: "") {
-//                        Label(app.galleyTitle, systemImage: "rectangle.stack")
-
-//                    NavigationLink {
-//                        GalleryPickerView(galleryKeys: app.settings.galleryKeys,
-//                                          selection: $selection)
-//                    } label: {
-//                        Label(app.galleyTitle, systemImage: "rectangle.stack")
-//                            .labelStyle(.titleAndIcon)
-//                        // Label("Gallery List", systemImage: "rectangle.stack")
-//
-//                    }
-
-//  NavigationLink {
-//      MediaDetailView(lobbyModel: lobbyModel,
-//          item: item,
-//              priorSelection: app.settings.storeGalleryKey)
-//      } label: {
-//          MediaThumbView(item: item, itemSize: Self.itemSize)
-//  }
+#Preview {
+    GalleryTabView()
+        .environmentObject(AppModel.main)
+        .environmentObject(CameraModel.main)
+        .environmentObject(LobbyModel.main)
+        .environmentObject(GalleryModel.main)
+        .environmentObject(PhotosModel.main)
+        .environmentObject(MetaModel.main)
+        .environmentObject(LocationModel.main)
+}
