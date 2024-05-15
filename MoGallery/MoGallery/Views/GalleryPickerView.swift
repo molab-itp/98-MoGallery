@@ -38,7 +38,7 @@ struct GalleryPickerView: View {
                             }
                     }
                     .onDelete { (indices) in
-                        print("onDelete", indices)
+                        xprint("onDelete", indices)
                         app.removeGalleryKey(at: indices)
                         app.saveSettings()
                         galleryKeys = app.settings.galleryKeys
@@ -80,7 +80,7 @@ struct GalleryPickerView: View {
         .toolbar {
             ToolbarItemGroup(placement: .navigationBarTrailing) {
                 Button(action: {
-                    print("Show All action")
+                    xprint("Show All action")
                     if !showAll {
                         galleryKeysSettings = galleryKeys
                         galleryKeys = app.metaModel.allGalleryKeys()
@@ -103,15 +103,15 @@ struct GalleryPickerView: View {
         .navigationTitle( mode )
         .navigationBarTitleDisplayMode(.inline)
         // .onDisappear {
-        //  print("GalleryPickerView onDisappear")
+        //  xprint("GalleryPickerView onDisappear")
         // }
     }
     
     // GalleryPickerView dismissPicker
     private func dismissPicker() {
-        print("GalleryPickerView selection", selection ?? "-none-")
-        print("GalleryPickerView mediaItem", mediaItem ?? "-none-")
-        print("GalleryPickerView storeGalleryKey", app.settings.storeGalleryKey )
+        xprint("GalleryPickerView selection", selection ?? "-none-")
+        xprint("GalleryPickerView mediaItem", mediaItem ?? "-none-")
+        xprint("GalleryPickerView storeGalleryKey", app.settings.storeGalleryKey )
         if let selection {
             if let mediaItem, selection != app.settings.storeGalleryKey {
                 if mode == "Move to" {

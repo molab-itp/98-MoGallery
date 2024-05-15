@@ -49,7 +49,7 @@ struct MainView: View {
                 .tag(TabTag.settings)
         }
         .onAppear {
-            print("MainView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
+            xprint("MainView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
         }
     }
 
@@ -80,14 +80,14 @@ struct MainView: View {
 //    func signInAnonymously() async {
 //        // Using Cloud Storage for Firebase requires the user be authenticated. Here we are using
 //        // anonymous authentication.
-//        print("signInAnonymously", Auth.auth().currentUser ?? "no-user")
-//        print("uid", Auth.auth().currentUser?.uid ?? "")
+//        xprint("signInAnonymously", Auth.auth().currentUser ?? "no-user")
+//        xprint("uid", Auth.auth().currentUser?.uid ?? "")
 //        if Auth.auth().currentUser == nil {
 //            do {
 //                try await Auth.auth().signInAnonymously()
 //                authenticated = true
 //            } catch {
-//                print("Not able to connect: \(error)")
+//                xprint("Not able to connect: \(error)")
 //                authenticated = false
 //            }
 //        }

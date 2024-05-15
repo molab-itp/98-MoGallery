@@ -37,7 +37,7 @@ final class PhotosModel: ObservableObject {
     
     func nextRandomAsset() -> PhotoAsset? {
         guard let assets = photoCollection?.photoAssets, assets.count > 0 else {
-            print("nextRandomAsset no assets")
+            xprint("nextRandomAsset no assets")
             return nil
         }
         // reshuffle when we wrap around and avoid two of the same in a row
@@ -54,7 +54,7 @@ final class PhotosModel: ObservableObject {
         var index = selectionIndex
         selectionIndex = selectionIndex + 1
         index = selectionIndices[index % selectionIndices.count] % assets.count;
-        print("nextRandomAsset assets.count", assets.count, "index", index)
+        xprint("nextRandomAsset assets.count", assets.count, "index", index)
         selectionLast = index
         return assets[index]
     }
@@ -63,7 +63,7 @@ final class PhotosModel: ObservableObject {
         selectionIndex = 0
         selectionIndices = nil
         let albumName = app.settings.photoAlbum
-        print("PhotosModel refresh photoAlbum", albumName)
+        xprint("PhotosModel refresh photoAlbum", albumName)
         // !!@ app.photoLibLimited
         if albumName == "-Photo Library-" || app.photoLibLimited {
             photoCollection = PhotoCollection(self, smartAlbum: .smartAlbumUserLibrary)
@@ -90,17 +90,17 @@ final class PhotosModel: ObservableObject {
         for index in 0..<userCollections.count {
             let col = userCollections.object(at: index);
             let title = col.localizedTitle ?? ""
-            // print("PhotosModel  setup index=", index, "localizedTitle=", title, "id=", col.localIdentifier)
+            // xprint("PhotosModel  setup index=", index, "localizedTitle=", title, "id=", col.localIdentifier)
             arr.append(title)
         }
         let sortedItems = arr.sorted(by: { $0 < $1 })
         Task { @MainActor in
             self.albumNames = sortedItems
 //            for ent in albumNames {
-//                print(ent)
+//                xprint(ent)
 //            }
-            // print("PhotosModel albumNames", albumNames)
-            print("albumNames count", albumNames.count)
+            // xprint("PhotosModel albumNames", albumNames)
+            xprint("albumNames count", albumNames.count)
         }
     }
 
@@ -112,23 +112,23 @@ final class PhotosModel: ObservableObject {
                 let imageData = app.galleryModel.getSaveImageData(photoInfo: photoInfo)
                 if let imageData {
                     try await photoCollection!.addImage(imageData)
-                    print("PhotosModel Added data")
+                    xprint("PhotosModel Added data")
                 }
             } catch let error {
-                print("PhotosModel Failed Add data: \(error.localizedDescription)")
+                xprint("PhotosModel Failed Add data: \(error.localizedDescription)")
             }
         }
     }
 
     func loadPhotos() async {
         guard !isPhotosLoaded else {
-            print("loadPhotos isPhotosLoaded", isPhotosLoaded)
+            xprint("loadPhotos isPhotosLoaded", isPhotosLoaded)
             return
         }
         
         let authorized = await PhotoLibrary.checkAuthorization()
         guard authorized.0 else {
-            print("Photo library access was not authorized.")
+            xprint("Photo library access was not authorized.")
             return
         }
         app.photoLibLimited = authorized.1 == .limited
@@ -138,7 +138,7 @@ final class PhotosModel: ObservableObject {
                 try await self.photoCollection!.load()
                 await self.loadThumbnail()
             } catch let error {
-                print("Failed to load photo collection: \(error.localizedDescription)")
+                xprint("Failed to load photo collection: \(error.localizedDescription)")
             }
             self.isPhotosLoaded = true
         }

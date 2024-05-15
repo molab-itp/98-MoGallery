@@ -14,7 +14,7 @@ extension AppModel {
     func playVideo(url ref: String) {
         // https://bit.ly/swswift
         // https://jht1493.net/macr/mov/sample_640x360.mp4
-        print("playVideo url", ref)
+        xprint("playVideo url", ref)
         if ref.hasPrefix("https://youtu.be/") ||
             ref.hasPrefix("https://youtube.com/") ||
             ref.hasPrefix("https://www.youtube.com/"
@@ -26,7 +26,7 @@ extension AppModel {
         }
         else if ref.hasSuffix(".mp4") {
             guard let url = URL(string: ref) else {
-                print("playVideo url failed")
+                xprint("playVideo url failed")
                 return
             }
             videoPlayer = AVPlayer(url: url);
@@ -35,7 +35,7 @@ extension AppModel {
     }
     
     func playVideo(youTubeId ref: String) {
-        print("playVideo youTubeId ref", ref)
+        xprint("playVideo youTubeId ref", ref)
         // youTubePlayer = "https://youtube.com/watch?v=psL_5RIBqnY"
         youTubePlayer = YouTubePlayer(
             source: .video(id: ref),
@@ -47,7 +47,7 @@ extension AppModel {
     }
     
     func playVideo(youTubeUrl ref: String) {
-        print("playVideo youTubeUrl ref", ref)
+        xprint("playVideo youTubeUrl ref", ref)
         // https://youtube.com/watch?v=psL_5RIBqnY
         // https://youtu.be/-Vmv9BMv7AQ
         youTubePlayer = YouTubePlayer(
@@ -65,15 +65,15 @@ extension AppModel {
         options.isNetworkAccessAllowed = true
         manager.requestPlayerItem( forVideo: phAsset, options: options ) {
             playerItem, info in
-            print("playVideo playerItem", playerItem ?? "-nil-")
-            print("playVideo info", info ?? "-nil-")
+            xprint("playVideo playerItem", playerItem ?? "-nil-")
+            xprint("playVideo info", info ?? "-nil-")
             self.videoPlayer = AVPlayer(playerItem: playerItem)
             self.videoPlayer?.play()
         }
     }
     
     func stopVideo() {
-        print("videoStop")
+        xprint("videoStop")
         youTubePlayer = nil
         videoPlayer = nil
     }

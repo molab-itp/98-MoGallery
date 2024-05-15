@@ -113,7 +113,7 @@ struct PhotoDetailView: View {
         //        }
         .task {
             guard image == nil, let cache = cache else { return }
-            print("PhotoDetailView isVideoMediaType", asset.isVideoMediaType)
+            xprint("PhotoDetailView isVideoMediaType", asset.isVideoMediaType)
             if let phAsset = asset.phAsset, asset.isVideoMediaType {
                 app.playVideo(phAsset: phAsset)
             }
@@ -128,13 +128,13 @@ struct PhotoDetailView: View {
             }
         }
         .onAppear {
-            print("PhotoDetailView onAppear")
+            xprint("PhotoDetailView onAppear")
             if let phAsset = asset.phAsset {
                 lobbyModel.locsForUsers(firstLoc: phAsset.loc)
             }
         }
         .onDisappear {
-            print("PhotoDetailView onDisappear")
+            xprint("PhotoDetailView onDisappear")
             app.stopVideo()
         }
     }

@@ -46,7 +46,13 @@ struct GalleryTabView: View {
                         MetaDetailView(metaEntry: metaEntry)
                     } label: {
                         VStack {
-                            Text(galleryModel.countDisplayText())
+                            HStack {
+                                Text(metaEntry.galleryName)
+                                    .padding(.leading)
+                                Spacer()
+                                Text(galleryModel.countDisplayText())
+                                    .padding(.trailing)
+                            }
                             if  !metaEntry.caption.isEmpty {
                                 Text(metaEntry.caption)
                                     .lineLimit(1)
@@ -147,7 +153,7 @@ struct GalleryTabView: View {
     private func addRandomMedia() {
         Task {
             guard let asset = app.photosModel.nextRandomAsset() else {
-                print("GalleryView no assets")
+                xprint("GalleryView no assets")
                 return
             }
             galleryModel.addGalleryAsset(phAsset: asset.phAsset)

@@ -28,7 +28,7 @@ struct MapTabView: View {
                         }
                         .onTapGesture {
                             withAnimation {
-                                print("nextLocAction withAnimation")
+                                xprint("nextLocAction withAnimation")
                                 model.setLocation(loc)
                             }
                         }
@@ -39,10 +39,10 @@ struct MapTabView: View {
                 bottomInfo()
             }
             .onAppear {
-//                print("MapTabView onAppear locations", model.locations)
+//                xprint("MapTabView onAppear locations", model.locations)
             }
             .onChange(of: model.region ) { _ in
-//                print("MapTabView onAppear region", model.region)
+//                xprint("MapTabView onAppear region", model.region)
             }
             // .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -102,17 +102,17 @@ struct MapTabView: View {
     }
     
     func restoreLocAction() {
-        print("nextLocAction")
+        xprint("nextLocAction")
         withAnimation {
-            print("nextLocAction withAnimation")
+            xprint("nextLocAction withAnimation")
             model.restoreLocation()
         }
     }
     
     func nextLocAction() {
-        print("nextLocAction")
+        xprint("nextLocAction")
         withAnimation {
-            print("nextLocAction withAnimation")
+            xprint("nextLocAction withAnimation")
             model.nextLocation()
         }
     }

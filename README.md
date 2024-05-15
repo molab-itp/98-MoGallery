@@ -56,11 +56,40 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 ## Plan-Issues:
 
-[] Gallery does not refresh correctly on launch
 
->> LimitedPicker nav view stays up after selection
+[] LimitedPicker nav view stays up after selection
+
+[] earlier photo progress view needed for add random
+
+[] Thread Performance Checker: Thread running at User-initiated quality-of-service 
+    class waiting on a thread without a QoS class specified (base priority 33). 
+    Investigate ways to avoid priority inversions
+    --
+    https://github.com/firebase/firebase-ios-sdk/issues/12883
+    FirebaseDatabase Thread Performance Checker warning #12883
 
 ## Log
+
+# --
+
+v92
+
+- Added @MainActor func receiveSnapShot
+>> Added @MainActor on snapshot -- no affect
+@MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+
+v91
+
+[x] func xprint
+
+[x] show gallery name
+
+[x] Gallery does not refresh correctly on launch
+    setCurrentUser app.refreshModels
+    set currentUser
+    func setCurrentUser(_ nuser: UserModel?) {
+
+# --
 
 [x] Fix #Preview in MainView, need all environmentObject from MoGalleryApp
 
@@ -83,7 +112,7 @@ https://developer.apple.com/documentation/photokit/phphotolibrary/3752108-presen
 https://stackoverflow.com/questions/63870238/how-to-call-phphotolibrary-presentlimitedlibrarypicker-from-swiftui
 
 [x] return tuple (authorized, limited) from PhotoLibrary.checkAuthorization
-print("Photo library access limited. 2023")
+xprint("Photo library access limited. 2023")
 let authorized = await PhotoLibrary.checkAuthorization()
     var photoLibLimited = false;
 
@@ -147,8 +176,8 @@ modify to use cgImageRepresentation() to control resolution of image
 Not sure how to get rid of entitlements file
 
 >> on iphone13 photo capture test:
-      print("photoDimensions", photoDimensions)
-      print("previewDimensions", previewDimensions)
+      xprint("photoDimensions", photoDimensions)
+      xprint("previewDimensions", previewDimensions)
 photoDimensions CMVideoDimensions(width: 4032, height: 3024)
 previewDimensions CMVideoDimensions(width: 852, height: 640)
 
@@ -164,6 +193,9 @@ I added [tutorial] which opens useless xcode browser link preview
 >> needed to add Info.plist in xcode to allow for camera and photo library access
 >> not sure how to do this via "Signing & Capabilities"
 
+# --
+
+2023-12-30 13:25:36
 Update 2023-02-02
 
 ```

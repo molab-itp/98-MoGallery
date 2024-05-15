@@ -5,6 +5,11 @@
 import SwiftUI
 import Firebase
 
+func xprint(_ args:Any...) {
+    //    print( args )
+//    debugPrint( args )
+}
+
 // Init firebase and signIn on view appear
 
 @main
@@ -34,13 +39,13 @@ struct MoGalleryApp: App {
                 .environmentObject(MetaModel.main)
                 .environmentObject(LocationModel.main)
                 .onAppear {
-                    print("MoGalleryApp onAppear")
+                    xprint("MoGalleryApp onAppear")
                     // For UIApplicationDelegateAdaptor must refreshModels here
                     // app.refreshModels()
                     app.lobbyModel.signIn()
                 }
                 .onDisappear {
-                    print("MoGalleryApp onDisappear")
+                    xprint("MoGalleryApp onDisappear")
                 }
         }
     }
@@ -72,3 +77,8 @@ fileprivate extension UINavigationBar {
 //
 // https://peterfriese.dev/posts/swiftui-new-app-lifecycle-firebase/
 // recommends: Start using the SwiftUI App Life Cycle
+
+/*
+ 2023-12-30 13:39:44
+
+ */

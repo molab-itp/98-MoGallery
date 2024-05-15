@@ -19,7 +19,7 @@ extension GalleryModel {
         
         guard let lobbyRef = app.lobbyModel.lobbyRef else { return }
         guard let user = app.lobbyModel.currentUser else {
-            print("uploadImageData no currentUser");
+            xprint("uploadImageData no currentUser");
             return
         }
         // upload filepath is userid/uploadCount.jpeg
@@ -30,7 +30,7 @@ extension GalleryModel {
         values["uploadCount"] = ServerValue.increment(1);
         lobbyRef.child(uid).updateChildValues(values) { error, ref in
             if let error = error {
-                print("uploadImageData uploadCount error: \(error).")
+                xprint("uploadImageData uploadCount error: \(error).")
             }
         }
         // !!@ May get out of sync with users logged in multiple times
@@ -53,10 +53,10 @@ extension GalleryModel {
         
         storageRef.putData(imageData, metadata: metadata) { metadata, error in
             guard let metad = metadata else {
-                print("uploadImageData no metadata")
+                xprint("uploadImageData no metadata")
                 return
             }
-            print("uploadImageData metad size", metad.size)
+            xprint("uploadImageData metad size", metad.size)
             // You can also access to download URL after upload.
             self.fetchDownloadURL(storageRef,
                                   storagePath: filePath,
@@ -76,10 +76,10 @@ extension GalleryModel {
         
         storageRef.downloadURL { url, error in
             guard let downloadURL = url else {
-                print("fetchDownloadURL download URL error : \(error.debugDescription)")
+                xprint("fetchDownloadURL download URL error : \(error.debugDescription)")
                 return
             }
-            // print("fetchDownloadURL download url:\n \(downloadURL) ")
+            // xprint("fetchDownloadURL download url:\n \(downloadURL) ")
             
             var values: [String: Any] = [:];
             values["mediaPath"] = downloadURL.description;
@@ -111,10 +111,10 @@ extension GalleryModel {
         let storageRefFullRez = storage.reference(withPath: filePathFullRez)
         storageRefFullRez.putData(fullRezData, metadata: metadata) { metadata, error in
             guard let metad = metadata else {
-                print("putFullRezData no metadata")
+                xprint("putFullRezData no metadata")
                 return
             }
-            print("putFullRezData metad size", metad.size)
+            xprint("putFullRezData metad size", metad.size)
             // You can also access to download URL after upload.
             self.fetchDownloadURL_FullRez(storageRefFullRez,
                                           info: info,
@@ -130,10 +130,10 @@ extension GalleryModel {
         
         storageRefFullRez.downloadURL { url, error in
             guard let downloadURL = url else {
-                print("fetchDownloadURL_FullRez download URL error : \(error.debugDescription)")
+                xprint("fetchDownloadURL_FullRez download URL error : \(error.debugDescription)")
                 return
             }
-            // print("fetchDownloadURL download url:\n \(downloadURL) ")
+            // xprint("fetchDownloadURL download url:\n \(downloadURL) ")
             
             var nvalues = values;
             nvalues["mediaPathFullRez"] = downloadURL.description;
@@ -159,7 +159,7 @@ extension GalleryModel {
         values["isFavorite"] = media.isFavorite;
         galleryRef.child(media.id).updateChildValues(values) { error, ref in
             if let error = error {
-                print("updateMediaEntry updateChildValues error: \(error).")
+                xprint("updateMediaEntry updateChildValues error: \(error).")
             }
         }
     }
@@ -170,11 +170,11 @@ extension GalleryModel {
                           galleryKey: String,
                           user: UserModel? ) {
         
-        print("createMediaEntry storagePath", info["storagePath"] ?? "-nil-")
-        print("createMediaEntry user", user ?? "-nil-")
+        xprint("createMediaEntry storagePath", info["storagePath"] ?? "-nil-")
+        xprint("createMediaEntry user", user ?? "-nil-")
         
         guard let galleryRef else { return }
-        guard let user else { print("createMediaEntry no user"); return }
+        guard let user else { xprint("createMediaEntry no user"); return }
         
         let date = Date()
         var values = values;
@@ -186,7 +186,7 @@ extension GalleryModel {
         values["info"] = info;
         
         guard let key = galleryRef.childByAutoId().key else {
-            print("createMediaEntry no key");
+            xprint("createMediaEntry no key");
             return
         }
         
@@ -200,18 +200,18 @@ extension GalleryModel {
             
             let userGalleryRef = dbGalleryRef(key: userGalleryKey)
             guard let userGalleryRef else {
-                print("createMediaEntry no userGalleryRef")
+                xprint("createMediaEntry no userGalleryRef")
                 return
             }
             guard let userGalleryChildId = userGalleryRef.childByAutoId().key else {
-                print("createMediaEntry no userGalleryChildId")
+                xprint("createMediaEntry no userGalleryChildId")
                 return
             }
             var nvalues = values;
             nvalues["homeRef"] = [galleryKey, key]
             userGalleryRef.child(userGalleryChildId).updateChildValues(nvalues) { error, ref in
                 if let error = error {
-                    print("createMediaEntry userGalleryRef updateChildValues error: \(error).")
+                    xprint("createMediaEntry userGalleryRef updateChildValues error: \(error).")
                 }
             }
             values["userGalleryChildId"] = userGalleryChildId;
@@ -219,7 +219,7 @@ extension GalleryModel {
         
         galleryRef.child(key).updateChildValues(values) { error, ref in
             if let error = error {
-                print("createMediaEntry updateChildValues error: \(error).")
+                xprint("createMediaEntry updateChildValues error: \(error).")
             }
         }
         
@@ -266,7 +266,7 @@ extension GalleryModel {
     // Move the mediaItem to another gallery named galleryKey
     func moveMediaEntry(galleryKey: String, mediaItem: MediaModel) {
         
-        print("moveMediaEntry galleryKey", galleryKey, "mediaItem", mediaItem)
+        xprint("moveMediaEntry galleryKey", galleryKey, "mediaItem", mediaItem)
         
         deleteMediaEntry(mediaItem: mediaItem)
         

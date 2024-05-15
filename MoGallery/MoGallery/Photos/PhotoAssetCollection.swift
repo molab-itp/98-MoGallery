@@ -23,9 +23,9 @@ class PhotoAssetCollection: RandomAccessCollection {
             return asset
         }
         // !!@ Getting null obj exception here sometimes
-        // print("PhotoAssetCollection subscript", position, "count", fetchResult.count)
+        // xprint("PhotoAssetCollection subscript", position, "count", fetchResult.count)
         if position < 0 || position >= fetchResult.count {
-            print("PhotoAssetCollection subscript", position, "count", fetchResult.count)
+            xprint("PhotoAssetCollection subscript", position, "count", fetchResult.count)
             return PhotoAsset(identifier: "")
         }
         let asset = PhotoAsset(phAsset: fetchResult.object(at: position), index: position)

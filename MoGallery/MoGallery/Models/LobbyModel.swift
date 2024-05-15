@@ -32,12 +32,13 @@ class LobbyModel: ObservableObject {
 //    @Published var mapRegion = MapRegionModel()
     @Published var locationModel = LocationModel.main
 
+    @Published var currentUser: UserModel?
+
     var locations: [Location] = [];
     
     static let main = LobbyModel()
     lazy var app = AppModel.main;
     
-    var currentUser: UserModel?
     
     var uid: String! {
         currentUser?.id
@@ -65,15 +66,15 @@ class LobbyModel: ObservableObject {
     }
 
     func signIn() {
-        print("LobbyModel signIn", state)
+        xprint("LobbyModel signIn", state)
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            print("LobbyModel signIn restorePreviousSignIn", state)
+            xprint("LobbyModel signIn restorePreviousSignIn", state)
             
             GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
                 authenticateUser(for: user, with: error)
             }
         } else {
-            print("LobbyModel signIn GIDConfiguration", state)
+            xprint("LobbyModel signIn GIDConfiguration", state)
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
             guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
             
@@ -85,7 +86,7 @@ class LobbyModel: ObservableObject {
     
     func authenticateUser(for user: GIDGoogleUser?, with error: Error?) {
         if let error = error {
-            print("authenticateUser error 1", error.localizedDescription)
+            xprint("authenticateUser error 1", error.localizedDescription)
             return
         }
         guard let idToken = user!.idToken?.tokenString else { return  };
@@ -94,7 +95,7 @@ class LobbyModel: ObservableObject {
 
         Auth.auth().signIn(with: credential) { [unowned self] (_, error) in
             if let error = error {
-                print("authenticateUser error 2", error.localizedDescription)
+                xprint("authenticateUser error 2", error.localizedDescription)
             } else {
                 setSignedIn()
             }
@@ -111,16 +112,16 @@ class LobbyModel: ObservableObject {
 //                try Auth.auth().signInAnonymously()
 //                setSignedIn()
 //            } catch {
-//                print("Not able to connect: \(error)")
+//                xprint("Not able to connect: \(error)")
 //            }
         }
     }
 
     func setSignedIn() {
-        print("setSignedIn state", state)
+        xprint("setSignedIn state", state)
         if state != .signedIn {
             state = .signedIn
-            print("setSignedIn set signedIn", state)
+            xprint("setSignedIn set signedIn", state)
             updateCurrentUser()
             // All Firebase references need to be refreshed when moving from logged out state
             // galleryModel countMine depends on current user uid
@@ -135,9 +136,28 @@ class LobbyModel: ObservableObject {
         do {
             try Auth.auth().signOut()
             state = .signedOut
-            currentUser = nil
+//            currentUser = nil
+            setCurrentUser(nil);
+            xprint("set currentUser nil")
         } catch {
-            print("signOut error", error.localizedDescription)
+            xprint("signOut error", error.localizedDescription)
+        }
+    }
+    
+    func setCurrentUser(_ nuser: UserModel?) {
+        var diff = true;
+        if let nuser, let currentUser {
+            diff = nuser.id != currentUser.id
+        }
+        if (diff) {
+            xprint("setCurrentUser diff currentUser", currentUser ?? "-none-", "nuser", nuser ?? "-none-")
+        }
+        currentUser = nuser;
+        
+        // If we are showing a new user, refresh the app models
+        if (diff) {
+            xprint("setCurrentUser app.refreshModels")
+            app.refreshModels();
         }
     }
         
@@ -161,20 +181,20 @@ class LobbyModel: ObservableObject {
         values["dateIn"] = dateIn;
         values["uploadCount"] = 0
 
-        print("updateCurrentUser id", id)
-        // print("value", values);
+        xprint("updateCurrentUser id", id)
+        // xprint("value", values);
 
         // !!@ Fails to get single value as documented
 //        let childRef = lobbyRef.child("/\(id)/uploadCount")
 //        let childRef = lobbyRef.child(id).child("uploadCount")
 //        childRef.getData() { error, snapshot in
 //            guard error == nil else {
-//                print(" getData error",error!.localizedDescription)
+//                xprint(" getData error",error!.localizedDescription)
 //                return;
 //            }
-//            print("getData snapshot", snapshot ?? "-nil-");
+//            xprint("getData snapshot", snapshot ?? "-nil-");
 //            if let num = snapshot?.value as? Int {
-//                print("getData num", num);
+//                xprint("getData num", num);
 //            }
 //        }
         // Current user location is update on each login check
@@ -186,31 +206,33 @@ class LobbyModel: ObservableObject {
         // Get user info and prepare to update
         lobbyRef.getData() { error, snapshot in
             guard error == nil else {
-                print("postUser getData error",error!.localizedDescription)
+                xprint("postUser getData error",error!.localizedDescription)
                 return;
             }
-            // print("updateCurrentUser snapshot", snapshot ?? "-nil-");
+            // xprint("updateCurrentUser snapshot", snapshot ?? "-nil-");
             if let users = snapshot?.value as? [String: Any] {
                 if let user = users[id] as? [String: Any] {
-                    print("updateCurrentUser user uploadCount", user["uploadCount"] ?? "-nil-");
+                    xprint("updateCurrentUser user uploadCount", user["uploadCount"] ?? "-nil-");
                     values["uploadCount"] = user["uploadCount"] as? Int ?? 0
                     values["activeCount"] = ServerValue.increment(1);
                 }
             }
-            // print("updateCurrentUser values", values);
+            // xprint("updateCurrentUser values", values);
             
             // Update db user properies
             lobbyRef.child(id).updateChildValues(values) { error, ref in
                 if let error = error {
-                    print("postUser updateChildValues error: \(error).")
+                    xprint("postUser updateChildValues error: \(error).")
                 }
             }
-            self.currentUser = UserModel(id: id, dict: values)
+//            self.currentUser = UserModel(id: id, dict: values)
+            self.setCurrentUser(UserModel(id: id, dict: values));
+            xprint("set currentUser UserModel id", id)
         }
     }
     
     func updateUser(user: UserModel) {
-        print("updateUser updateUser", updateUser)
+        xprint("updateUser updateUser", updateUser)
         guard let lobbyRef else { return }
         
         var values:[String : Any] = [:];
@@ -218,43 +240,48 @@ class LobbyModel: ObservableObject {
         values["stats"] = user.stats
         lobbyRef.child(user.id).updateChildValues(values) { error, ref in
             if let error = error {
-                print("updateUser updateChildValues error: \(error).")
+                xprint("updateUser updateChildValues error: \(error).")
             }
         }
     }
     
     func observeStart() {
         guard let lobbyRef else { return }
-        print("observeUsersStart usersHandle", lobbyHandle ?? "nil")
+        xprint("observeUsersStart usersHandle", lobbyHandle ?? "nil")
         if lobbyHandle != nil {
             return;
         }
-        lobbyHandle = lobbyRef.observe(.value, with: { snapshot in
-            // print("observeUsersStart snapshot", snapshot)
-            guard let snapUsers = snapshot.value as? [String: [String: Any]] else {
-                print("LobbyModel users EMPTY")
-                self.users = []
-                return
+        lobbyHandle = lobbyRef.observe(.value, with: { snapshot   in
+            Task {
+                await self.receiveSnapShot(snapshot)
             }
-            let items = snapUsers.compactMap { UserModel(id: $0, dict: $1) }
-            let sortedItems = items.sorted(by: { $0.dateIn > $1.dateIn })
-            self.users = sortedItems;
-            // print("observeUsersStart users", self.users)
-            // Update current user check
-            if let user = self.currentUser {
-                if let nuser = sortedItems.first(where: { $0.id == user.id } ) {
-                    print("LobbyModel currentUser nuser", nuser)
-                    self.currentUser = nuser
-                }
-            }
-            print("LobbyModel users.count", self.users.count)
-            self.locsForUsers(firstLoc: nil)
         })
+    }
+    
+    @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+        // xprint("LobbyModel receiveSnapShot snapshot", snapshot)
+        guard let snapUsers = snapshot.value as? [String: [String: Any]] else {
+            xprint("LobbyModel users EMPTY")
+            self.users = []
+            return
+        }
+        let items = snapUsers.compactMap { UserModel(id: $0, dict: $1) }
+        let sortedItems = items.sorted(by: { $0.dateIn > $1.dateIn })
+        users = sortedItems;
+        // Update current user check
+        if let user = currentUser {
+            if let nuser = sortedItems.first(where: { $0.id == user.id } ) {
+                setCurrentUser( nuser );
+                xprint("set currentUser LobbyModel nuser.id", nuser.id )
+            }
+        }
+        xprint("LobbyModel users.count", users.count)
+        locsForUsers(firstLoc: nil)
     }
     
     func observeStop() {
         guard let lobbyRef else { return }
-        print("observeUsersStop usersHandle", lobbyHandle ?? "nil")
+        xprint("observeUsersStop usersHandle", lobbyHandle ?? "nil")
         if let refHandle = lobbyHandle {
             lobbyRef.removeObserver(withHandle: refHandle)
             lobbyHandle = nil;
@@ -262,7 +289,7 @@ class LobbyModel: ObservableObject {
     }
     
     func locsForUsers(firstLoc: Location?) {
-        print("locsForUsers firstLoc", firstLoc ?? "-nil-")
+        xprint("locsForUsers firstLoc", firstLoc ?? "-nil-")
         var locs = [Location]()
         if let firstLoc {
             locs.append(firstLoc)

@@ -53,7 +53,7 @@ class CameraCapture: NSObject {
     private var captureDevice: AVCaptureDevice? {
         didSet {
             guard let captureDevice = captureDevice else { return }
-            print("Using capture device: \(captureDevice.localizedName)")
+            xprint("Using capture device: \(captureDevice.localizedName)")
             sessionQueue.async {
                 self.updateSessionForCaptureDevice(captureDevice)
             }
@@ -127,7 +127,7 @@ class CameraCapture: NSObject {
             let captureDevice = captureDevice,
             let deviceInput = try? AVCaptureDeviceInput(device: captureDevice)
         else {
-            print("Failed to obtain video input.")
+            xprint("Failed to obtain video input.")
             return
         }
         
@@ -139,15 +139,15 @@ class CameraCapture: NSObject {
         videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "VideoDataOutputQueue"))
   
         guard captureSession.canAddInput(deviceInput) else {
-            print("Unable to add device input to capture session.")
+            xprint("Unable to add device input to capture session.")
             return
         }
         guard captureSession.canAddOutput(photoOutput) else {
-            print("Unable to add photo output to capture session.")
+            xprint("Unable to add photo output to capture session.")
             return
         }
         guard captureSession.canAddOutput(videoOutput) else {
-            print("Unable to add video output to capture session.")
+            xprint("Unable to add video output to capture session.")
             return
         }
         
@@ -173,19 +173,19 @@ class CameraCapture: NSObject {
     private func checkAuthorization() async -> Bool {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
-            print("Camera access authorized.")
+            xprint("Camera access authorized.")
             return true
         case .notDetermined:
-            print("Camera access not determined.")
+            xprint("Camera access not determined.")
             sessionQueue.suspend()
             let status = await AVCaptureDevice.requestAccess(for: .video)
             sessionQueue.resume()
             return status
         case .denied:
-            print("Camera access denied.")
+            xprint("Camera access denied.")
             return false
         case .restricted:
-            print("Camera library access restricted.")
+            xprint("Camera library access restricted.")
             return false
         @unknown default:
             return false
@@ -197,7 +197,7 @@ class CameraCapture: NSObject {
         do {
             return try AVCaptureDeviceInput(device: validDevice)
         } catch let error {
-            print("Error getting capture device input: \(error.localizedDescription)")
+            xprint("Error getting capture device input: \(error.localizedDescription)")
             return nil
         }
     }
@@ -234,7 +234,7 @@ class CameraCapture: NSObject {
     func start() async {
         let authorized = await checkAuthorization()
         guard authorized else {
-            print("Camera access was not authorized.")
+            xprint("Camera access was not authorized.")
             return
         }
         
@@ -336,7 +336,7 @@ extension CameraCapture: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
         
         if let error = error {
-            print("Error capturing photo: \(error.localizedDescription)")
+            xprint("Error capturing photo: \(error.localizedDescription)")
             return
         }
         

@@ -15,7 +15,7 @@ extension AppModel {
     
     func toGalleryTab() {
         selectedTab = .gallery
-        print("toGalleryTab galleryModel.path", galleryModel.path)
+        xprint("toGalleryTab galleryModel.path", galleryModel.path)
         while !galleryModel.path.isEmpty {
             galleryModel.path.removeLast()
         }

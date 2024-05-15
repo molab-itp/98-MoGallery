@@ -39,7 +39,7 @@ struct LobbyView: View {
             }
         }
         .onAppear {
-            print("LobbyView onAppear")
+            xprint("LobbyView onAppear")
             app.lobbyModel.locsForUsers(firstLoc: nil)
         }
     }
@@ -122,7 +122,7 @@ struct LobbyView: View {
             Spacer()
         }
 //        .onTapGesture {
-//            print("userListView onTapGesture user", user)
+//            xprint("userListView onTapGesture user", user)
 //            app.setStoreGallery(key: user.userGalleryKey)
 //            app.toGalleryTab()
 //        }
@@ -151,7 +151,7 @@ struct LocationRow: View {
 
 // .cornerRadius(8)
 // .onTapGesture {
-//      print("userListView AsyncImage onTapGesture user", user)
+//      xprint("userListView AsyncImage onTapGesture user", user)
 //      app.setStoreGallery(key: user.userGalleryKey)
 //      app.selectedTab = .gallery
 //  }

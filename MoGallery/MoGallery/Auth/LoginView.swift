@@ -55,10 +55,10 @@ Don't worry, be sharing happy!
             }
         }
         .onAppear {
-            print("LoginView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
+            xprint("LoginView onAppear currentUser", lobbyModel.currentUser?.email ?? "-none-")
         }
         .onDisappear {
-            print("LoginView onDisappear")
+            xprint("LoginView onDisappear")
             app.locationManager.requestUse();
         }
     }

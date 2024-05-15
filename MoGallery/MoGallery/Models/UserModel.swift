@@ -31,7 +31,7 @@ class UserModel: ObservableObject, Identifiable {
     var userGalleryKey: String {
         let nemail = email.replacingOccurrences(of: ".", with: "-")
         let str = "zu-\( id )-\( nemail )"
-        // print("userGalleryKey", str)
+        // xprint("userGalleryKey", str)
         return str
     }
     

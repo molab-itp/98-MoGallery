@@ -15,7 +15,7 @@ struct GoogleSignInButton: UIViewRepresentable {
     
     func makeUIView(context: Context) -> GIDSignInButton {
         button.colorScheme = colorScheme == .dark ? .dark : .light
-        print("GoogleSignInButton button.frame", button.frame)
+        xprint("GoogleSignInButton button.frame", button.frame)
         // var frame = button.frame
         // button.frame = CGRect(x:frame.minX,y:frame.minY,width: frame.width,height: frame.height)
         return button

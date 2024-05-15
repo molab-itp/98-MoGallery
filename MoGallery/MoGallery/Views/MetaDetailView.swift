@@ -27,7 +27,7 @@ struct MetaDetailView: View {
             }
         }
         .onDisappear {
-            print("MetaDetailView onDisappear")
+            xprint("MetaDetailView onDisappear")
             metaModel.update(metaEntry: metaEntry);
         }
     }

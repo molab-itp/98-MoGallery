@@ -14,10 +14,10 @@ import SwiftUI
 extension GalleryModel {
     
     func addGalleryAsset(phAsset: PHAsset?) {
-        print("addGalleryAsset phAsset", phAsset ?? "-none-")
+        xprint("addGalleryAsset phAsset", phAsset ?? "-none-")
         guard let phAsset = phAsset else { return }
-        print("addGalleryAsset phAsset.location", phAsset.location as Any)
-        print("addGalleryAsset phAsset.mediaType", phAsset.mediaType.rawValue)
+        xprint("addGalleryAsset phAsset.location", phAsset.location as Any)
+        xprint("addGalleryAsset phAsset.mediaType", phAsset.mediaType.rawValue)
         
         // var targetSize = PHImageManagerMaximumSize
         let fullRezSize:CGSize = CGSize(width: phAsset.pixelWidth, height: phAsset.pixelHeight)
@@ -48,13 +48,13 @@ extension GalleryModel {
                       options: PHImageRequestOptions?,
                       phAsset: PHAsset,
                       attempts: Int) {
-        print("requestImage targetSize", targetSize)
+        xprint("requestImage targetSize", targetSize)
         manager.requestImage(for: phAsset, targetSize: targetSize,
                              contentMode:PHImageContentMode.default, options: options)
         { (image:UIImage?, info) in
             guard let image = image else {
-                print("requestImage no image. attempts", attempts)
-                print("requestImage no image. info", info ?? "-nil-")
+                xprint("requestImage no image. attempts", attempts)
+                xprint("requestImage no image. info", info ?? "-nil-")
                 if attempts > 0 {
                     let options = PHImageRequestOptions()
                     options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
@@ -69,9 +69,9 @@ extension GalleryModel {
                 }
                 return
             }
-            print("requestImage image.size", image.size)
+            xprint("requestImage image.size", image.size)
             guard let imageData = image.jpegData(compressionQuality: 1) else {
-                print("requestImage jpegData failed")
+                xprint("requestImage jpegData failed")
                 return;
             }
             if self.app.settings.storeFullRez {
@@ -104,13 +104,13 @@ extension GalleryModel {
                         options: PHImageRequestOptions?,
                         phAsset: PHAsset,
                         attempts: Int) {
-        print("requestFullRez fullRezSize", fullRezSize)
+        xprint("requestFullRez fullRezSize", fullRezSize)
         manager.requestImage(for: phAsset, targetSize: fullRezSize,
                              contentMode:PHImageContentMode.default, options: options)
         { ( fullRezImage:UIImage?, info) in
             guard let fullRezImage = fullRezImage else {
-                print("requestFullRez no image. attempts", attempts)
-                print("requestFullRez no image. info", info ?? "-nil-")
+                xprint("requestFullRez no image. attempts", attempts)
+                xprint("requestFullRez no image. info", info ?? "-nil-")
                 if attempts > 0 {
                     let options = PHImageRequestOptions()
                     options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
@@ -130,9 +130,9 @@ extension GalleryModel {
                 return
             }
             // in fastFormat we may get back much smaller image
-            print("requestFullRez fullRezImage.size", fullRezImage.size)
+            xprint("requestFullRez fullRezImage.size", fullRezImage.size)
             guard let fullRezData = fullRezImage.jpegData(compressionQuality: 1) else {
-                print("requestFullRez jpegData failed")
+                xprint("requestFullRez jpegData failed")
                 return;
             }
             self.requestImageUpload(phAsset: phAsset,
@@ -151,7 +151,7 @@ extension GalleryModel {
         let sourceId = phAsset.localIdentifier;
         let sourceDate = phAsset.creationDate?.description ?? ""
         let imageSize = image.size;
-        print("requestImageUpload imageSize", imageSize)
+        xprint("requestImageUpload imageSize", imageSize)
         var info:[String: Any] = [
             "sourceId": sourceId,
             "sourceDate": sourceDate,
@@ -180,7 +180,7 @@ extension GalleryModel {
             mediaType = "unknown"
         }
         info["mediaType"] = mediaType
-        print("requestImageUpload mediaType", mediaType)
+        xprint("requestImageUpload mediaType", mediaType)
         if phAsset.isFavorite {
             info["isFavorite"] = true
         }
@@ -199,7 +199,7 @@ extension GalleryModel {
 } // extension GalleryModel
 
 func export(phAsset: PHAsset) {
-    print("export phAsset", phAsset)
+    xprint("export phAsset", phAsset)
     
     let manager = PHImageManager.default()
         
@@ -210,22 +210,22 @@ func export(phAsset: PHAsset) {
     _ = manager.requestAVAsset(
         forVideo: phAsset,
         options: options) { avasset, audioMix, info in
-            print("export phAsset avasset", avasset ?? "-nil-")
-            print("export phAsset info", info ?? "-nil-")
+            xprint("export phAsset avasset", avasset ?? "-nil-")
+            xprint("export phAsset info", info ?? "-nil-")
             let dirUrl = FileManager.documentsDirectory.appending(path: "videos", directoryHint: .isDirectory)
             let filem = FileManager.default
             do {
                 try filem.createDirectory(at: dirUrl, withIntermediateDirectories: true)
             }
             catch {
-                print("export createDirectory error", error)
+                xprint("export createDirectory error", error)
             }
             let outputUrl = dirUrl.appendingPathComponent("export-1.mp4")
             do {
                 try filem.removeItem(at: outputUrl)
             }
             catch {
-                print("export removeItem error", error)
+                xprint("export removeItem error", error)
             }
             if let avasset {
                 Task {
@@ -247,14 +247,14 @@ func export(video: AVAsset,
     guard await AVAssetExportSession.compatibility(ofExportPreset: preset,
                                                    with: video,
                                                    outputFileType: outputFileType) else {
-        print("The preset can't export the video to the output file type.")
+        xprint("The preset can't export the video to the output file type.")
         return
     }
 
     // Create and configure the export session.
     guard let exportSession = AVAssetExportSession(asset: video,
                                                    presetName: preset) else {
-        print("Failed to create export session.")
+        xprint("Failed to create export session.")
         return
     }
     exportSession.outputFileType = outputFileType
@@ -263,7 +263,7 @@ func export(video: AVAsset,
     // Convert the video to the output file type and export it to the output URL.
     await exportSession.export()
     
-    print("export(video outputURL", outputURL)
+    xprint("export(video outputURL", outputURL)
 }
 
 // https://developer.apple.com/documentation/avfoundation/avassetexportsession/export_presets

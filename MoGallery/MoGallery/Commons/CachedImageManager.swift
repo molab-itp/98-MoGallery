@@ -66,10 +66,10 @@ actor CachedImageManager {
         
         let requestID = imageManager.requestImage(for: phAsset, targetSize: targetSize, contentMode: imageContentMode, options: requestOptions) { image, info in
             if let error = info?[PHImageErrorKey] as? Error {
-                print("CachedImageManager requestImage error: \(error.localizedDescription)")
+                xprint("CachedImageManager requestImage error: \(error.localizedDescription)")
                 completion(nil)
             } else if let cancelled = (info?[PHImageCancelledKey] as? NSNumber)?.boolValue, cancelled {
-                print("CachedImageManager request canceled")
+                xprint("CachedImageManager request canceled")
                 completion(nil)
             } else if let image = image {
                 let isLowerQualityImage = (info?[PHImageResultIsDegradedKey] as? NSNumber)?.boolValue ?? false

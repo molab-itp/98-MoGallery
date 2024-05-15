@@ -64,11 +64,11 @@ struct UserDetailView: View {
             }
         }
         .onAppear {
-            print("UserDetailView onAppear")
+            xprint("UserDetailView onAppear")
             lobbyModel.locsForUsers(firstLoc: user.loc)
         }
         .onDisappear {
-            print("UserDetailView onDisappear")
+            xprint("UserDetailView onDisappear")
             lobbyModel.updateUser(user: user);
             // app.updateSettings();
         }

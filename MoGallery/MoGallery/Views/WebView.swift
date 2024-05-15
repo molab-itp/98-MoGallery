@@ -18,7 +18,7 @@ struct WebView : UIViewRepresentable {
         guard let user = app.lobbyModel.currentUser else {
             return
         }
-        print("update key", key, "value", value)
+        xprint("update key", key, "value", value)
         user.stats[key] = value
         app.lobbyModel.updateUser(user: user);
     }
@@ -65,26 +65,26 @@ extension WebView {
             _ userContentController: WKUserContentController,
             didReceive message: WKScriptMessage
         ) {
-            print("userContentController didReceive message", message)
-            print("userContentController didReceive message.name", message.name)
-            print("userContentController didReceive message.body", message.body)
+            xprint("userContentController didReceive message", message)
+            xprint("userContentController didReceive message.name", message.name)
+            xprint("userContentController didReceive message.body", message.body)
             guard message.name == "dice" else {
                 return
             }
             guard let body = message.body as? NSDictionary else {
                 return
             }
-            print("userContentController body", body)
+            xprint("userContentController body", body)
             guard let stats = body["stats"] as? NSDictionary else {
                 return
             }
-            print("userContentController stats", stats)
+            xprint("userContentController stats", stats)
             if let init_lapse = stats["init_lapse"] as? Double {
-                print("userContentController init_lapse", init_lapse)
+                xprint("userContentController init_lapse", init_lapse)
                 parent.update( key: "init_lapse", value: init_lapse )
             }
             if let load_lapse = stats["load_lapse"] as? Double {
-                print("userContentController load_lapse", load_lapse)
+                xprint("userContentController load_lapse", load_lapse)
                 parent.update( key: "load_lapse", value: load_lapse )
             }
             // load_lapse
@@ -96,7 +96,7 @@ extension WebView {
             initiatedByFrame frame: WKFrameInfo,
             decisionHandler: @escaping (WKPermissionDecision) -> Void
         ) {
-            print("requestDeviceOrientationAndMotionPermissionFor origin", origin)
+            xprint("requestDeviceOrientationAndMotionPermissionFor origin", origin)
             decisionHandler(.grant);
         }
         
@@ -107,8 +107,8 @@ extension WebView {
             type: WKMediaCaptureType,
             decisionHandler: @escaping (WKPermissionDecision) -> Void
         ) {
-            print("requestMediaCapturePermissionFor origin type", type.rawValue)
-            // print("requestMediaCapturePermissionFor origin", origin, "type", type.rawValue)
+            xprint("requestMediaCapturePermissionFor origin type", type.rawValue)
+            // xprint("requestMediaCapturePermissionFor origin", origin, "type", type.rawValue)
             decisionHandler(.grant);
         }
         
@@ -118,8 +118,8 @@ extension WebView {
             preferences: WKWebpagePreferences,
             decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void
         ) {
-            print("decidePolicyFor preferences navigationAction")
-            // print("decidePolicyFor preferences navigationAction", navigationAction, "preferences", preferences)
+            xprint("decidePolicyFor preferences navigationAction")
+            // xprint("decidePolicyFor preferences navigationAction", navigationAction, "preferences", preferences)
             decisionHandler(.allow, preferences)
         }
         
@@ -128,8 +128,8 @@ extension WebView {
             decidePolicyFor navigationAction: WKNavigationAction,
             decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
         ) {
-            print("decidePolicyFor navigationAction")
-            // print("decidePolicyFor navigationAction", navigationAction)
+            xprint("decidePolicyFor navigationAction")
+            // xprint("decidePolicyFor navigationAction", navigationAction)
             decisionHandler(.allow)
         }
         
@@ -138,8 +138,8 @@ extension WebView {
             decidePolicyFor navigationResponse: WKNavigationResponse,
             decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void
         ) {
-            print("decidePolicyFor navigationResponse")
-            // print("decidePolicyFor navigationResponse", navigationResponse)
+            xprint("decidePolicyFor navigationResponse")
+            // xprint("decidePolicyFor navigationResponse", navigationResponse)
             decisionHandler(.allow)
         }
     }

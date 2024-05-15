@@ -19,7 +19,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     var regionInited = false
     
     override init() {
-        print("LocationManager init")
+        xprint("LocationManager init")
         delta = 0.001
         region = MKCoordinateRegion()
         super.init()
@@ -30,7 +30,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func requestUse() {
-        print("LocationManager requestUse")
+        xprint("LocationManager requestUse")
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
     }
@@ -69,7 +69,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatus = status
-        print("locationManager didChangeAuthorization", statusString)
+        xprint("locationManager didChangeAuthorization", statusString)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -80,7 +80,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             regionInited = true
             centerUserLocation()
         }
-//        print("locationManager didUpdateLocations", location)
+//        xprint("locationManager didUpdateLocations", location)
     }
     
     func centerUserLocation() {

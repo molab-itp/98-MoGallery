@@ -73,7 +73,7 @@ struct AppSettingView: View {
             }
         }
         .onDisappear {
-            print("AppSettingView onDisappear")
+            xprint("AppSettingView onDisappear")
             app.updateSettings();
         }
     }

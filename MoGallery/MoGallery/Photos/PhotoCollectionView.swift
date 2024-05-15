@@ -182,7 +182,7 @@ struct AlbumPickerView: View {
     
     private func dismissPicker() {
         // showPicker = false
-        print("selection", selection ?? "-none-")
+        xprint("selection", selection ?? "-none-")
         if let selection {
             app.settings.photoAlbum = selection
             app.lobbyModel.albumName = selection

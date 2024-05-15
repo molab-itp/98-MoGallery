@@ -24,7 +24,7 @@ class MetaModel: ObservableObject {
     lazy var app = AppModel.main;
 
     init() {
-        print("MetaModel init")
+        xprint("MetaModel init")
         moMetaKey = app.settings.storePrefix + "meta"
         metaRef = Database.root.child(moMetaKey)
     }
@@ -41,7 +41,7 @@ class MetaModel: ObservableObject {
     }
     
     func refresh() {
-        print("MetaModel refresh")
+        xprint("MetaModel refresh")
         observeStop()
         metaRef = Database.root.child(moMetaKey)
         observeStart()
@@ -49,47 +49,54 @@ class MetaModel: ObservableObject {
     
     func observeStart() {
         guard let metaRef else { return }
-        print("MetaModel observeStart metaHandle", metaHandle ?? "nil")
+        xprint("MetaModel observeStart metaHandle", metaHandle ?? "nil")
         if metaHandle != nil {
             return;
         }
         metaHandle = metaRef.observe(.value, with: { snapshot in
-            guard let snapItems = snapshot.value as? [String: [String: Any]] else {
-                print("MetaModel meta EMPTY")
-                self.metas = []
-                self.loaded = true
-                return
+            Task {
+                await self.receiveSnapShot(snapshot)
             }
-            let items = snapItems.compactMap { MetaEntry(id: $0, dict: $1) }
-            let sortedItems = items.sorted(by: { $0.galleryName < $1.galleryName })
-            self.metas = sortedItems;
-            print("MetaModel metas count", self.metas.count)
-            // if (self.metas.count > 1000 && !self.cleaned) {
-            if !self.cleaned {
-                self.cleaned = true
-                self.removeAllMetas()
-            }
-            self.loaded = true
         })
     }
     
+    @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+        // xprint("MetaModel receiveSnapShot snapshot \(snapshot)")
+        guard let snapItems = snapshot.value as? [String: [String: Any]] else {
+            xprint("MetaModel meta EMPTY")
+            metas = []
+            loaded = true
+            return
+        }
+        let items = snapItems.compactMap { MetaEntry(id: $0, dict: $1) }
+        let sortedItems = items.sorted(by: { $0.galleryName < $1.galleryName })
+        metas = sortedItems;
+        xprint("MetaModel metas count", metas.count)
+        // if (metas.count > 1000 && !cleaned) {
+        if !cleaned {
+            cleaned = true
+            removeAllMetas()
+        }
+        loaded = true
+    }
+    
     func removeAllMetas() {
-        print("removeAllMetas metaRef", metaRef ?? "-nil-")
+        xprint("removeAllMetas metaRef", metaRef ?? "-nil-")
         guard let metaRef else { return }
 //        metaRef.removeValue { error, ref in
 //            if let error = error {
-//                print("removeMeta removeValue error: \(error).")
+//                xprint("removeMeta removeValue error: \(error).")
 //            }
 //        }
         var count = 0
         for mentry in metas {
             if count % 1000 == 0 {
-                print(count, "removeAllMetas mentry.id ", mentry.id)
+                xprint(count, "removeAllMetas mentry.id ", mentry.id)
             }
             count += 1
             metaRef.child(mentry.id).removeValue {error, ref in
                 if let error = error {
-                    print("removeAllMetas removeValue error: \(error).")
+                    xprint("removeAllMetas removeValue error: \(error).")
                 }
             }
         }
@@ -98,7 +105,7 @@ class MetaModel: ObservableObject {
     
     func observeStop() {
         guard let metaRef else { return }
-        print("MetaModel observeStop metaHandle", metaHandle ?? "nil")
+        xprint("MetaModel observeStop metaHandle", metaHandle ?? "nil")
         if let refHandle = metaHandle {
             metaRef.removeObserver(withHandle: refHandle)
             metaHandle = nil;
@@ -110,48 +117,48 @@ class MetaModel: ObservableObject {
     }
     
     func fetch(galleryName: String) -> MetaEntry?  {
-        print("fetch galleryName", galleryName);
+        xprint("fetch galleryName", galleryName);
         if let metaEntry = find(galleryName: galleryName) {
             return metaEntry
         }
         guard let user = app.lobbyModel.currentUser else {
-            print("addMeta no currentUser")
+            xprint("fetch galleryName no currentUser")
             return nil
         }
         return addMeta(galleryName: galleryName, user: user)
     }
     
     func addMeta(galleryName: String) -> MetaEntry? {
-        print("addMeta galleryName", galleryName);
+        xprint("addMeta galleryName", galleryName);
         guard let user = app.lobbyModel.currentUser else {
-            print("addMeta no currentUser")
+            xprint("addMeta no currentUser")
             return nil
         }
         return addMeta(galleryName: galleryName, user: user)
     }
     
     func addMeta(galleryName: String, user: UserModel?) -> MetaEntry? {
-        print("addMeta user galleryName", galleryName);
-        print("addMeta loaded", loaded);
+        xprint("addMeta user galleryName", galleryName);
+        xprint("addMeta loaded", loaded);
         
         // return nil; // !!@
         guard loaded else { return nil }
         
         let mentry = find(galleryName: galleryName)
         if let mentry  {
-            print("addMeta present uid", mentry.uid);
+            xprint("addMeta present uid", mentry.uid);
             return mentry;
         }
         guard let user else {
-            print("addMeta no currentUser")
+            xprint("addMeta no currentUser")
             return nil
         }
         guard let metaRef else {
-            print("addMeta no metaRef")
+            xprint("addMeta no metaRef")
             return nil
         }
         guard let key = metaRef.childByAutoId().key else {
-            print("addMeta no key")
+            xprint("addMeta no key")
             return nil
         }
         var values:[String : Any] = [:];
@@ -159,7 +166,7 @@ class MetaModel: ObservableObject {
         values["galleryName"] = galleryName;
         metaRef.child(key).updateChildValues(values) { error, ref in
             if let error = error {
-                print("addMeta updateChildValues error: \(error).")
+                xprint("addMeta updateChildValues error: \(error).")
             }
         }
         let newEnt = MetaEntry(id: key, dict: values)
@@ -168,25 +175,25 @@ class MetaModel: ObservableObject {
     }
     
     func removeMeta(galleryName: String) {
-        print("removeMeta galleryName", galleryName);
+        xprint("removeMeta galleryName", galleryName);
         guard let mentry = find(galleryName: galleryName)
         else {
-            print("removeMeta NOT FOUND galleryName", galleryName)
+            xprint("removeMeta NOT FOUND galleryName", galleryName)
             return;
         }
         // Delete from meta if this user is the creator
         guard let user = app.lobbyModel.currentUser else {
-            print("addMeta no currentUser");
+            xprint("addMeta no currentUser");
             return
         }
         if user.id != mentry.uid {
-            print("removeMeta NOT owner mentry.uid", mentry.uid, "user.id", user.id)
+            xprint("removeMeta NOT owner mentry.uid", mentry.uid, "user.id", user.id)
             return
         }
         guard let metaRef else { return }
         metaRef.child(mentry.id).removeValue {error, ref in
             if let error = error {
-                print("removeMeta removeValue error: \(error).")
+                xprint("removeMeta removeValue error: \(error).")
             }
         }
     }
@@ -198,7 +205,7 @@ class MetaModel: ObservableObject {
         values["caption"] = metaEntry.caption;
         metaRef.child(metaEntry.id).updateChildValues(values) { error, ref in
             if let error = error {
-                print("update metaEntry updateChildValues error: \(error).")
+                xprint("update metaEntry updateChildValues error: \(error).")
             }
         }
     }

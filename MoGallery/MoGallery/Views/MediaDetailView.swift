@@ -106,20 +106,20 @@ struct MediaDetailView: View {
             }
         }
         .onChange(of: selection) { newState in
-            print("MediaDetailView onChange priorSelection", priorSelection, "newState", newState ?? "-nil-")
+            xprint("MediaDetailView onChange priorSelection", priorSelection, "newState", newState ?? "-nil-")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 dismiss()
             }
         }
         .onAppear {
-            print("MediaDetailView onAppear")
+            xprint("MediaDetailView onAppear")
             lobbyModel.locsForUsers(firstLoc: item.loc)
             // priorCaption = item.caption
             // priorPreviewUrl = item.previewUrl
             // priorLoadPreviewUrl = item.loadPreviewUrl
         }
         .onDisappear {
-            print("MediaDetailView onDisappear")
+            xprint("MediaDetailView onDisappear")
             app.stopVideo()
 //            if !deleted {
 //                Task {
@@ -129,7 +129,7 @@ struct MediaDetailView: View {
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
-            print("imageThumb", imageThumb ?? "-nil-")
+            xprint("imageThumb", imageThumb ?? "-nil-")
             if !item.previewUrl.isEmpty  && item.loadPreviewUrl {
                 // Play remote video
                 app.playVideo(url: item.previewUrl)
@@ -138,7 +138,7 @@ struct MediaDetailView: View {
                 // Play local movie video
                 let asset = PhotoAsset(identifier: sourceId)
                 guard let phAsset = asset.phAsset else {
-                    print("MediaDetailView !!@ Missing sourceId", sourceId)
+                    xprint("MediaDetailView !!@ Missing sourceId", sourceId)
                     return
                 }
                 app.playVideo(phAsset: phAsset)
@@ -248,6 +248,8 @@ struct MediaDetailView: View {
     
     func activityItems() -> [Any] {
         var items: [String] = []
+        items.append("");
+        items.append("");
         items.append("authorEmail: "+item.authorEmail)
         items.append("createdDate: "+item.createdDate)
         items.append("uid: "+item.uid)

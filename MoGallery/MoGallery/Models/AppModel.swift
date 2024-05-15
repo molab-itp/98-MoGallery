@@ -79,7 +79,7 @@ class AppModel: ObservableObject {
 //        let str = "zu-\( user.id )-\( nemail )"
 //        // let str = settings.storePrefix + "zu-\( user.id )-\( nemail )"
 //        // let str = "zu-\( id )-\( nemail )"
-//        // print("userGalleryKey", str)
+//        // xprint("userGalleryKey", str)
 //        return str;
 //    }
     
@@ -97,7 +97,7 @@ extension AppModel {
             let data = try Data(contentsOf: Self.savePath)
             settings = try JSONDecoder().decode(Settings.self, from: data)
         } catch {
-            print("AppModel loadSettings error", error)
+            xprint("AppModel loadSettings error", error)
             settings = Settings();
         }
         return settings;
@@ -108,7 +108,7 @@ extension AppModel {
             let data = try JSONEncoder().encode(settings)
             try data.write(to: Self.savePath, options: [.atomic, .completeFileProtection])
         } catch {
-            print("AppModel saveSettings error", error)
+            xprint("AppModel saveSettings error", error)
         }
     }
     

@@ -31,7 +31,7 @@ import MapKit
     }
 
     func locationMatch(_ current:Location) -> Bool {
-//        print("locationMatch current", current, "center", region.center)
+//        xprint("locationMatch current", current, "center", region.center)
         let epsilon = 0.000001;
         let center = region.center
         return abs(current.latitude - center.latitude) < epsilon
@@ -43,7 +43,7 @@ import MapKit
     }
 
     func nextLocation() {
-        print("LocationModel next index", index, "locations.count", locations.count)
+        xprint("LocationModel next index", index, "locations.count", locations.count)
         if locations.count <= 0 {
             return;
         }
@@ -76,7 +76,7 @@ import MapKit
     }
         
 //    func restoreFrom(marked: Array<String>) {
-//        print("LocationModel restoreFrom marked", marked)
+//        xprint("LocationModel restoreFrom marked", marked)
 //        var newLocs = [Location]()
 //        for ccode in marked {
 //            guard let fitem = AppModel.main.flagItem(ccode: ccode) else { continue }
