@@ -65,6 +65,9 @@ struct MediaDetailView: View {
                     }
                 }
             }
+            .onTapGesture {
+                showInfo.toggle();
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         // .ignoresSafeArea()
@@ -112,24 +115,19 @@ struct MediaDetailView: View {
             }
         }
         .onAppear {
-            xprint("MediaDetailView onAppear")
-            lobbyModel.locsForUsers(firstLoc: item.loc)
-            // priorCaption = item.caption
-            // priorPreviewUrl = item.previewUrl
-            // priorLoadPreviewUrl = item.loadPreviewUrl
+            // xprint("MediaDetailView onAppear")
+            // lobbyModel.locsForUsers(firstLoc: item.loc)
+            if let loc = item.loc {
+                LocationModel.main.setLocation(loc)
+            }
         }
         .onDisappear {
-            xprint("MediaDetailView onDisappear")
+            // xprint("MediaDetailView onDisappear")
             app.stopVideo()
-//            if !deleted {
-//                Task {
-//                    app.galleryModel.updateMedia(media: item)
-//                }
-//            }
         }
         .task {
             imageThumb = await imageFor(string: item.mediaPath)
-            xprint("imageThumb", imageThumb ?? "-nil-")
+            // xprint("imageThumb", imageThumb ?? "-nil-")
             if !item.previewUrl.isEmpty  && item.loadPreviewUrl {
                 // Play remote video
                 app.playVideo(url: item.previewUrl)

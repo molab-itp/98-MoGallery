@@ -56,7 +56,9 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 ## Plan-Issues:
 
-
+[] MediaDetailView showInfoOverlay locationDescription 
+    location not show on in Map tab
+    
 [] LimitedPicker nav view stays up after selection
 
 [] earlier photo progress view needed for add random
@@ -71,9 +73,53 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 ## Log
 
 # --
+v101
+
+[x] download pause | resume | cancel
+
+# --
+v100
+
+[x] Gallery view sluggish with 50+ images
+
+[x] AddAll lockup - try async to trottle upload all
+
+# --
+v99
+upload all photos in a collection
+need async to trottle upload all
+    func addAll() {
+
+# --
+
+v95
+[x] storePrefix = "mo-2/";
+
+# --
+v94
+
+v93
+[x] addTempMedia
 
 v92
+[x] Main actor-isolated static property 'main' can not be referenced from a non-isolated context; 
+    this is an error in Swift 6
+    lazy var locationModel = LocationModel.main
+    @Published var locationModel = LocationModel.main
 
+[x] MediaDetailView onTapGesture showInfo.toggle
+
+[x] drop Button("OK - dont ask again")
+    app.settings.randomAddWarning = false
+
+- uploads appear to be much slower in Xcode debug
+
+- remove LobbyModel @Published var currentUser
+
+- disable Image(loc.imageRef) in MapTabView
+
+- removed @MainActor from class LocationModel: ObservableObject
+- removed @MainActor from func receiveSnapShot
 - Added @MainActor func receiveSnapShot
 >> Added @MainActor on snapshot -- no affect
 @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {

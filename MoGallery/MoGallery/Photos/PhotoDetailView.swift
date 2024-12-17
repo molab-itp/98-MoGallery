@@ -73,7 +73,7 @@ struct PhotoDetailView: View {
                 }
                 Button {
                     Task {
-                        app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
+                        await app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
                         await MainActor.run {
                             dismiss()
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -130,7 +130,10 @@ struct PhotoDetailView: View {
         .onAppear {
             xprint("PhotoDetailView onAppear")
             if let phAsset = asset.phAsset {
-                lobbyModel.locsForUsers(firstLoc: phAsset.loc)
+                // lobbyModel.locsForUsers(firstLoc: phAsset.loc)
+                if let loc = phAsset.loc {
+                    LocationModel.main.setLocation(loc)
+                }
             }
         }
         .onDisappear {
@@ -152,48 +155,3 @@ extension PHAsset {
         return Location(id: "photo", latitude: lat, longitude: lon, label: "photo")
     }
 }
-
-//        private func buttonsView() -> some View {
-//            HStack(spacing: 60) {
-//                Button {
-//                    Task {
-//                        app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
-//                        await MainActor.run {
-//                            // navigation with app.path
-//                            // Show gallery after media added
-//                            // app.path.removeLast()
-//                            // app.path.append("gallery")
-//                            dismiss()
-//                            app.toGalleryTab()
-//                        }
-//                    }
-//                } label: {
-//                    Label("Add Photo", systemImage: "plus.app.fill")
-//                        .font(.system(size: 24))
-//                }
-//                Button {
-//                    Task {
-//                        await asset.setIsFavorite(!asset.isFavorite)
-//                    }
-//                } label: {
-//                    Label("Favorite", systemImage: asset.isFavorite ? "heart.fill" : "heart")
-//                        .font(.system(size: 24))
-//                }
-//                Button {
-//                    Task {
-//                        await asset.delete()
-//                        await MainActor.run {
-//                            dismiss()
-//                        }
-//                    }
-//                } label: {
-//                    Label("Delete", systemImage: "trash")
-//                        .font(.system(size: 24))
-//                }
-//            }
-//            .buttonStyle(.plain)
-//            .labelStyle(.iconOnly)
-//            .padding(EdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30))
-//            .background(Color.secondary.colorInvert())
-//            .cornerRadius(15)
-//        }

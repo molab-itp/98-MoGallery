@@ -115,10 +115,14 @@ struct GalleryPickerView: View {
         if let selection {
             if let mediaItem, selection != app.settings.storeGalleryKey {
                 if mode == "Move to" {
-                    app.galleryModel.moveMediaEntry(galleryKey: selection, mediaItem: mediaItem)
+                    app.galleryModel.moveMediaEntry(galleryKey: selection, mediaItem: mediaItem) {
+                        
+                    }
                 }
                 else {
-                    app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem)
+                    app.galleryModel.createMediaEntry(galleryKey: selection, mediaItem: mediaItem) {
+                        
+                    }
                 }
             }
             // app.addGalleryKey(name: selection)

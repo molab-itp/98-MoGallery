@@ -126,7 +126,8 @@ extension MediaModel {
     var loc: Location? {
         guard let lat = info["lat"] as? Double else { return nil }
         guard let lon = info["lon"] as? Double else { return nil }
-        return Location(id: "photo:", latitude: lat, longitude: lon, label: "photo")
+//        return Location(id: "photo:", latitude: lat, longitude: lon, label: "photo")
+        return Location(id: "photo:", latitude: lat, longitude: lon, label: self.locationDescription ?? "photo")
     }
 }
 

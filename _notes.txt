@@ -1,6 +1,58 @@
 _notes.txt
 
 # --
+2024-12-16 14:26:27
+
+struct PhotoCollectionView: View {
+
+# --
+
+https://www.hackingwithswift.com/quick-start/concurrency
+
+func addGalleryAsset(phAsset: PHAsset?) {
+
+requestFullRez(
+
+requestImageUpload(
+
+uploadImageData(
+
+fetchDownloadURL(
+
+putFullRezData(
+
+fetchDownloadURL_FullRez(storageRefFullRez
+
+createMediaEntry(
+
+
+https://www.hackingwithswift.com/quick-start/concurrency/how-to-create-and-run-a-task
+
+requestImageUpload
+
+func requestImage(manager: PHImageManager,
+
+@discardableResult
+func requestImage(for asset: PhotoAsset, targetSize: CGSize, completion: @escaping ((image: Image?, isLowerQuality: Bool)?) -> Void) -> PHImageRequestID? {
+
+# --
+
+https://www.hackingwithswift.com/quick-start/concurrency/how-to-use-continuations-to-convert-completion-handlers-into-async-functions
+
+https://developer.apple.com/documentation/swift/withcheckedcontinuation(isolation:function:_:)
+https://developer.apple.com/documentation/swift/withcheckedthrowingcontinuation(isolation:function:_:)
+
+https://developer.apple.com/documentation/swift/updating_an_app_to_use_swift_concurrency
+https://developer.apple.com/videos/play/wwdc2021/10194/
+Swift concurrency: Update a sample app
+
+https://developer.apple.com/documentation/swift/concurrency/
+
+https://developer.apple.com/documentation/swift/updating-an-app-to-use-strict-concurrency
+
+
+
+# --
 2023-11-23 13:14:47
 
 

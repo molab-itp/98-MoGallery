@@ -16,7 +16,8 @@ struct Settings: Codable {
     var storePhotoSize = "500"
     var storeAddEnabled = true;
     var storeFullRez = true;
-    var storePrefix = "mo-1/";
+    var storePrefix = "mo-3/";
+//    var storePrefix = "mo-2/";
     // var storePrefix = "mo-";
     var storeGalleryKey = "gallery-1"
     // var storeGalleryKey = "mo-gallery-1"

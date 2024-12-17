@@ -25,7 +25,7 @@ class AppModel: ObservableObject {
     lazy var galleryModel = GalleryModel.main
     lazy var photosModel = PhotosModel.main
     lazy var metaModel = MetaModel.main
-    lazy var locationModel = LocationModel.main
+//    lazy var locationModel = LocationModel.main
         
     var locationManager = LocationManager()
     var geometrySize = CGSize.zero

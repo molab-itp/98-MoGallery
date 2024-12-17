@@ -65,7 +65,11 @@ struct UserDetailView: View {
         }
         .onAppear {
             xprint("UserDetailView onAppear")
-            lobbyModel.locsForUsers(firstLoc: user.loc)
+            // lobbyModel.locsForUsers(firstLoc: user.loc)
+            // lobbyModel.setLocation(user.loc)
+            if let loc = user.loc {
+                LocationModel.main.setLocation(loc)
+            }
         }
         .onDisappear {
             xprint("UserDetailView onDisappear")

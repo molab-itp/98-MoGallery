@@ -54,13 +54,11 @@ class MetaModel: ObservableObject {
             return;
         }
         metaHandle = metaRef.observe(.value, with: { snapshot in
-            Task {
-                await self.receiveSnapShot(snapshot)
-            }
+            self.receiveSnapShot(snapshot)
         })
     }
     
-    @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+    func receiveSnapShot(_ snapshot: DataSnapshot) {
         // xprint("MetaModel receiveSnapShot snapshot \(snapshot)")
         guard let snapItems = snapshot.value as? [String: [String: Any]] else {
             xprint("MetaModel meta EMPTY")

@@ -21,9 +21,14 @@ struct PhotoCollectionView: View {
 
     @State private var selection: String?
     @State var showLimitedPicker: Bool = true
+    
+    @State var showDownloading: Bool = false
+    @State var downloadingIndex = 0
+    @State var downloadingCount = 0
+    @State var downloadingBase = 0
+    @State var showDownloadingAlert: Bool = false
+    @State var downloadingActive: Bool = false
 
-    // private static let itemSpacing = 12.0
-    // private static let itemCornerRadius = 15.0
     private static let itemSpacing = 2.0
     private static let itemSize = CGSize(width: 94, height: 94)
     
@@ -31,15 +36,39 @@ struct PhotoCollectionView: View {
         return CGSize(width: Self.itemSize.width * min(displayScale, 2),
                       height: Self.itemSize.height * min(displayScale, 2))
     }
-    
     private let columns = [
         GridItem(.adaptive(minimum: itemSize.width, maximum: itemSize.height), spacing: itemSpacing)
     ]
     
     var body: some View {
+        let photoCount = photosModel.photoCollection!.photoAssets.count;
         NavigationStack {
             ScrollView {
-                Text("\(photosModel.photoCollection!.photoAssets.count) items")
+                Text("\(photoCount) items")
+                if showDownloading {
+                    VStack {
+                        HStack {
+                            Text("downloading \(downloadingIndex) of \(downloadingCount)")
+                        }
+                        HStack {
+                            Button(action: {
+                                downloadingActive = !downloadingActive
+                                if downloadingActive {
+                                    startDownloading()
+                                }
+                            }) {
+                                Text(downloadingActive ? "Pause" : "Resume")
+                            }
+                            Button(action: {
+                                showDownloading = false
+                                downloadingActive = false
+                                downloadingBase = 0
+                            }) {
+                                Label("Cancel", systemImage: "x.circle")
+                            }
+                        }
+                    }
+                }
                 LazyVGrid(columns: columns, spacing: Self.itemSpacing) {
                     ForEach(photosModel.photoCollection!.photoAssets) { asset in
                         NavigationLink {
@@ -60,6 +89,12 @@ struct PhotoCollectionView: View {
             .toolbar {
                 // ToolbarItemGroup(placement: .navigationBarTrailing) {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
+                    Button(action: {
+                        dismiss()
+                        app.toGalleryTab()
+                    }) {
+                        Label("Gallery", systemImage: "rectangle.stack")
+                    }
                     NavigationLink {
                         if app.photoLibLimited {
                             LimitedPicker(isPresented: $showLimitedPicker);
@@ -72,6 +107,26 @@ struct PhotoCollectionView: View {
                             .labelStyle(.titleAndIcon)
                     }
                 }
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showDownloadingAlert = true
+                    }) {
+                        Label("Download All", systemImage: "plus.diamond.fill")
+                    }
+                }
+            }
+            .alert(
+                "Are you sure you want to ADD all \(photoCount) photos from this album?",
+                isPresented:$showDownloadingAlert)
+            {
+                Button("OK") {
+                    showDownloadingAlert = false
+                    downloadingBase = 0
+                    startDownloading()
+                }
+                Button("Cancel", role: .cancel) {
+                    showDownloadingAlert = false
+                }
             }
             .onAppear {
                 cameraModel.isPreviewPaused = true
@@ -83,6 +138,35 @@ struct PhotoCollectionView: View {
         }
     }
         
+    func startDownloading() {
+        downloadingActive = true;
+        showDownloading = true;
+        Task {
+            let photos = photosModel.photoCollection!.photoAssets
+            downloadingCount = photos.count;
+            print("Download count", downloadingCount)
+            let startIndex = downloadingBase;
+            for index in startIndex..<photos.count {
+                downloadingIndex = index+1;
+                print("Download index", downloadingIndex, " of", downloadingCount);
+                
+                // Add temporary media item for progress feedback
+                app.galleryModel.addTempMedia()
+                
+                let asset = photos[photos.count - 1 - index]
+                await app.galleryModel.addGalleryAsset(phAsset: asset.phAsset);
+                downloadingBase = index + 1;
+                if !showDownloading || !downloadingActive { break; }
+            }
+            await MainActor.run {
+                if downloadingActive { showDownloading = false; }
+                dismiss()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    app.toGalleryTab()
+                }
+            }
+        }
+    }
     private func photoItemView(asset: PhotoAsset, cache: CachedImageManager ) -> some View {
         PhotoItemView(asset: asset, cache: cache, imageSize: imageSize)
             .frame(width: Self.itemSize.width, height: Self.itemSize.height)
@@ -200,3 +284,6 @@ struct AlbumPickerView: View {
 //                            Text($0)
 //                        }
 //                    }
+
+// private static let itemSpacing = 12.0
+// private static let itemCornerRadius = 15.0

@@ -30,10 +30,10 @@ class GalleryModel: ObservableObject {
     
     static let main = GalleryModel()
     lazy var app = AppModel.main;
-//    unowned var app: AppModel
-//    init(_ app:AppModel) {
-//        self.app = app
-//    }
+
+    func addTempMedia() {
+        gallery.insert( MediaModel(id: UUID().uuidString, dict: [:]), at: 0)
+    }
     
     func deleteWarning() -> String {
         "Are you sure you want to delete your \(countMine) photos in this gallery?"
@@ -67,13 +67,11 @@ class GalleryModel: ObservableObject {
             return;
         }
         galleryHandle = galleryRef.observe(.value, with: { snapshot in
-            Task {
-                await self.receiveSnapShot(snapshot)
-            }
+            self.receiveSnapShot(snapshot)
         })
     }
     
-    @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+    func receiveSnapShot(_ snapshot: DataSnapshot) {
         // xprint("GalleryModel receiveSnapShot snapshot \(snapshot)")
         guard let snapItems = snapshot.value as? [String: [String: Any]] else {
             xprint("GalleryModel gallery EMPTY")
@@ -249,7 +247,10 @@ class GalleryModel: ObservableObject {
             }
             uploadImageData(imageData,
                             fullRezData: fullRezData,
-                            info: info)
+                            info: info) 
+            {
+                xprint("uploadImageData done")
+            }
         }
         // Saving to Photo library, check for scaling
         if !app.settings.photoAddEnabled {

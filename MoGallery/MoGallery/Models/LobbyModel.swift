@@ -30,9 +30,10 @@ class LobbyModel: ObservableObject {
     @Published var albumName = ""
     
 //    @Published var mapRegion = MapRegionModel()
-    @Published var locationModel = LocationModel.main
+//    @Published var locationModel = LocationModel.main
 
-    @Published var currentUser: UserModel?
+//    @Published var currentUser: UserModel?
+    var currentUser: UserModel?
 
     var locations: [Location] = [];
     
@@ -252,13 +253,11 @@ class LobbyModel: ObservableObject {
             return;
         }
         lobbyHandle = lobbyRef.observe(.value, with: { snapshot   in
-            Task {
-                await self.receiveSnapShot(snapshot)
-            }
+            self.receiveSnapShot(snapshot)
         })
     }
     
-    @MainActor func receiveSnapShot(_ snapshot: DataSnapshot) {
+    func receiveSnapShot(_ snapshot: DataSnapshot) {
         // xprint("LobbyModel receiveSnapShot snapshot", snapshot)
         guard let snapUsers = snapshot.value as? [String: [String: Any]] else {
             xprint("LobbyModel users EMPTY")
@@ -289,7 +288,7 @@ class LobbyModel: ObservableObject {
     }
     
     func locsForUsers(firstLoc: Location?) {
-        xprint("locsForUsers firstLoc", firstLoc ?? "-nil-")
+        xprint("locsForUsers firstLoc", firstLoc?.label ?? "-nil-")
         var locs = [Location]()
         if let firstLoc {
             locs.append(firstLoc)
@@ -305,7 +304,9 @@ class LobbyModel: ObservableObject {
         }
         locations = locs;
         Task () {
-            await locationModel.setLocations(locations);
+            await LocationModel.main.setLocations(locations);
+            //  await locationModel.setLocations(locations);
+            //  locationModel.setLocations(locations);
         }
     }
 }

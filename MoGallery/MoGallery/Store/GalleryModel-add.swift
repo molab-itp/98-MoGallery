@@ -13,7 +13,18 @@ import SwiftUI
 
 extension GalleryModel {
     
-    func addGalleryAsset(phAsset: PHAsset?) {
+    func addGalleryAsset(phAsset: PHAsset?) async  {
+        await withCheckedContinuation { continuation in
+            addGalleryAsset (phAsset: phAsset) {
+                continuation.resume()
+            }
+        }
+    }
+    
+    func addGalleryAsset(
+        phAsset: PHAsset?,
+        done: @Sendable @escaping () -> Void)
+    {
         xprint("addGalleryAsset phAsset", phAsset ?? "-none-")
         guard let phAsset = phAsset else { return }
         xprint("addGalleryAsset phAsset.location", phAsset.location as Any)
@@ -34,20 +45,25 @@ extension GalleryModel {
         
         let manager = PHImageManager.default()
         
-        requestImage(manager: manager,
-                     fullRezSize: fullRezSize,
-                     targetSize: targetSize,
-                     options: options,
-                     phAsset: phAsset,
-                     attempts: 1)
+        requestImage(
+            manager: manager,
+            fullRezSize: fullRezSize,
+            targetSize: targetSize,
+            options: options,
+            phAsset: phAsset,
+            attempts: 1,
+            done: done)
     }
     
-    func requestImage(manager: PHImageManager,
-                      fullRezSize: CGSize,
-                      targetSize: CGSize,
-                      options: PHImageRequestOptions?,
-                      phAsset: PHAsset,
-                      attempts: Int) {
+    func requestImage(
+        manager: PHImageManager,
+        fullRezSize: CGSize,
+        targetSize: CGSize,
+        options: PHImageRequestOptions?,
+        phAsset: PHAsset,
+        attempts: Int,
+        done: @Sendable @escaping () -> Void)
+    {
         xprint("requestImage targetSize", targetSize)
         manager.requestImage(for: phAsset, targetSize: targetSize,
                              contentMode:PHImageContentMode.default, options: options)
@@ -60,12 +76,14 @@ extension GalleryModel {
                     options.deliveryMode = PHImageRequestOptionsDeliveryMode.fastFormat
                     options.isSynchronous = true
                     options.isNetworkAccessAllowed = true
-                    self.requestImage(manager: manager,
-                                      fullRezSize: fullRezSize,
-                                      targetSize: targetSize,
-                                      options: options,
-                                      phAsset: phAsset,
-                                      attempts: attempts-1)
+                    self.requestImage(
+                        manager: manager,
+                        fullRezSize: fullRezSize,
+                        targetSize: targetSize,
+                        options: options,
+                        phAsset: phAsset,
+                        attempts: attempts-1,
+                        done: done)
                 }
                 return
             }
@@ -79,31 +97,37 @@ extension GalleryModel {
                 options.deliveryMode = PHImageRequestOptionsDeliveryMode.highQualityFormat
                 options.isSynchronous = true
                 options.isNetworkAccessAllowed = true
-                self.requestFullRez(manager: manager,
-                                    image: image,
-                                    imageData: imageData,
-                                    fullRezSize: fullRezSize,
-                                    options: options,
-                                    phAsset: phAsset,
-                                    attempts: 1)
+                self.requestFullRez(
+                    manager: manager,
+                    image: image,
+                    imageData: imageData,
+                    fullRezSize: fullRezSize,
+                    options: options,
+                    phAsset: phAsset,
+                    attempts: 1,
+                    done: done)
             }
             else {
                 self.requestImageUpload(phAsset: phAsset,
                                         image: image,
                                         imageData: imageData,
                                         fullRezData: nil,
-                                        fullRezSize: fullRezSize)
+                                        fullRezSize: fullRezSize,
+                                        done: done)
             }
         }
     }
     
-    func requestFullRez(manager: PHImageManager,
-                        image:UIImage,
-                        imageData: Data,
-                        fullRezSize: CGSize,
-                        options: PHImageRequestOptions?,
-                        phAsset: PHAsset,
-                        attempts: Int) {
+    func requestFullRez(
+        manager: PHImageManager,
+        image:UIImage,
+        imageData: Data,
+        fullRezSize: CGSize,
+        options: PHImageRequestOptions?,
+        phAsset: PHAsset,
+        attempts: Int,
+        done: @Sendable @escaping () -> Void)
+    {
         xprint("requestFullRez fullRezSize", fullRezSize)
         manager.requestImage(for: phAsset, targetSize: fullRezSize,
                              contentMode:PHImageContentMode.default, options: options)
@@ -119,13 +143,15 @@ extension GalleryModel {
                     // !!@ bug full rez not shown for some images from photo library
                     var fullRezSize = fullRezSize;
                     if fullRezSize.width > 1000 { fullRezSize = CGSize(width:1000, height: 1000)}
-                    self.requestFullRez(manager: manager,
-                                        image: image,
-                                        imageData: imageData,
-                                        fullRezSize: fullRezSize,
-                                        options: options,
-                                        phAsset: phAsset,
-                                        attempts: attempts-1)
+                    self.requestFullRez(
+                        manager: manager,
+                        image: image,
+                        imageData: imageData,
+                        fullRezSize: fullRezSize,
+                        options: options,
+                        phAsset: phAsset,
+                        attempts: attempts-1,
+                        done: done)
                 }
                 return
             }
@@ -135,19 +161,24 @@ extension GalleryModel {
                 xprint("requestFullRez jpegData failed")
                 return;
             }
-            self.requestImageUpload(phAsset: phAsset,
-                                    image: image,
-                                    imageData: imageData,
-                                    fullRezData: fullRezData,
-                                    fullRezSize: fullRezImage.size)
+            self.requestImageUpload(
+                phAsset: phAsset,
+                image: image,
+                imageData: imageData,
+                fullRezData: fullRezData,
+                fullRezSize: fullRezImage.size,
+                done: done)
         }
     }
     
-    func requestImageUpload(phAsset: PHAsset,
-                            image:UIImage,
-                            imageData: Data,
-                            fullRezData: Data?,
-                            fullRezSize: CGSize) {
+    func requestImageUpload(
+        phAsset: PHAsset,
+        image:UIImage,
+        imageData: Data,
+        fullRezData: Data?,
+        fullRezSize: CGSize,
+        done: @Sendable @escaping () -> Void)
+    {
         let sourceId = phAsset.localIdentifier;
         let sourceDate = phAsset.creationDate?.description ?? ""
         let imageSize = image.size;
@@ -187,22 +218,24 @@ extension GalleryModel {
         if phAsset.duration > 0 {
             info["duration"] = phAsset.duration
         }
-        self.uploadImageData(imageData,
-                             fullRezData: fullRezData,
-                             info: info)
+        self.uploadImageData(
+            imageData,
+            fullRezData: fullRezData,
+            info: info,
+            done: done)
         // !!@ Disabled
         // if phAsset.mediaType == .video {
-            // export(phAsset: phAsset)
+        // export(phAsset: phAsset)
         // }
     }
-
+    
 } // extension GalleryModel
 
 func export(phAsset: PHAsset) {
     xprint("export phAsset", phAsset)
     
     let manager = PHImageManager.default()
-        
+    
     let options = PHVideoRequestOptions()
     options.isNetworkAccessAllowed = true
     options.deliveryMode = .highQualityFormat
@@ -237,12 +270,13 @@ func export(phAsset: PHAsset) {
 
 // AVAssetExportPresetHighestQuality
 
-func export(video: AVAsset,
-            atURL outputURL: URL,
-            withPreset preset: String = AVAssetExportPresetLowQuality,
-            toFileType outputFileType: AVFileType = .mp4
-            ) async {
-    
+func export(
+    video: AVAsset,
+    atURL outputURL: URL,
+    withPreset preset: String = AVAssetExportPresetLowQuality,
+    toFileType outputFileType: AVFileType = .mp4
+) async
+{
     // Check the compatibility of the preset to export the video to the output file type.
     guard await AVAssetExportSession.compatibility(ofExportPreset: preset,
                                                    with: video,
@@ -250,7 +284,7 @@ func export(video: AVAsset,
         xprint("The preset can't export the video to the output file type.")
         return
     }
-
+    
     // Create and configure the export session.
     guard let exportSession = AVAssetExportSession(asset: video,
                                                    presetName: preset) else {

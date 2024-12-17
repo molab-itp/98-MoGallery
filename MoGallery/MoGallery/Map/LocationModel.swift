@@ -31,7 +31,7 @@ import MapKit
     }
 
     func locationMatch(_ current:Location) -> Bool {
-//        xprint("locationMatch current", current, "center", region.center)
+        // xprint("locationMatch current", current, "center", region.center)
         let epsilon = 0.000001;
         let center = region.center
         return abs(current.latitude - center.latitude) < epsilon
@@ -56,7 +56,6 @@ import MapKit
         let loc = locations[index];
         region = loc.region
         currentLocation = loc;
-//        AppModel.main.currentFlagItem(loc.id)
     }
     
     func setLocation(ccode: String) {
@@ -66,33 +65,16 @@ import MapKit
     }
     
     func setLocation(_ location: Location) {
-        if let index = locations.firstIndex(of: location) {
-            setLocation(index: index);
-        }
+//        if let index = locations.firstIndex(of: location) {
+//            setLocation(index: index);
+//        }
+        region = location.region
+        currentLocation = location;
     }
     
     func restoreLocation() {
         region = currentLocation.region
     }
-        
-//    func restoreFrom(marked: Array<String>) {
-//        xprint("LocationModel restoreFrom marked", marked)
-//        var newLocs = [Location]()
-//        for ccode in marked {
-//            guard let fitem = AppModel.main.flagItem(ccode: ccode) else { continue }
-//            let loc = Location(
-//                id: fitem.alpha3,
-//                latitude: fitem.latitude,
-//                longitude: fitem.longitude,
-//                label: fitem.name,
-//                capital: fitem.capital);
-//            newLocs.append(loc)
-//        }
-//        locations = newLocs;
-//        if !newLocs.isEmpty {
-//            setLocation(index: 0)
-//        }
-//    }
 }
 
 let knownLocations:[Location] = [

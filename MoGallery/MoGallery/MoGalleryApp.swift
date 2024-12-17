@@ -6,8 +6,8 @@ import SwiftUI
 import Firebase
 
 func xprint(_ args:Any...) {
-    //    print( args )
-//    debugPrint( args )
+//     print( args )
+    // debugPrint( args )
 }
 
 // Init firebase and signIn on view appear

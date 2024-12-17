@@ -73,7 +73,7 @@ extension AppModel {
     }
     
     func stopVideo() {
-        xprint("videoStop")
+        // xprint("videoStop")
         youTubePlayer = nil
         videoPlayer = nil
     }

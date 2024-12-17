@@ -75,7 +75,7 @@ struct GalleryTabView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     NavigationLink(value: "") {
-                        Label(app.galleyTitle, systemImage: "rectangle.stack")
+                        Label(app.galleyTitle, systemImage: "arrowshape.up")
                             .labelStyle(.titleAndIcon)
                     }
                     Button(action: {
@@ -111,12 +111,12 @@ struct GalleryTabView: View {
                     showingAddRandomAlert = false
                     addRandomMedia()
                 }
-                Button("OK - dont ask again") {
-                    showingAddRandomAlert = false
-                    app.settings.randomAddWarning = false
-                    app.saveSettings()
-                    addRandomMedia()
-                }
+//                Button("OK - dont ask again") {
+//                    showingAddRandomAlert = false
+//                    app.settings.randomAddWarning = false
+//                    app.saveSettings()
+//                    addRandomMedia()
+//                }
                 Button("Cancel", role: .cancel) {
                     showingAddRandomAlert = false
                 }
@@ -156,7 +156,9 @@ struct GalleryTabView: View {
                 xprint("GalleryView no assets")
                 return
             }
-            galleryModel.addGalleryAsset(phAsset: asset.phAsset)
+            // Add temporary media item for progress feedback
+            galleryModel.addTempMedia()
+            await galleryModel.addGalleryAsset(phAsset: asset.phAsset)
         }
     }
 }

@@ -21,9 +21,9 @@ struct MapTabView: View {
                 { loc in
                     MapAnnotation(coordinate: loc.coordinate) {
                         VStack {
-                            Image(loc.imageRef)
-                                .resizable()
-                                .frame(width: 44, height: 22)
+//                            Image(loc.imageRef)
+//                                .resizable()
+//                                .frame(width: 44, height: 22)
                             Text(loc.label)
                         }
                         .onTapGesture {
