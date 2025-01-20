@@ -26,7 +26,7 @@ Created for NYU ITP Course:
 
 Born of a need to share and collaborate free of evil profit-driven corporations.
 
-- [use social media?](https://github.com/jht1493/jht-site#facts)
+- [use social media?](https://github.com/jht1493/jht-site?tab=readme-ov-file#why)
 
 ## References
 
