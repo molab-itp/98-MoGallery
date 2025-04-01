@@ -1,6 +1,26 @@
 _notes.txt
 
 # --
+2024-12-18 10:49:45
+
+Identifiable
+
+selection: app.settings.photoAlbum,
+
+photoAlbumItem
+
+final class PhotosModel: ObservableObject {
+
+    @Published var albumNames: [String] = []
+-->
+    @Published var albumItems: [AlbumItem] = []
+
+
+AlbumItem
+  id: String
+  title: String
+
+# --
 2024-12-16 14:26:27
 
 struct PhotoCollectionView: View {

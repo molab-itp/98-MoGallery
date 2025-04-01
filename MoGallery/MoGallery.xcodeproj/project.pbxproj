@@ -12,6 +12,7 @@
 		AB07BC4129BD68000079C149 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB07BC4029BD68000079C149 /* Settings.swift */; };
 		AB07BC4429C0D8080079C149 /* YouTubePlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = AB07BC4329C0D8080079C149 /* YouTubePlayerKit */; };
 		AB281C5E2961268F007328EB /* StringMisc.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB281C5D2961268F007328EB /* StringMisc.swift */; };
+		AB3FE4DD2D13132F004ED9FB /* AlbumPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3FE4DC2D13132F004ED9FB /* AlbumPickerView.swift */; };
 		AB4A7E332954DB79005E55CB /* MoGalleryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4A7E322954DB79005E55CB /* MoGalleryApp.swift */; };
 		AB4A7E372954DB7A005E55CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB4A7E362954DB7A005E55CB /* Assets.xcassets */; };
 		AB4A7E3A2954DB7A005E55CB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AB4A7E392954DB7A005E55CB /* Preview Assets.xcassets */; };
@@ -71,6 +72,7 @@
 		AB07BC3E29BD18FF0079C149 /* GalleryModel-add.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GalleryModel-add.swift"; sourceTree = "<group>"; };
 		AB07BC4029BD68000079C149 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		AB281C5D2961268F007328EB /* StringMisc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringMisc.swift; sourceTree = "<group>"; };
+		AB3FE4DC2D13132F004ED9FB /* AlbumPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumPickerView.swift; sourceTree = "<group>"; };
 		AB4A7E2F2954DB79005E55CB /* MoGallery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoGallery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB4A7E322954DB79005E55CB /* MoGalleryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoGalleryApp.swift; sourceTree = "<group>"; };
 		AB4A7E362954DB7A005E55CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 			isa = PBXGroup;
 			children = (
 				AB4A7E512954DFB4005E55CB /* PhotoCollectionView.swift */,
+				AB3FE4DC2D13132F004ED9FB /* AlbumPickerView.swift */,
 				AB4A7E4A2954DFB4005E55CB /* PhotosModel.swift */,
 				AB4A7E4F2954DFB4005E55CB /* PhotoCollection.swift */,
 				AB4A7E4B2954DFB4005E55CB /* PhotoDetailView.swift */,
@@ -395,6 +398,7 @@
 				ABCF7C3129ECB3E000F3527B /* WebView.swift in Sources */,
 				AB4A7E6F2954DFB4005E55CB /* PhotoAsset.swift in Sources */,
 				ABEA5B972995DC95005E7148 /* UserDetailView.swift in Sources */,
+				AB3FE4DD2D13132F004ED9FB /* AlbumPickerView.swift in Sources */,
 				AB560E7929841B8900A3F738 /* LocationManager.swift in Sources */,
 				AB4A7E672954DFB4005E55CB /* PhotoDetailView.swift in Sources */,
 				AB4A7E712954DFB4005E55CB /* PhotoLibrary.swift in Sources */,
@@ -550,7 +554,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 111;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;
@@ -585,7 +589,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = MoGallery/MoGallery.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 111;
 				DEVELOPMENT_ASSET_PATHS = "\"MoGallery/Preview Content\"";
 				DEVELOPMENT_TEAM = 3RCW2SSL8G;
 				ENABLE_PREVIEWS = YES;

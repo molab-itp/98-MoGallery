@@ -9,6 +9,11 @@ import os.log
 // for fetch album names, extracted from DICE PhotosLibrary
 import Photos
 
+struct AlbumItem: Identifiable, Codable, Equatable, Hashable {
+    var id: String = "-Photo Library-"
+    var title: String = "-Photo Library-"
+}
+
 final class PhotosModel: ObservableObject {
         
     var photoCollection: PhotoCollection?
@@ -16,6 +21,7 @@ final class PhotosModel: ObservableObject {
     @Published var viewfinderImage: Image?
     @Published var thumbnailImage: Image?
     @Published var albumNames: [String] = []
+    @Published var albumItems: [AlbumItem] = []
 
     @Published var isLoading: Bool = false
     @Published var errorFound: Bool = false
@@ -82,25 +88,44 @@ final class PhotosModel: ObservableObject {
         }
     }
     
+    func albumItem(title: String) -> AlbumItem {
+        if let index = albumItems.firstIndex(where: { $0.title == title }) {
+//            print("AlbumPickerView scrollTo index", index)
+            return albumItems[index];
+        }
+        print("PhotosModel albumItem no index for title", title)
+        return AlbumItem();
+    }
+    
     func loadAlbumNames() async {
         let userCollections = PHCollectionList.fetchTopLevelUserCollections(with: nil)
         // !!@ album are saved by title only
         // to deal with duplicate names we need to also store associated localIdentifier
-        var arr: [String] = ["-Photo Library-"]
+        var arr: [String] = []
+        var arrItems: [AlbumItem] = []
         for index in 0..<userCollections.count {
             let col = userCollections.object(at: index);
+            let id = col.localIdentifier
             let title = col.localizedTitle ?? ""
             // xprint("PhotosModel  setup index=", index, "localizedTitle=", title, "id=", col.localIdentifier)
             arr.append(title)
+            arrItems.append(AlbumItem(id:id,title:title))
         }
-        let sortedItems = arr.sorted(by: { $0 < $1 })
+        var sortedItems = arr.sorted(by: { $0 < $1 })
+        var sortedAlbumItems = arrItems.sorted(by: { $0.title < $1.title })
+        sortedItems.insert("-Photo Library-", at: 0)
+        sortedAlbumItems.insert(AlbumItem(), at: 0)
+        let nsortedItems = sortedItems
+        let nsortedAlbumItems = sortedAlbumItems
         Task { @MainActor in
-            self.albumNames = sortedItems
+            self.albumNames = nsortedItems
+            self.albumItems = nsortedAlbumItems
 //            for ent in albumNames {
 //                xprint(ent)
 //            }
             // xprint("PhotosModel albumNames", albumNames)
-            xprint("albumNames count", albumNames.count)
+//            print("albumNames count", albumNames.count)
+            print("albumItems count", albumItems.count)
         }
     }
 

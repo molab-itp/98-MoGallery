@@ -19,7 +19,7 @@ struct PhotoCollectionView: View {
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss
 
-    @State private var selection: String?
+//    @State private var selection: String?
     @State var showLimitedPicker: Bool = true
     
     @State var showDownloading: Bool = false
@@ -44,7 +44,13 @@ struct PhotoCollectionView: View {
         let photoCount = photosModel.photoCollection!.photoAssets.count;
         NavigationStack {
             ScrollView {
-                Text("\(photoCount) items")
+                HStack {
+                    Text(app.settings.photoAlbum)
+                        .padding(.leading)
+                    Spacer()
+                    Text("\(photoCount) items")
+                        .padding(.trailing)
+                }
                 if showDownloading {
                     VStack {
                         HStack {
@@ -100,7 +106,13 @@ struct PhotoCollectionView: View {
                             LimitedPicker(isPresented: $showLimitedPicker);
                         }
                         else {
-                            AlbumPickerView(selection: $selection)
+                            AlbumPickerView(
+                                selection: app.settings.photoAlbum,
+                                albumNames: app.photosModel.albumNames)
+
+//                            AlbumPickerView_AlbumItem(
+//                                selection: app.photosModel.albumItem(title:app.settings.photoAlbum),
+//                                albumItems: app.photosModel.albumItems)
                         }
                     } label: {
                         Label(photosModel.photoCollectionTitle , systemImage: "photo.on.rectangle")
@@ -142,6 +154,9 @@ struct PhotoCollectionView: View {
         downloadingActive = true;
         showDownloading = true;
         Task {
+          // Need to dismiss first to avoid cancelled download in GalleryTabView
+          dismiss()
+          app.toGalleryTab()
             let photos = photosModel.photoCollection!.photoAssets
             downloadingCount = photos.count;
             print("Download count", downloadingCount)
@@ -158,13 +173,14 @@ struct PhotoCollectionView: View {
                 downloadingBase = index + 1;
                 if !showDownloading || !downloadingActive { break; }
             }
-            await MainActor.run {
-                if downloadingActive { showDownloading = false; }
-                dismiss()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    app.toGalleryTab()
-                }
-            }
+            if downloadingActive { showDownloading = false; }
+//            await MainActor.run {
+//                if downloadingActive { showDownloading = false; }
+//                dismiss()
+//                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                    app.toGalleryTab()
+//                }
+//            }
         }
     }
     private func photoItemView(asset: PhotoAsset, cache: CachedImageManager ) -> some View {
@@ -225,58 +241,6 @@ struct LimitedPicker: UIViewControllerRepresentable {
     }
 }
 
-struct AlbumPickerView: View {
-    @Binding var selection: String?
-
-    @EnvironmentObject var app: AppModel
-    @Environment(\.dismiss) var dismiss
-
-    var body: some View {
-        Group {
-// HStack {
-//     Button(action: dismissPicker) {
-//         Image(systemName: "chevron.left")
-//     }
-//     Spacer()
-//     let str = selection ?? ""
-//     Text("Selected album: \(str)")
-//     Spacer()
-// }
-// .padding(20)
-            VStack {
-                List(app.photosModel.albumNames, id: \.self,
-                     selection: $selection)
-                { item in
-                    Text(item)
-                }
-            }
-            .onChange(of: selection) { newState in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    dismissPicker()
-                }
-            }
-        }
-        // .navigationTitle( photosModel.photoCollection!.albumName ?? "Photo Library")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("Select Album")
-        // Label("Select Album", systemImage: "photo.on.rectangle")
-        //  .labelStyle(.titleAndIcon)
-
-    }
-    
-    private func dismissPicker() {
-        // showPicker = false
-        xprint("selection", selection ?? "-none-")
-        if let selection {
-            app.settings.photoAlbum = selection
-            app.lobbyModel.albumName = selection
-            app.saveSettings()
-            app.photosModel.refresh()
-        }
-        dismiss();
-    }
-
-}
 
 // !!@ Fails for more than 30 albumNames
 //                    Picker("Please choose a album", selection: $app.settings.photoAlbum) {
@@ -287,3 +251,14 @@ struct AlbumPickerView: View {
 
 // private static let itemSpacing = 12.0
 // private static let itemCornerRadius = 15.0
+
+// HStack {
+//     Button(action: dismissPicker) {
+//         Image(systemName: "chevron.left")
+//     }
+//     Spacer()
+//     let str = selection ?? ""
+//     Text("Selected album: \(str)")
+//     Spacer()
+// }
+// .padding(20)

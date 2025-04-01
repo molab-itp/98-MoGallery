@@ -72,15 +72,21 @@ struct PhotoDetailView: View {
                     Label("Favorite", systemImage: asset.isFavorite ? "heart.fill" : "heart")
                 }
                 Button {
-                    Task {
-                        await app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
-                        await MainActor.run {
-                            dismiss()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                app.toGalleryTab()
-                            }
-                        }
-                    }
+                  Task {
+                    xprint("PhotoDetailView - Add Photo START -----")
+                    // Need to dismiss first to avoid cancelled download in GalleryTabView
+                    dismiss()
+                    app.toGalleryTab()
+                    app.galleryModel.addTempMedia()
+                    await app.galleryModel.addGalleryAsset(phAsset: asset.phAsset)
+                    //  await MainActor.run {
+                    //    dismiss()
+                    //    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    //      app.toGalleryTab()
+                    //    }
+                    //  }
+                    xprint("PhotoDetailView - Add Photo DONE -----")
+                  }
                 } label: {
                     Label("Add Photo", systemImage: "plus.app.fill")
                 }

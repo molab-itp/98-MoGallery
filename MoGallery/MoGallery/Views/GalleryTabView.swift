@@ -186,51 +186,69 @@ struct GalleryHeaderView: View {
 }
 
 struct MediaThumbView: View {
-    var item: MediaModel
-    var itemSize: CGSize
-    
-    var body: some View {
-        AsyncImage(url: URL(string: item.mediaPath))
-        { image in
-            image.resizable()
-                .scaledToFill()
-            // .scaledToFit()
-            
-        } placeholder: {
-            ProgressView()
-        }
-        .aspectRatio(contentMode: .fill)
-        // .aspectRatio(contentMode: .fit)
-        .frame(width: itemSize.width, height: itemSize.height)
-        .clipped()
-        .overlay(alignment: .bottomLeading) {
-            HStack {
-                if item.isFavorite {
-                    Image(systemName: "heart.fill")
-                        .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
-                        .font(.callout)
-                        .offset(x: 4, y: -4)
-                }
-                if item.isVideoMediaType {
-                    Image(systemName: "video.fill")
-                        .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
-                        .font(.callout)
-                        .offset(x: 4, y: -4)
-                }
-                if !item.caption.isEmpty {
-                    let lines = item.caption.split(separator: "\n")
-                    let str = lines[0]
-                    Text(str)
-                        .font(.footnote)
-                        .padding(2)
-                        .foregroundColor(.white)
-                        .background(Color(.lightGray))
-                }
-            }
-        }
+  var item: MediaModel
+  var itemSize: CGSize
+  
+  var body: some View {
+    //        AsyncImage(url: URL(string: item.mediaPath))
+    //        { image in
+    //            image.resizable()
+    //                .scaledToFill()
+    //            // .scaledToFit()
+    //
+    //        } placeholder: {
+    //            ProgressView()
+    //        }
+    AsyncImage(url: URL(string: item.mediaPath)) { phase in
+      if let image = phase.image {
+        // Displays the loaded image
+        image
+          .resizable()
+          .scaledToFill()
+      } else if phase.error != nil {
+        let _ = print("phase.error", phase.error!)
+        Color.red // Indicates an error.
+      } else {
+        //          Color.blue  // Acts as a placeholder.
+        ProgressView()
+      }
     }
+    
+    .onAppear {
+      xprint("MediaThumbView.onAppear item.mediaPath", item.mediaPath);
+    }
+    .aspectRatio(contentMode: .fill)
+    // .aspectRatio(contentMode: .fit)
+    .frame(width: itemSize.width, height: itemSize.height)
+    .clipped()
+    .overlay(alignment: .bottomLeading) {
+      HStack {
+        if item.isFavorite {
+          Image(systemName: "heart.fill")
+            .foregroundColor(.white)
+            .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+            .font(.callout)
+            .offset(x: 4, y: -4)
+        }
+        if item.isVideoMediaType {
+          Image(systemName: "video.fill")
+            .foregroundColor(.white)
+            .shadow(color: .black.opacity(0.3), radius: 5, x: 0, y: 1)
+            .font(.callout)
+            .offset(x: 4, y: -4)
+        }
+        if !item.caption.isEmpty {
+          let lines = item.caption.split(separator: "\n")
+          let str = lines[0]
+          Text(str)
+            .font(.footnote)
+            .padding(2)
+            .foregroundColor(.white)
+            .background(Color(.lightGray))
+        }
+      }
+    }
+  }
 }
 
 #Preview {

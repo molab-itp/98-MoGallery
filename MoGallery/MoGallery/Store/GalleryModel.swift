@@ -32,6 +32,7 @@ class GalleryModel: ObservableObject {
     lazy var app = AppModel.main;
 
     func addTempMedia() {
+      xprint("addTempMedia ---------")
         gallery.insert( MediaModel(id: UUID().uuidString, dict: [:]), at: 0)
     }
     

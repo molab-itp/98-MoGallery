@@ -56,6 +56,8 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 ## Plan-Issues:
 
+[] scrollTo album selection fails
+
 [] MediaDetailView showInfoOverlay locationDescription 
     location not show on in Map tab
     
@@ -71,6 +73,12 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
     FirebaseDatabase Thread Performance Checker warning #12883
 
 ## Log
+
+# --
+v103
+
+HStack photoAlbum photoCount
+[] scrollTo album selection fails
 
 # --
 v101
