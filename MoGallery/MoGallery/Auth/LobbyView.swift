@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LobbyView: View {
 
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var app: AppModel
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(AppModel.self) var app
     
     var body: some View {
         NavigationStack {
@@ -132,8 +132,8 @@ struct LobbyView: View {
 struct LocationRow: View {
     var user: UserModel
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var app: AppModel
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(AppModel.self) var app
     
     var body: some View {
         if let locationDescription = user.locationDescription {

@@ -9,41 +9,41 @@ import Foundation
 import MapKit
 import SwiftUI
 
-class MediaModel: ObservableObject, Identifiable {
-    
-    var id: String
-    var uid: String
-    var userGalleryChildId: String
-    var authorEmail: String
-    var uploadCount: Int
-    var createdAt: Date
-    var createdDate: String
-    var info: [String: Any]
-    
-    var homeRef: [String]
-    var mediaPath: String
-    var storagePath: String
-    var mediaPathFullRez: String
-    var storagePathFullRez: String
+@Observable class MediaModel: Identifiable {
 
-    var isFavorite: Bool
-    var caption: String
+    @ObservationIgnored var id: String
+    @ObservationIgnored var uid: String
+    @ObservationIgnored var userGalleryChildId: String
+    @ObservationIgnored var authorEmail: String
+    @ObservationIgnored var uploadCount: Int
+    @ObservationIgnored var createdAt: Date
+    @ObservationIgnored var createdDate: String
+    @ObservationIgnored var info: [String: Any]
+
+    @ObservationIgnored var homeRef: [String]
+    @ObservationIgnored var mediaPath: String
+    @ObservationIgnored var storagePath: String
+    @ObservationIgnored var mediaPathFullRez: String
+    @ObservationIgnored var storagePathFullRez: String
+
+    @ObservationIgnored var isFavorite: Bool
+    @ObservationIgnored var caption: String
 //    var videoUrl: String
-    var previewUrl: String
-    var loadPreviewUrl: Bool
-    
+    @ObservationIgnored var previewUrl: String
+    @ObservationIgnored var loadPreviewUrl: Bool
+
     var duration: Double {
         info["duration"] as? Double ?? 0.0
     }
-    
+
     var isVideoMediaType: Bool {
         (info["mediaType"] as? String ?? "") == "video"
     }
-    
+
     var fullRezWidth: Int {
         info["fullRezWidth"] as? Int ?? -1
     }
-    
+
     var fullRezHeight:Int {
         info["fullRezHeight"] as? Int ?? -1
     }
@@ -58,7 +58,7 @@ class MediaModel: ObservableObject, Identifiable {
         if val > 0 { return val }
         return info["imageWidth"] as? Int ?? -1
     }
-    
+
     var height:Int {
         let val = fullRezHeight
         if val > 0 { return val }
@@ -69,7 +69,7 @@ class MediaModel: ObservableObject, Identifiable {
         guard let item = info["sourceDate"] else { return nil }
         return item as? String
     }
-    
+
     var sourceId: String? {
         guard let item = info["sourceId"] else { return nil }
         return item as? String
@@ -78,7 +78,7 @@ class MediaModel: ObservableObject, Identifiable {
     // init? if we want to allow for invalid entries filter out with compactMap
     // init?(id: String, dict: [String: Any]) {
     init(id: String, dict: [String: Any]) {
-        
+
         let uid = dict["uid"] as? String ?? ""
         let authorEmail = dict["authorEmail"] as? String ?? ""
         let mediaPath = dict["mediaPath"] as? String ?? ""

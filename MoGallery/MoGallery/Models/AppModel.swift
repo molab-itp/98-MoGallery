@@ -10,46 +10,46 @@ import AVKit
 import Photos
 import YouTubePlayerKit
 
-class AppModel: ObservableObject {
-    
-    @Published var settings:Settings = AppModel.loadSettings()
-    @Published var selectedTab = TabTag.gallery
-    
-    @Published var videoPlayer: AVPlayer?
-    @Published var youTubePlayer: YouTubePlayer?
-    
+@Observable class AppModel {
+
+    var settings:Settings = AppModel.loadSettings()
+    var selectedTab = TabTag.gallery
+
+    var videoPlayer: AVPlayer?
+    var youTubePlayer: YouTubePlayer?
+
     static let main = AppModel()
 
-    let cameraModel = CameraModel.main
-    lazy var lobbyModel = LobbyModel.main
-    lazy var galleryModel = GalleryModel.main
-    lazy var photosModel = PhotosModel.main
-    lazy var metaModel = MetaModel.main
+    @ObservationIgnored let cameraModel = CameraModel.main
+    @ObservationIgnored lazy var lobbyModel = LobbyModel.main
+    @ObservationIgnored lazy var galleryModel = GalleryModel.main
+    @ObservationIgnored lazy var photosModel = PhotosModel.main
+    @ObservationIgnored lazy var metaModel = MetaModel.main
 //    lazy var locationModel = LocationModel.main
-        
-    var locationManager = LocationManager()
-    var geometrySize = CGSize.zero
-    
-    var dateFormatter = DateComponentsFormatter()
-    
-    lazy var verNum = Self.bundleVersion()
-    
-    var photoLibLimited = false;
-    
+
+    @ObservationIgnored var locationManager = LocationManager()
+    @ObservationIgnored var geometrySize = CGSize.zero
+
+    @ObservationIgnored var dateFormatter = DateComponentsFormatter()
+
+    @ObservationIgnored lazy var verNum = Self.bundleVersion()
+
+    @ObservationIgnored var photoLibLimited = false
+
     func string(duration: Double) -> String {
         if let str = dateFormatter.string(from: duration) {
             return str
         }
         return ""
     }
-    
+
     func initRefresh() {
         // metaModel is not dependent on login status or selected gallery
         // only need to refresh once per app launch
         metaModel.refresh()
         refreshModels()
     }
-    
+
     func refreshModels() {
         cameraModel.photoInfoProvided = { photoInfo in
             self.photosModel.savePhoto(photoInfo: photoInfo)
@@ -64,33 +64,24 @@ class AppModel: ObservableObject {
         galleryModel.refresh()
         photosModel.refresh()
     }
-    
+
     func toMapTab() {
         selectedTab = .map
     }
-    
+
     func updateSettings() {
         saveSettings()
         refreshModels()
     }
 
-//    func userGalleryKey(user: UserModel) -> String {
-//        let nemail = user.email.replacingOccurrences(of: ".", with: "-")
-//        let str = "zu-\( user.id )-\( nemail )"
-//        // let str = settings.storePrefix + "zu-\( user.id )-\( nemail )"
-//        // let str = "zu-\( id )-\( nemail )"
-//        // xprint("userGalleryKey", str)
-//        return str;
-//    }
-    
 } // class AppModel
 
 // load and save settings
 //
 extension AppModel {
-    
+
     static let savePath = FileManager.documentsDirectory.appendingPathComponent("AppSetting")
-    
+
     static func loadSettings() -> Settings {
         var settings:Settings;
         do {
@@ -102,7 +93,7 @@ extension AppModel {
         }
         return settings;
     }
-    
+
     func saveSettings() {
         do {
             let data = try JSONEncoder().encode(settings)
@@ -111,11 +102,11 @@ extension AppModel {
             xprint("AppModel saveSettings error", error)
         }
     }
-    
+
     static func bundleVersion() -> String {
         return String(describing: Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)
     }
-    
+
 } // extension AppModel
 
 extension FileManager {
@@ -128,3 +119,5 @@ extension FileManager {
 // https://github.com/twostraws/HackingWithSwift.git
 //  SwiftUI/project14/Bucketlist/ContentView-ViewModel.swift
 // https://github.com/twostraws/HackingWithSwift/blob/main/SwiftUI/project14/Bucketlist/ContentView-ViewModel.swift
+
+

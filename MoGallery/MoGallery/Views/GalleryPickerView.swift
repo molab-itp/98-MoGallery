@@ -14,7 +14,7 @@ struct GalleryPickerView: View {
     var mode = "Select"
     
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     
     @State var newGallery = ""
     @Environment(\.editMode) private var editMode

@@ -9,10 +9,10 @@ import SwiftUI
 
 struct UserDetailView: View {
     
-    @ObservedObject var user: UserModel
-    
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var app: AppModel
+    @Bindable var user: UserModel
+
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(AppModel.self) var app
     
     var body: some View {
         VStack() {

@@ -31,13 +31,13 @@ struct MoGalleryApp: App {
     var body: some Scene {
         WindowGroup {
             LoginCheckView()
-                .environmentObject(AppModel.main)
-                .environmentObject(CameraModel.main)
-                .environmentObject(LobbyModel.main)
-                .environmentObject(GalleryModel.main)
-                .environmentObject(PhotosModel.main)
-                .environmentObject(MetaModel.main)
-                .environmentObject(LocationModel.main)
+                .environment(AppModel.main)
+                .environment(CameraModel.main)
+                .environment(LobbyModel.main)
+                .environment(GalleryModel.main)
+                .environment(PhotosModel.main)
+                .environment(MetaModel.main)
+                .environment(LocationModel.main)
                 .onAppear {
                     xprint("MoGalleryApp onAppear")
                     // For UIApplicationDelegateAdaptor must refreshModels here

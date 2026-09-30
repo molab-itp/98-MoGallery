@@ -15,12 +15,12 @@ import YouTubePlayerKit
 
 struct MediaDetailView: View {
     
-    @ObservedObject var item: MediaModel;
+    @Bindable var item: MediaModel
     var priorSelection: String
-    
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var galleryModel: GalleryModel
-    @EnvironmentObject var app: AppModel
+
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(GalleryModel.self) var galleryModel
+    @Environment(AppModel.self) var app
     @Environment(\.dismiss) var dismiss
     
     @State private var showingAlert = false

@@ -12,7 +12,7 @@ struct WebView : UIViewRepresentable {
     
     let request: URLRequest
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
 
     func update(key: String, value: Double) {
         guard let user = app.lobbyModel.currentUser else {

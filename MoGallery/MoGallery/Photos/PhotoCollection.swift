@@ -4,10 +4,9 @@ See the License.txt file for this sample’s licensing information.
 
 import Photos
 import os.log
-
-class PhotoCollection: NSObject, ObservableObject {
+@Observable class PhotoCollection: NSObject {
     
-    @Published var photoAssets: PhotoAssetCollection = PhotoAssetCollection(PHFetchResult<PHAsset>())
+    var photoAssets: PhotoAssetCollection = PhotoAssetCollection(PHFetchResult<PHAsset>())
     
     var identifier: String? {
         assetCollection?.localIdentifier
@@ -21,9 +20,9 @@ class PhotoCollection: NSObject, ObservableObject {
     
     private var assetCollection: PHAssetCollection?
     
-    private var createAlbumIfNotFound = false
+    @ObservationIgnored private var createAlbumIfNotFound = false
     
-    var userCollections: PHFetchResult<PHCollection>!
+    @ObservationIgnored var userCollections: PHFetchResult<PHCollection>!
 
     unowned let photosModel: PhotosModel
     

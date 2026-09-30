@@ -4,29 +4,30 @@
 //  Created by jht2 on 12/20/22.
 //
 
-import FirebaseDatabase
+import FirebaseFirestore
+import Observation
 
 //private var moMetaKey = "mo-meta1"
 //private var moMetaKey = "mo-meta"
 
-class MetaModel: ObservableObject {
-    
-    @Published var metas: [MetaEntry] = []
+@Observable class MetaModel {
+
+    var metas: [MetaEntry] = []
 
     // mo-meta
-    private var moMetaKey = "mo-meta"
-    private var metaRef: DatabaseReference? 
-    private var metaHandle: DatabaseHandle?
-    var loaded: Bool = false
-    var cleaned: Bool = true
-    
+    @ObservationIgnored private var moMetaKey = "mo-meta"
+    @ObservationIgnored private var metaRef: CollectionReference?
+    @ObservationIgnored private var metaListener: ListenerRegistration?
+    @ObservationIgnored var loaded: Bool = false
+    @ObservationIgnored var cleaned: Bool = true
+
     static let main = MetaModel()
-    lazy var app = AppModel.main;
+    @ObservationIgnored lazy var app = AppModel.main
 
     init() {
         xprint("MetaModel init")
         moMetaKey = app.settings.storePrefix + "meta"
-        metaRef = Database.root.child(moMetaKey)
+        metaRef = FirestorePaths.metaEntries(prefix: app.settings.storePrefix)
     }
     
     func allGalleryKeys() -> [String] {
@@ -43,34 +44,43 @@ class MetaModel: ObservableObject {
     func refresh() {
         xprint("MetaModel refresh")
         observeStop()
-        metaRef = Database.root.child(moMetaKey)
+        metaRef = FirestorePaths.metaEntries(prefix: app.settings.storePrefix)
         observeStart()
     }
     
     func observeStart() {
         guard let metaRef else { return }
-        xprint("MetaModel observeStart metaHandle", metaHandle ?? "nil")
-        if metaHandle != nil {
+        xprint("MetaModel observeStart metaListener", metaListener as Any)
+        if metaListener != nil {
             return;
         }
-        metaHandle = metaRef.observe(.value, with: { snapshot in
+        metaListener = metaRef.addSnapshotListener { snapshot, error in
+            if let error = error {
+                xprint("MetaModel snapshot error", error.localizedDescription)
+                return
+            }
+            guard let snapshot else {
+                xprint("MetaModel snapshot nil")
+                self.metas = []
+                self.loaded = true
+                return
+            }
             self.receiveSnapShot(snapshot)
-        })
+        }
     }
     
-    func receiveSnapShot(_ snapshot: DataSnapshot) {
-        // xprint("MetaModel receiveSnapShot snapshot \(snapshot)")
-        guard let snapItems = snapshot.value as? [String: [String: Any]] else {
+    func receiveSnapShot(_ snapshot: QuerySnapshot) {
+        let documents = snapshot.documents
+        guard !documents.isEmpty else {
             xprint("MetaModel meta EMPTY")
             metas = []
             loaded = true
             return
         }
-        let items = snapItems.compactMap { MetaEntry(id: $0, dict: $1) }
+        let items = documents.compactMap { MetaEntry(id: $0.documentID, dict: $0.data()) }
         let sortedItems = items.sorted(by: { $0.galleryName < $1.galleryName })
         metas = sortedItems;
         xprint("MetaModel metas count", metas.count)
-        // if (metas.count > 1000 && !cleaned) {
         if !cleaned {
             cleaned = true
             removeAllMetas()
@@ -92,9 +102,9 @@ class MetaModel: ObservableObject {
                 xprint(count, "removeAllMetas mentry.id ", mentry.id)
             }
             count += 1
-            metaRef.child(mentry.id).removeValue {error, ref in
+            metaRef.document(mentry.id).delete { error in
                 if let error = error {
-                    xprint("removeAllMetas removeValue error: \(error).")
+                    xprint("removeAllMetas delete error: \(error).")
                 }
             }
         }
@@ -102,11 +112,10 @@ class MetaModel: ObservableObject {
     }
     
     func observeStop() {
-        guard let metaRef else { return }
-        xprint("MetaModel observeStop metaHandle", metaHandle ?? "nil")
-        if let refHandle = metaHandle {
-            metaRef.removeObserver(withHandle: refHandle)
-            metaHandle = nil;
+        xprint("MetaModel observeStop metaListener", metaListener as Any)
+        if let listener = metaListener {
+            listener.remove()
+            metaListener = nil;
         }
     }
     
@@ -155,19 +164,15 @@ class MetaModel: ObservableObject {
             xprint("addMeta no metaRef")
             return nil
         }
-        guard let key = metaRef.childByAutoId().key else {
-            xprint("addMeta no key")
-            return nil
-        }
         var values:[String : Any] = [:];
         values["uid"] = user.id;
         values["galleryName"] = galleryName;
-        metaRef.child(key).updateChildValues(values) { error, ref in
+        let docRef = metaRef.addDocument(data: values) { error in
             if let error = error {
-                xprint("addMeta updateChildValues error: \(error).")
+                xprint("addMeta setData error: \(error).")
             }
         }
-        let newEnt = MetaEntry(id: key, dict: values)
+        let newEnt = MetaEntry(id: docRef.documentID, dict: values)
         metas.append( newEnt )
         return newEnt
     }
@@ -189,9 +194,9 @@ class MetaModel: ObservableObject {
             return
         }
         guard let metaRef else { return }
-        metaRef.child(mentry.id).removeValue {error, ref in
+        metaRef.document(mentry.id).delete { error in
             if let error = error {
-                xprint("removeMeta removeValue error: \(error).")
+                xprint("removeMeta delete error: \(error).")
             }
         }
     }
@@ -201,9 +206,9 @@ class MetaModel: ObservableObject {
         guard let metaRef else { return }
         var values:[String: Any] = [:];
         values["caption"] = metaEntry.caption;
-        metaRef.child(metaEntry.id).updateChildValues(values) { error, ref in
+        metaRef.document(metaEntry.id).setData(values, merge: true) { error in
             if let error = error {
-                xprint("update metaEntry updateChildValues error: \(error).")
+                xprint("update metaEntry setData error: \(error).")
             }
         }
     }

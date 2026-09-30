@@ -5,7 +5,7 @@
 //  Created by jht2 on 3/11/23.
 //
 
-import FirebaseDatabase
+import FirebaseFirestore
 import FirebaseStorage
 import Photos
 import UIKit
@@ -30,8 +30,8 @@ extension GalleryModel {
         
         // add 1 to user uploadCount
         var values:[String: Any] = [:];
-        values["uploadCount"] = ServerValue.increment(1);
-        lobbyRef.child(uid).updateChildValues(values) { error, ref in
+        values["uploadCount"] = FieldValue.increment(Int64(1));
+        lobbyRef.document(uid).setData(values, merge: true) { error in
             if let error = error {
                 xprint("uploadImageData uploadCount error: \(error).")
             }
@@ -182,9 +182,9 @@ extension GalleryModel {
         values["previewUrl"] = media.previewUrl;
         values["loadPreviewUrl"] = media.loadPreviewUrl;
         values["isFavorite"] = media.isFavorite;
-        galleryRef.child(media.id).updateChildValues(values) { error, ref in
+        galleryRef.document(media.id).setData(values, merge: true) { error in
             if let error = error {
-                xprint("updateMediaEntry updateChildValues error: \(error).")
+                xprint("updateMediaEntry setData error: \(error).")
             }
         }
     }
@@ -192,7 +192,7 @@ extension GalleryModel {
     func createMediaEntry(
         info: [String: Any],
         values: [String: Any],
-        galleryRef: DatabaseReference?,
+        galleryRef: CollectionReference?,
         galleryKey: String,
         user: UserModel?,
         done: @Sendable @escaping () -> Void)
@@ -214,10 +214,8 @@ extension GalleryModel {
         values["createdDate"] = date.description;
         values["info"] = info;
         
-        guard let key = galleryRef.childByAutoId().key else {
-            xprint("createMediaEntry no key");
-            return
-        }
+        let docRef = galleryRef.document()
+        let key = docRef.documentID
         
         let userGalleryKey = user.userGalleryKey
         // let userGalleryKey = app.userGalleryKey(user: user)
@@ -232,23 +230,21 @@ extension GalleryModel {
                 xprint("createMediaEntry no userGalleryRef")
                 return
             }
-            guard let userGalleryChildId = userGalleryRef.childByAutoId().key else {
-                xprint("createMediaEntry no userGalleryChildId")
-                return
-            }
+            let userGalleryDoc = userGalleryRef.document()
+            let userGalleryChildId = userGalleryDoc.documentID
             var nvalues = values;
             nvalues["homeRef"] = [galleryKey, key]
-            userGalleryRef.child(userGalleryChildId).updateChildValues(nvalues) { error, ref in
+            userGalleryDoc.setData(nvalues, merge: true) { error in
                 if let error = error {
-                    xprint("createMediaEntry userGalleryRef updateChildValues error: \(error).")
+                    xprint("createMediaEntry userGalleryRef setData error: \(error).")
                 }
             }
             values["userGalleryChildId"] = userGalleryChildId;
         }
         
-        galleryRef.child(key).updateChildValues(values) { error, ref in
+        docRef.setData(values, merge: true) { error in
             if let error = error {
-                xprint("createMediaEntry updateChildValues error: \(error).")
+                xprint("createMediaEntry setData error: \(error).")
             }
             done();
         }

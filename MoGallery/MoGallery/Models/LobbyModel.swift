@@ -3,65 +3,45 @@
 
 import Firebase
 import GoogleSignIn
-import FirebaseDatabase
 import FirebaseAuth
+import FirebaseFirestore
 import MapKit
+import Observation
 
-//struct MapRegionModel {
-//    var region = MKCoordinateRegion(
-//        center: CLLocationCoordinate2D(latitude: 37.334_900,
-//                                       longitude: -122.009_020),
-//        latitudinalMeters: 750,
-//        longitudinalMeters: 750
-//    )
-//    var locIndex = 0
-//    var regionLabel = ""
-//    var locs: [Location] = []
-//}
-
-class LobbyModel: ObservableObject {
+@Observable class LobbyModel {
     enum SignInState {
         case signedIn
         case signedOut
         case signedInFresh
     }
-    @Published var state: SignInState = .signedOut
-    @Published var users: [UserModel] = []
-    @Published var albumName = ""
-    
-//    @Published var mapRegion = MapRegionModel()
-//    @Published var locationModel = LocationModel.main
+    var state: SignInState = .signedOut
+    var users: [UserModel] = []
+    var albumName = ""
 
-//    @Published var currentUser: UserModel?
-    var currentUser: UserModel?
+    @ObservationIgnored var currentUser: UserModel?
 
-    var locations: [Location] = [];
-    
+    @ObservationIgnored var locations: [Location] = []
+
     static let main = LobbyModel()
-    lazy var app = AppModel.main;
-    
-    
+    @ObservationIgnored lazy var app = AppModel.main
+
     var uid: String! {
         currentUser?.id
     }
 
     // mo-lobby
-    var lobbyRef: DatabaseReference? // = Database.root.child(app.settings.storeLobbyKey)
-    var lobbyHandle: DatabaseHandle?
-
-//    unowned let app: AppModel
-//    init(_ app:AppModel) {
-//        self.app = app
-//    }
+    @ObservationIgnored var lobbyRef: CollectionReference? // users collection
+    @ObservationIgnored var lobbyListener: ListenerRegistration?
 
     func refresh() {
         observeStop()
-        let nstoreLobbyKey = app.settings.storePrefix + app.settings.storeLobbyKey
-        lobbyRef = Database.root.child(nstoreLobbyKey)
+        lobbyRef = FirestorePaths.lobbyUsers(
+            prefix: app.settings.storePrefix,
+            lobbyKey: app.settings.storeLobbyKey)
         observeStart()
         albumName = app.settings.photoAlbum
     }
-    
+
     func user(uid: String) -> UserModel? {
         return users.first{ $0.id == uid }
     }
@@ -70,7 +50,7 @@ class LobbyModel: ObservableObject {
         xprint("LobbyModel signIn", state)
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             xprint("LobbyModel signIn restorePreviousSignIn", state)
-            
+
             GIDSignIn.sharedInstance.restorePreviousSignIn { [unowned self] user, error in
                 authenticateUser(for: user, with: error)
             }
@@ -78,13 +58,13 @@ class LobbyModel: ObservableObject {
             xprint("LobbyModel signIn GIDConfiguration", state)
             guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
             guard let rootViewController = windowScene.windows.first?.rootViewController else { return }
-            
+
             GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController) { [unowned self] signInResult, error in
                 self.authenticateUser(for: signInResult?.user, with: error)
             }
         }
     }
-    
+
     func authenticateUser(for user: GIDGoogleUser?, with error: Error?) {
         if let error = error {
             xprint("authenticateUser error 1", error.localizedDescription)
@@ -102,10 +82,10 @@ class LobbyModel: ObservableObject {
             }
         }
     }
-    
+
     func signInAnonymously() {
         // anonymous authentication.
-        
+
         if Auth.auth().currentUser == nil {
             Auth.auth().signInAnonymously()
             setSignedIn()
@@ -131,7 +111,7 @@ class LobbyModel: ObservableObject {
             // app.metaModel.refresh()
         }
     }
-    
+
     func signOut() {
         GIDSignIn.sharedInstance.signOut()
         do {
@@ -144,7 +124,7 @@ class LobbyModel: ObservableObject {
             xprint("signOut error", error.localizedDescription)
         }
     }
-    
+
     func setCurrentUser(_ nuser: UserModel?) {
         var diff = true;
         if let nuser, let currentUser {
@@ -154,20 +134,20 @@ class LobbyModel: ObservableObject {
             xprint("setCurrentUser diff currentUser", currentUser ?? "-none-", "nuser", nuser ?? "-none-")
         }
         currentUser = nuser;
-        
+
         // If we are showing a new user, refresh the app models
         if (diff) {
             xprint("setCurrentUser app.refreshModels")
             app.refreshModels();
         }
     }
-        
+
     // First time user is inited in mo-users
     // update db user property dateIn with current time in seconds
     //
     func updateCurrentUser() {
         guard let lobbyRef else { return }
-        
+
         let id = Auth.auth().currentUser?.uid ?? ""
         let guser = GIDSignIn.sharedInstance.currentUser;
         let name = guser?.profile?.name ?? ""
@@ -204,89 +184,94 @@ class LobbyModel: ObservableObject {
             values["lon"] = loc.coordinate.longitude
         }
 
-        // Get user info and prepare to update
-        lobbyRef.getData() { error, snapshot in
-            guard error == nil else {
-                xprint("postUser getData error",error!.localizedDescription)
-                return;
+        let userDoc = lobbyRef.document(id)
+        userDoc.getDocument { snapshot, error in
+            if let error = error {
+                xprint("updateCurrentUser getDocument error", error.localizedDescription)
             }
-            // xprint("updateCurrentUser snapshot", snapshot ?? "-nil-");
-            if let users = snapshot?.value as? [String: Any] {
-                if let user = users[id] as? [String: Any] {
-                    xprint("updateCurrentUser user uploadCount", user["uploadCount"] ?? "-nil-");
-                    values["uploadCount"] = user["uploadCount"] as? Int ?? 0
-                    values["activeCount"] = ServerValue.increment(1);
-                }
+            var updateValues = values
+            var localValues = values
+            if let data = snapshot?.data() {
+                let uploadCount = data["uploadCount"] as? Int ?? 0
+                updateValues["uploadCount"] = uploadCount
+                localValues["uploadCount"] = uploadCount
+                let activeCount = (data["activeCount"] as? Int ?? 0) + 1
+                localValues["activeCount"] = activeCount
+            } else {
+                localValues["activeCount"] = 1
             }
-            // xprint("updateCurrentUser values", values);
-            
-            // Update db user properies
-            lobbyRef.child(id).updateChildValues(values) { error, ref in
+            updateValues["activeCount"] = FieldValue.increment(Int64(1))
+            userDoc.setData(updateValues, merge: true) { error in
                 if let error = error {
-                    xprint("postUser updateChildValues error: \(error).")
+                    xprint("postUser setData error: \(error).")
                 }
             }
-//            self.currentUser = UserModel(id: id, dict: values)
-            self.setCurrentUser(UserModel(id: id, dict: values));
+            self.setCurrentUser(UserModel(id: id, dict: localValues));
             xprint("set currentUser UserModel id", id)
         }
     }
-    
+
     func updateUser(user: UserModel) {
         xprint("updateUser updateUser", updateUser)
         guard let lobbyRef else { return }
-        
+
         var values:[String : Any] = [:];
         values["caption"] = user.caption
         values["stats"] = user.stats
-        lobbyRef.child(user.id).updateChildValues(values) { error, ref in
+        lobbyRef.document(user.id).setData(values, merge: true) { error in
             if let error = error {
-                xprint("updateUser updateChildValues error: \(error).")
+                xprint("updateUser setData error: \(error).")
             }
         }
     }
-    
+
     func observeStart() {
         guard let lobbyRef else { return }
-        xprint("observeUsersStart usersHandle", lobbyHandle ?? "nil")
-        if lobbyHandle != nil {
+        xprint("observeUsersStart lobbyListener", lobbyListener as Any)
+        if lobbyListener != nil {
             return;
         }
-        lobbyHandle = lobbyRef.observe(.value, with: { snapshot   in
+        lobbyListener = lobbyRef.addSnapshotListener { snapshot, error in
+            if let error = error {
+                xprint("LobbyModel snapshot error", error.localizedDescription)
+                return
+            }
+            guard let snapshot else {
+                xprint("LobbyModel snapshot nil")
+                self.users = []
+                return
+            }
             self.receiveSnapShot(snapshot)
-        })
+        }
     }
-    
-    func receiveSnapShot(_ snapshot: DataSnapshot) {
-        // xprint("LobbyModel receiveSnapShot snapshot", snapshot)
-        guard let snapUsers = snapshot.value as? [String: [String: Any]] else {
+
+    func receiveSnapShot(_ snapshot: QuerySnapshot) {
+        let docs = snapshot.documents
+        guard !docs.isEmpty else {
             xprint("LobbyModel users EMPTY")
             self.users = []
             return
         }
-        let items = snapUsers.compactMap { UserModel(id: $0, dict: $1) }
+        let items = docs.compactMap { UserModel(id: $0.documentID, dict: $0.data()) }
         let sortedItems = items.sorted(by: { $0.dateIn > $1.dateIn })
         users = sortedItems;
-        // Update current user check
-        if let user = currentUser {
-            if let nuser = sortedItems.first(where: { $0.id == user.id } ) {
-                setCurrentUser( nuser );
-                xprint("set currentUser LobbyModel nuser.id", nuser.id )
-            }
+        if let user = currentUser,
+           let nuser = sortedItems.first(where: { $0.id == user.id }) {
+            setCurrentUser( nuser );
+            xprint("set currentUser LobbyModel nuser.id", nuser.id )
         }
         xprint("LobbyModel users.count", users.count)
         locsForUsers(firstLoc: nil)
     }
-    
+
     func observeStop() {
-        guard let lobbyRef else { return }
-        xprint("observeUsersStop usersHandle", lobbyHandle ?? "nil")
-        if let refHandle = lobbyHandle {
-            lobbyRef.removeObserver(withHandle: refHandle)
-            lobbyHandle = nil;
+        xprint("observeUsersStop lobbyListener", lobbyListener as Any)
+        if let listener = lobbyListener {
+            listener.remove()
+            lobbyListener = nil;
         }
     }
-    
+
     func locsForUsers(firstLoc: Location?) {
         xprint("locsForUsers firstLoc", firstLoc?.label ?? "-nil-")
         var locs = [Location]()
@@ -308,12 +293,6 @@ class LobbyModel: ObservableObject {
             //  await locationModel.setLocations(locations);
             //  locationModel.setLocations(locations);
         }
-    }
-}
-
-extension Database {
-    class var root: DatabaseReference {
-        return database().reference()
     }
 }
 

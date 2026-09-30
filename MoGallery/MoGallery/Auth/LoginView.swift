@@ -7,9 +7,9 @@ import SwiftUI
 
 struct LoginView: View {
     
-    @EnvironmentObject var lobbyModel: LobbyModel
+    @Environment(LobbyModel.self) var lobbyModel
 
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     @Environment(\.openURL) var openURL
 
     var body: some View {

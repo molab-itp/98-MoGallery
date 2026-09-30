@@ -14,13 +14,14 @@ enum TabTag {
 
 struct MainView: View {
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-//    @EnvironmentObject var photosModel: PhotosModel
-//    @EnvironmentObject var cameraModel: CameraModel
-    
-    @EnvironmentObject var app: AppModel
-    
+    @Environment(LobbyModel.self) var lobbyModel
+//    @Environment(PhotosModel.self) var photosModel
+//    @Environment(CameraModel.self) var cameraModel
+
+    @Environment(AppModel.self) var app
+
     var body: some View {
+        @Bindable var app = app
         TabView(selection: $app.selectedTab) {
             GalleryTabView()
                 .tabItem {
@@ -68,13 +69,13 @@ struct MainView: View {
 
 #Preview {
     MainView()
-        .environmentObject(AppModel.main)
-        .environmentObject(CameraModel.main)
-        .environmentObject(LobbyModel.main)
-        .environmentObject(GalleryModel.main)
-        .environmentObject(PhotosModel.main)
-        .environmentObject(MetaModel.main)
-        .environmentObject(LocationModel.main)
+        .environment(AppModel.main)
+        .environment(CameraModel.main)
+        .environment(LobbyModel.main)
+        .environment(GalleryModel.main)
+        .environment(PhotosModel.main)
+        .environment(MetaModel.main)
+        .environment(LocationModel.main)
 }
 
 //    func signInAnonymously() async {

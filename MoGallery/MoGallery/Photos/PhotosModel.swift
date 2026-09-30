@@ -14,28 +14,28 @@ struct AlbumItem: Identifiable, Codable, Equatable, Hashable {
     var title: String = "-Photo Library-"
 }
 
-final class PhotosModel: ObservableObject {
-        
+@Observable final class PhotosModel {
+
     var photoCollection: PhotoCollection?
-    
-    @Published var viewfinderImage: Image?
-    @Published var thumbnailImage: Image?
-    @Published var albumNames: [String] = []
-    @Published var albumItems: [AlbumItem] = []
 
-    @Published var isLoading: Bool = false
-    @Published var errorFound: Bool = false
-    @Published var errInfo: Error?
+    var viewfinderImage: Image?
+    var thumbnailImage: Image?
+    var albumNames: [String] = []
+    var albumItems: [AlbumItem] = []
 
-    var isPhotosLoaded = false
+    var isLoading: Bool = false
+    var errorFound: Bool = false
+    var errInfo: Error?
+
+    @ObservationIgnored var isPhotosLoaded = false
 
     static let main = PhotosModel()
-    lazy var app = AppModel.main;
+    @ObservationIgnored lazy var app = AppModel.main
 
     // Array of randomly shuffled indices for non-repeating selection from nextRandomAsset
-    var selectionIndices: [Int]?
-    var selectionIndex = 0
-    var selectionLast = -1
+    @ObservationIgnored var selectionIndices: [Int]?
+    @ObservationIgnored var selectionIndex = 0
+    @ObservationIgnored var selectionLast = -1
     
     var photoCollectionTitle: String {
         photoCollection!.albumName ?? "Photo Library"

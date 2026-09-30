@@ -28,6 +28,10 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 - [why use social media?](https://github.com/jht1493/jht-site?tab=readme-ov-file#why)
 
+## Backend console
+
+- [firebase firestore console](https://console.firebase.google.com/u/0/project/molab-485f5/firestore/databases/-default-/data/~2Fnamespaces~2Fmo-5)
+
 ## References
 
 - [Apple Tutorial - Browsing Your Photos](https://developer.apple.com/tutorials/sample-apps/capturingphotos-browsephotos)
@@ -58,21 +62,22 @@ Born of a need to share and collaborate free of evil profit-driven corporations.
 
 [] scrollTo album selection fails
 
-[] MediaDetailView showInfoOverlay locationDescription 
+[] MediaDetailView showInfoOverlay locationDescription
     location not show on in Map tab
-    
+
 [] LimitedPicker nav view stays up after selection
 
 [] earlier photo progress view needed for add random
 
-[] Thread Performance Checker: Thread running at User-initiated quality-of-service 
-    class waiting on a thread without a QoS class specified (base priority 33). 
+[] Thread Performance Checker: Thread running at User-initiated quality-of-service
+    class waiting on a thread without a QoS class specified (base priority 33).
     Investigate ways to avoid priority inversions
     --
     https://github.com/firebase/firebase-ios-sdk/issues/12883
     FirebaseDatabase Thread Performance Checker warning #12883
 
 ## Log
+
 
 # --
 v103
@@ -110,7 +115,7 @@ v93
 [x] addTempMedia
 
 v92
-[x] Main actor-isolated static property 'main' can not be referenced from a non-isolated context; 
+[x] Main actor-isolated static property 'main' can not be referenced from a non-isolated context;
     this is an error in Swift 6
     lazy var locationModel = LocationModel.main
     @Published var locationModel = LocationModel.main
@@ -173,7 +178,7 @@ let authorized = await PhotoLibrary.checkAuthorization()
 [x] no update if media item deleted
     struct MediaDetailView
     private var deleted = false
-    
+
 [x] store prefix mo- --> mo-1/
 >> store names mo-gallery --> mo-1/gallery
 

@@ -11,7 +11,7 @@ struct AlbumPickerView: View {
     @State var selection: String?
     var albumNames: [String]
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -76,7 +76,7 @@ struct AlbumPickerView_AlbumItem: View {
     //    @State var selectionIndex: Int = 0
     //    @State var selectionString: String = ""
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -129,7 +129,7 @@ struct AlbumPickerView2: View {
     @State var selectionInt: Int? = 99
     var albumNames: [String]
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -180,7 +180,7 @@ struct AlbumPickerView3: View {
     @State var selectionInt: Int? = 99
     var albumNames: [String]
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
     @Environment(\.dismiss) var dismiss
     
     var body: some View {

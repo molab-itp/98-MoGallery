@@ -51,3 +51,7 @@ struct MainView: View {
 //            .environmentObject(app.lobbyModel)
 //    }
 //}
+/* Error:
+ |  MoLobbyAnon crashed due to an uncaught exception `com.firebase.core`. Reason: Default app has already been configured..
+
+ */

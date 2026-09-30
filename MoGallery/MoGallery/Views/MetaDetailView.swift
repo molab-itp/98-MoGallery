@@ -9,10 +9,10 @@ import SwiftUI
 
 struct MetaDetailView: View {
     
-    @ObservedObject var metaEntry: MetaEntry
+    @Bindable var metaEntry: MetaEntry
 
-    @EnvironmentObject var metaModel: MetaModel
-    @EnvironmentObject var app: AppModel
+    @Environment(MetaModel.self) var metaModel
+    @Environment(AppModel.self) var app
 
     var body: some View {
         VStack() {

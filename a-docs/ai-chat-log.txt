@@ -1,0 +1,114 @@
+
+In MoGallery
+using cursor
+
+# --
+give overview
+
+[2 tools called]
+
+MoGallery is a SwiftUI-based iOS app that wires together Firebase-backed
+authentication, local camera/photo handling, and gallery/map views. The entry
+point `MoGalleryApp` bootstraps Firebase, applies a custom navigation-bar
+appearance, and injects shared singletons (`AppModel`, `CameraModel`,
+`LobbyModel`, `GalleryModel`, `PhotosModel`, `MetaModel`, `LocationModel`) into
+the root `LoginCheckView`, kicking off sign-in on appear.
+
+```
+15:45:MoGallery/MoGalleryApp.swift
+@main
+struct MoGalleryApp: App {
+    var app = AppModel.main
+    init() {
+        UINavigationBar.applyCustomAppearance()
+        FirebaseApp.configure()
+        app.initRefresh()
+    }
+    var body: some Scene {
+        WindowGroup {
+            LoginCheckView()
+                .environmentObject(AppModel.main)
+                ...
+                .environmentObject(LocationModel.main)
+                .onAppear { app.lobbyModel.signIn() }
+        }
+    }
+}
+```
+
+Key modules:
+
+- `Auth/`: SwiftUI screens for onboarding and user management (`LoginView`, `UserDetailView`), plus app settings and lobby checks.
+- `Camera/`: `CameraModel` + `CameraView` handle capture workflows, likely integrating AVFoundation for stills/video used elsewhere.
+- `Commons/`: Reusable utilities (image caching, elapsed time formatting, Google sign-in button, location manager, thumbnail/viewfinder helpers).
+- `Map/`: `LocationModel` with SwiftUI views for displaying captured media on a map tab.
+- `Models/`: Core state containers (`AppModel`, `GalleryModel`, `PhotosModel`, etc.) coordinating data flow, uploads, and Firebase interactions.
+- `Photos/`: Photo-library abstractions (`PhotoAsset`, `PhotoCollection`, `PhotosModel`) and views for browsing, picking, and detailing assets.
+- `Store/`: Upload/download logic (`GalleryModel-upload`, `MediaModel-decode`, `MetaModel`) plus map views tied to stored metadata.
+- `Views/`: High-level UI composition (`MainView`, `GalleryTabView`, `MediaDetailView`, `ShareSheet`, `WebView`) that stitch together models and feature modules.
+- `Assets.xcassets`, `Preview Content`, and entitlements/plists provide app resources, Firebase config, and previews.
+
+Overall: a modular SwiftUI app where models live as singletons injected via `environmentObject`, Firebase handles backend storage/auth, and the app spans authentication, media capture/upload, gallery browsing, and geospatial display.
+
+
+# --
+recode to use firebase firestore
+
+
+[58 tools called]
+
+## Summary
+- Added `FirestorePaths` to normalize `storePrefix` values and map every feature to Firestore namespaces (`namespaces/{prefix}/galleries/{galleryKey}/entries`, `.../lobbies/{lobbyKey}/users`, `.../metaEntries`) so the rest of the app can ask for `CollectionReference`s without repeating path math.
+```10:43:MoGallery/Store/FirestorePaths.swift
+enum FirestorePaths {
+    static func galleryEntries(prefix: String, key: String) -> CollectionReference {
+        namespaceDocument(prefix: prefix)
+            .collection("galleries")
+            .document(key)
+            .collection("entries")
+    }
+    ...
+}
+```
+- Reworked `GalleryModel` to rely on Firestore snapshot listeners, keeping the same singletons/environmentObjects but now reading, sorting, and mutating gallery entries through `CollectionReference` handles (including deletes and user-gallery copies).
+```54:122:MoGallery/Store/GalleryModel.swift
+galleryRef = FirestorePaths.galleryEntries(
+    prefix: app.settings.storePrefix,
+    key: galleryName)
+galleryListener = galleryRef.addSnapshotListener { snapshot, error in
+    ...
+    let items = documents.compactMap { MediaModel(id: $0.documentID, dict: $0.data()) }
+    gallery = items.sorted(by: { $0.createdAt > $1.createdAt })
+}
+```
+- Updated the upload pipeline (`GalleryModel-upload.swift`) so every write uses Firestore (`FieldValue.increment` for counts, `setData(merge:)` for media/user-gallery documents) while leaving Storage uploads untouched; removed the final dependency on Realtime Database.
+- Migrated `LobbyModel` to Firestore so Google sign-in, user list observation, caption/stats updates, and location/active-count tracking all work against the new collection, with local state seeded immediately from the fetched document.
+```169:247:MoGallery/Models/LobbyModel.swift
+let userDoc = lobbyRef.document(id)
+userDoc.getDocument { snapshot, error in
+    var updateValues = values
+    var localValues = values
+    ...
+    updateValues["activeCount"] = FieldValue.increment(Int64(1))
+    userDoc.setData(updateValues, merge: true)
+    self.setCurrentUser(UserModel(id: id, dict: localValues))
+}
+```
+- Converted `MetaModel` listeners and helpers to Firestore (including batch clean-up) and trimmed unused Realtime imports from `GalleryModel-add.swift`; 
+the entire codebase now targets Firestore for structured data.
+
+## Testing
+- Not run (not requested). Please exercise the gallery, upload, lobby, and meta flows against a Firestore project and verify security rules/indexes.
+
+## Next Steps
+- Seed/migrate existing Realtime Database content into the `namespaces/{prefix}` Firestore structure or update settings to point at a clean namespace.
+- Verify Firestore security rules allow the new collections plus `FieldValue.increment` writes, and add composite indexes if you later add `order`/`where` clauses.
+- Run the app end-to-end (login, capture/upload, gallery browsing, meta edits) to finish TODO 4 and ensure the new listeners behave as expected.
+
+
+# --
+
+Added lib FirebaseFirestore
+
+
+

@@ -8,15 +8,14 @@
 import Foundation
 import CoreLocation
 import MapKit
-
-class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+@Observable class LocationManager: NSObject, CLLocationManagerDelegate {
     
-    private let locationManager = CLLocationManager()
-    @Published var locationStatus: CLAuthorizationStatus?
-    @Published var lastLocation: CLLocation?
-    @Published var region:MKCoordinateRegion
-    @Published var delta: Double
-    var regionInited = false
+    @ObservationIgnored private let locationManager = CLLocationManager()
+    var locationStatus: CLAuthorizationStatus?
+    var lastLocation: CLLocation?
+    var region:MKCoordinateRegion
+    var delta: Double
+    @ObservationIgnored var regionInited = false
     
     override init() {
         xprint("LocationManager init")

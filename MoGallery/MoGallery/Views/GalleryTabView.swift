@@ -16,11 +16,11 @@ struct GalleryTabView: View {
     @State private var showingAlert = false
     @State private var showingAddRandomAlert = false
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var galleryModel: GalleryModel
-    @EnvironmentObject var metaModel: MetaModel
-    @EnvironmentObject var app: AppModel
-    
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(GalleryModel.self) var galleryModel
+    @Environment(MetaModel.self) var metaModel
+    @Environment(AppModel.self) var app
+
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss
     
@@ -37,6 +37,7 @@ struct GalleryTabView: View {
     ]
     
     var body: some View {
+        @Bindable var galleryModel = galleryModel
         NavigationStack(path: $galleryModel.path) {
             ScrollView {
                 // !!@ metaEntry update no seen when GalleryHeaderView used
@@ -168,8 +169,8 @@ struct GalleryHeaderView: View {
     var metaModel: MetaModel;
     var metaEntry: MetaEntry;
     
-    @EnvironmentObject var app: AppModel
-    
+    @Environment(AppModel.self) var app
+
     var body: some View {
         NavigationLink {
             MetaDetailView(metaEntry: metaEntry)
@@ -253,11 +254,11 @@ struct MediaThumbView: View {
 
 #Preview {
     GalleryTabView()
-        .environmentObject(AppModel.main)
-        .environmentObject(CameraModel.main)
-        .environmentObject(LobbyModel.main)
-        .environmentObject(GalleryModel.main)
-        .environmentObject(PhotosModel.main)
-        .environmentObject(MetaModel.main)
-        .environmentObject(LocationModel.main)
+        .environment(AppModel.main)
+        .environment(CameraModel.main)
+        .environment(LobbyModel.main)
+        .environment(GalleryModel.main)
+        .environment(PhotosModel.main)
+        .environment(MetaModel.main)
+        .environment(LocationModel.main)
 }

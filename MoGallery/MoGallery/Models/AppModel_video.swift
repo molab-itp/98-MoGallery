@@ -39,7 +39,7 @@ extension AppModel {
         // youTubePlayer = "https://youtube.com/watch?v=psL_5RIBqnY"
         youTubePlayer = YouTubePlayer(
             source: .video(id: ref),
-            configuration: .init(
+            parameters: .init(
                 autoPlay: true,
                 loopEnabled: true
             )
@@ -50,9 +50,10 @@ extension AppModel {
         xprint("playVideo youTubeUrl ref", ref)
         // https://youtube.com/watch?v=psL_5RIBqnY
         // https://youtu.be/-Vmv9BMv7AQ
+        let source: YouTubePlayer.Source? = .init(urlString: ref)
         youTubePlayer = YouTubePlayer(
-            source: .url(ref),
-            configuration: .init(
+            source: source,
+            parameters: .init(
                 autoPlay: true,
                 loopEnabled: true
             )
@@ -79,3 +80,6 @@ extension AppModel {
     }
     
 }
+
+// https://github.com/SvenTiigi/YouTubePlayerKit
+

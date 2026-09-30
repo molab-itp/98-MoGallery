@@ -17,16 +17,7 @@
 	</array>
 	<key>GIDClientID</key>
 	<string>219508380677-1lec5othbt67apu30ee2vut15lp0agcl.apps.googleusercontent.com</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>UIApplicationSceneManifest</key>
-	<dict>
-		<key>UIApplicationSupportsMultipleScenes</key>
-		<true/>
-		<key>UISceneConfigurations</key>
-		<dict/>
-	</dict>
-    <key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
-    <string>YES</string>
+	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
+	<string>YES</string>
 </dict>
 </plist>

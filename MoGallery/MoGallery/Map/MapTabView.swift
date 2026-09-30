@@ -10,9 +10,10 @@ import MapKit
 
 struct MapTabView: View {
 
-    @EnvironmentObject var model: LocationModel
-    
+    @Environment(LocationModel.self) var model
+
     var body: some View {
+        @Bindable var model = model
 //        let _ = Self._printChanges()
         NavigationStack {
             ZStack {
@@ -133,5 +134,5 @@ let locationFont = Font
 
 #Preview {
     MapTabView()
-        .environmentObject(LocationModel.sample)
+        .environment(LocationModel.sample)
 }

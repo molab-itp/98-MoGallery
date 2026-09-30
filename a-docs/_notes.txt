@@ -1,0 +1,263 @@
+_notes.txt
+
+# --
+2026-09-24 14:44:58
+v1000
+
+in MoGallery/MoGallery convert usage of ObservableObject
+to @Observable macro
+@Observable
+
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+
+class PhotoCollection: NSObject, ObservableObject {
+
+
+# --
+2026-06-23 17:11:13
+
+>> Dup app entries in App Store Connect
+
+MoGallery2026
+SDK: MoGallery2023
+Apple ID: 1663982326
+
+MoGallery
+SDK: com.jht1900.MoGalllery
+Apple ID: 6783112474
+
+# --
+2026-06-23 15:25:16
+
+The following build has completed processing:
+
+Platform: iOS
+App Name: MoGallery
+Build Number: 119
+Version Number: 1.0
+App SKU: com.jht1900.MoGalllery
+App Apple ID: 6783112474
+
+
+
+ITMS-90683: Missing purpose string in Info.plist - Your app’s code references
+one or more APIs that access sensitive user data, or the app has one or more
+entitlements that permit such access. The Info.plist file for the
+“MoGallery.app” bundle should contain a NSLocationWhenInUseUsageDescription key
+with a user-facing purpose string explaining clearly and completely why your app
+needs the data. If you’re using external libraries or SDKs, they may reference
+APIs that require a purpose string. While your app might not use these APIs, a
+purpose string is still required. For details, visit:
+https://developer.apple.com/documentation/uikit/protecting_the_user_s_privacy/requesting_access_to_protected_resources.
+
+
+
+>> using Xcode_26.6_r2.app
+
+Upload Symbols Failed
+The archive did not include a dSYM for the FirebaseFirestoreInternal.framework with the UUIDs [6F19F64A-008E-3294-BECD-5C12E752283B]. Ensure that the archive's dSYM folder includes a DWARF file for FirebaseFirestoreInternal.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the absl.framework with the UUIDs [3C54E846-8747-31EB-B8B0-41E010FB8D92]. Ensure that the archive's dSYM folder includes a DWARF file for absl.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpc.framework with the UUIDs [64F6273D-F198-3120-AFAA-35C0EFA14CF7]. Ensure that the archive's dSYM folder includes a DWARF file for grpc.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpcpp.framework with the UUIDs [41D9471B-1975-31ED-A4EA-59EECAB35872]. Ensure that the archive's dSYM folder includes a DWARF file for grpcpp.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the openssl_grpc.framework with the UUIDs [2021D2B1-4736-3202-BF39-F87C3F049263]. Ensure that the archive's dSYM folder includes a DWARF file for openssl_grpc.framework with the expected UUIDs.
+
+
+2026-06-23 09:40:20
+
+>> using Xcode_26.6_r2.app
+
+The server returned unexpected content.
+<HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>
+An error occurred while processing your request.<p>
+Reference&#32;&#35;221&#46;d2623417&#46;1782221787&#46;30fc7d8f
+<P>https&#58;&#47;&#47;errors&#46;edgesuite&#46;net&#47;221&#46;d2623417&#46;1782221787&#46;30fc7d8f</P>
+</BODY></HTML>
+
+Upload Symbols Failed
+The archive did not include a dSYM for the FirebaseFirestoreInternal.framework with the UUIDs [877DC9FD-7B6D-38AB-963D-0043C700F146]. Ensure that the archive's dSYM folder includes a DWARF file for FirebaseFirestoreInternal.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the absl.framework with the UUIDs [3D4A2ACE-FAD0-3276-8624-50E7D5B9DC49]. Ensure that the archive's dSYM folder includes a DWARF file for absl.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpc.framework with the UUIDs [98A55310-4754-3283-839E-68ACFB43CE19]. Ensure that the archive's dSYM folder includes a DWARF file for grpc.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpcpp.framework with the UUIDs [34310B3C-074D-3F28-959E-C34C7E1CCC85]. Ensure that the archive's dSYM folder includes a DWARF file for grpcpp.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the openssl_grpc.framework with the UUIDs [E3D55825-89BB-33BC-ABB9-F1BDAF07B793]. Ensure that the archive's dSYM folder includes a DWARF file for openssl_grpc.framework with the expected UUIDs.
+
+
+# --
+2026-06-22 19:28:22
+
+Upload Symbols Failed
+The archive did not include a dSYM for the FirebaseFirestoreInternal.framework with the UUIDs [034B645C-0475-3C49-B526-17D7EE201590]. Ensure that the archive's dSYM folder includes a DWARF file for FirebaseFirestoreInternal.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the absl.framework with the UUIDs [916D1CE4-BCCD-3F33-8D66-61CBA4022F1A]. Ensure that the archive's dSYM folder includes a DWARF file for absl.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpc.framework with the UUIDs [19D8530D-6CFD-3649-95CB-58CEA298ED81]. Ensure that the archive's dSYM folder includes a DWARF file for grpc.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpcpp.framework with the UUIDs [DD199426-2496-3731-8AAE-D621C6FA78B7]. Ensure that the archive's dSYM folder includes a DWARF file for grpcpp.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the openssl_grpc.framework with the UUIDs [9655BA11-698A-34DF-AAD0-1A62815D76A0]. Ensure that the archive's dSYM folder includes a DWARF file for openssl_grpc.framework with the expected UUIDs.
+
+App Record Creation failed due to request containing an attribute already in use. 
+The app name you entered is already being used for another app in your account. 
+If you would like to use the name for this app you will need to submit an update 
+to your other app to change the name, or remove it from App Store Connect.
+>> rename to MoGallery2026
+
+Upload Symbols Failed
+The archive did not include a dSYM for the FirebaseFirestoreInternal.framework with the UUIDs [F3D7ABC6-4412-3C72-81FB-D2CED85CE0C2]. Ensure that the archive's dSYM folder includes a DWARF file for FirebaseFirestoreInternal.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the absl.framework with the UUIDs [7364DA5D-CC73-35F5-883A-FE5593226BF7]. Ensure that the archive's dSYM folder includes a DWARF file for absl.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpc.framework with the UUIDs [C7D7C191-5C95-3ED9-B770-99BC794C1CD1]. Ensure that the archive's dSYM folder includes a DWARF file for grpc.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the grpcpp.framework with the UUIDs [0B82D886-87B2-3B41-A9D4-6805CAB4F9AA]. Ensure that the archive's dSYM folder includes a DWARF file for grpcpp.framework with the expected UUIDs.
+
+Upload Symbols Failed
+The archive did not include a dSYM for the openssl_grpc.framework with the UUIDs [CD608EDA-1806-3827-B76C-C13146B86193]. Ensure that the archive's dSYM folder includes a DWARF file for openssl_grpc.framework with the expected UUIDs.
+
+# --
+2026-03-03 20:04:20
+
+BUG IN CLIENT OF LIBDISPATCH: trying to lock recursively
+
+convert from class ObservableObject to @Observable macro, use @ObservationIgnored for all not @Published vars
+
+
+>> remove Copy Info.plist from Build Phases / Copy Bundle Resources
+
+Multiple commands produce '/Users/jht2/Library/Developer/Xcode/DerivedData/MoGalllery-eywptktyunugkmaxcngavikpiaii/Build/
+Products/Debug-iphonesimulator/MoGalllery.app/Info.plist'
+
+Target 'MoGalllery' (project 'MoGalllery') has process command with output '/Users/jht2/Library/Developer/Xcode/DerivedData/
+MoGalllery-eywptktyunugkmaxcngavikpiaii/Build/Products/Debug-iphonesimulator/MoGalllery.app/Info.plist'
+
+Target 'MoGalllery' (project 'MoGalllery') has copy command from '/Users/jht2/Documents/projects/_molab-repos/a-98/
+98-MoGallery-Private/MoGallery2/MoGalllery/MoGallery/Info.plist' to 
+'/Users/jht2/Library/Developer/Xcode/DerivedData/MoGalllery-eywptktyunugkmaxcngavikpiaii/Build/Products/Debug-iphonesimulator/
+MoGalllery.app/Info.plist'
+
+*** Terminating app due to uncaught exception 'NSInvalidArgumentException', 
+reason: 'No active configuration. Make sure GIDClientID is set in Info.plist.'
+
+
+                  format:@"No active configuration. Make sure GIDClientID is set in Info.plist."];
+
+
+Multiple Path Components
+Groups and files must refer to exactly one path component. The following items refer to multiple path components:
+• The file 
+    "MoGallery/Store/MetaModel.swift" with path: 
+    "MoGallery/Store/MetaModel.swift".
+
+Consider reparenting these items in groups corresponding to the extra path components.
+
+
+
+# --
+ 2025-11-21 14:08:48
+
+ Not able to convert to folders
+ moved some file items to
+ z-stray
+
+ ai-chat-log.txt
+ using cursor app
+ recode to use firebase firestore
+
+# --
+2024-12-18 10:49:45
+
+Identifiable
+
+selection: app.settings.photoAlbum,
+
+photoAlbumItem
+
+final class PhotosModel: ObservableObject {
+
+    @Published var albumNames: [String] = []
+-->
+    @Published var albumItems: [AlbumItem] = []
+
+
+AlbumItem
+  id: String
+  title: String
+
+# --
+2024-12-16 14:26:27
+
+struct PhotoCollectionView: View {
+
+# --
+
+https://www.hackingwithswift.com/quick-start/concurrency
+
+func addGalleryAsset(phAsset: PHAsset?) {
+
+requestFullRez(
+
+requestImageUpload(
+
+uploadImageData(
+
+fetchDownloadURL(
+
+putFullRezData(
+
+fetchDownloadURL_FullRez(storageRefFullRez
+
+createMediaEntry(
+
+
+https://www.hackingwithswift.com/quick-start/concurrency/how-to-create-and-run-a-task
+
+requestImageUpload
+
+func requestImage(manager: PHImageManager,
+
+@discardableResult
+func requestImage(for asset: PhotoAsset, targetSize: CGSize, completion: @escaping ((image: Image?, isLowerQuality: Bool)?) -> Void) -> PHImageRequestID? {
+
+# --
+
+https://www.hackingwithswift.com/quick-start/concurrency/how-to-use-continuations-to-convert-completion-handlers-into-async-functions
+
+https://developer.apple.com/documentation/swift/withcheckedcontinuation(isolation:function:_:)
+https://developer.apple.com/documentation/swift/withcheckedthrowingcontinuation(isolation:function:_:)
+
+https://developer.apple.com/documentation/swift/updating_an_app_to_use_swift_concurrency
+https://developer.apple.com/videos/play/wwdc2021/10194/
+Swift concurrency: Update a sample app
+
+https://developer.apple.com/documentation/swift/concurrency/
+
+https://developer.apple.com/documentation/swift/updating-an-app-to-use-strict-concurrency
+
+
+
+# --
+2023-11-23 13:14:47
+
+

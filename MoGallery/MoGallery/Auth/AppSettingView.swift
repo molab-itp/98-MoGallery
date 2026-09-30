@@ -17,9 +17,10 @@ import SwiftUI
 
 struct AppSettingView: View {
     
-    @EnvironmentObject var app: AppModel
+    @Environment(AppModel.self) var app
 
     var body: some View {
+        @Bindable var app = app
         Form {
             Section {
                 Link("MoGallery git repo",
@@ -81,7 +82,7 @@ struct AppSettingView: View {
 
 struct AppSettingView_Previews: PreviewProvider {
     static var previews: some View {
-        AppSettingView( )
-            .environmentObject(AppModel())
+        AppSettingView()
+            .environment(AppModel())
     }
 }

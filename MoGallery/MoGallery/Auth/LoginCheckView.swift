@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LoginCheckView: View {
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var app: AppModel
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(AppModel.self) var app
 
     var body: some View {
         GeometryReader { geometry in
@@ -29,12 +29,12 @@ struct LoginCheckView: View {
 
 #Preview {
     LoginCheckView()
-        .environmentObject(AppModel.main)
-        .environmentObject(CameraModel.main)
-        .environmentObject(LobbyModel.main)
-        .environmentObject(GalleryModel.main)
-        .environmentObject(PhotosModel.main)
-        .environmentObject(MetaModel.main)
+        .environment(AppModel.main)
+        .environment(CameraModel.main)
+        .environment(LobbyModel.main)
+        .environment(GalleryModel.main)
+        .environment(PhotosModel.main)
+        .environment(MetaModel.main)
 }
 
 

@@ -6,14 +6,14 @@ import AVFoundation
 import SwiftUI
 
 
-final class CameraModel: ObservableObject {
-    
+@Observable final class CameraModel {
+
     static let main = CameraModel()
 
-    var photoInfoProvided: ((PhotoInfo) -> ())?
-    var previewImageProvided: ((Image?) -> ())?
-    
-    private let cameraCapture = CameraCapture()
+    @ObservationIgnored var photoInfoProvided: ((PhotoInfo) -> ())?
+    @ObservationIgnored var previewImageProvided: ((Image?) -> ())?
+
+    @ObservationIgnored private let cameraCapture = CameraCapture()
             
     init() {
         Task {

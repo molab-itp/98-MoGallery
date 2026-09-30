@@ -14,8 +14,8 @@ struct PhotoDetailView: View {
     var asset: PhotoAsset
     var cache: CachedImageManager?
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var app: AppModel
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(AppModel.self) var app
     
     @Environment(\.dismiss) var dismiss
 

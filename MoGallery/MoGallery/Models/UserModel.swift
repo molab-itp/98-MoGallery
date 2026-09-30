@@ -7,36 +7,37 @@
 
 import Foundation
 import MapKit
+import Observation
 
-class UserModel: ObservableObject, Identifiable {
-    
-    var id: String
-    var name: String
-    var email: String
-    var profileImg: String
-    var dateIn: Date
-    var uploadCount: Int
-    var activeCount: Int
-    var stats: [String:Any];
-    @Published var caption: String
+@Observable class UserModel: Identifiable {
 
-    // @Published var activeLapse: TimeInterval
-    var info:[String: Any] = [:]
-    
+    @ObservationIgnored var id: String
+    @ObservationIgnored var name: String
+    @ObservationIgnored var email: String
+    @ObservationIgnored var profileImg: String
+    @ObservationIgnored var dateIn: Date
+    @ObservationIgnored var uploadCount: Int
+    @ObservationIgnored var activeCount: Int
+    @ObservationIgnored var stats: [String:Any]
+    var caption: String
+
+    // @ObservationIgnored var activeLapse: TimeInterval
+    @ObservationIgnored var info:[String: Any] = [:]
+
     var activeCountLabel: String? {
         if activeCount > 0 { return "signin: "+String(activeCount) }
         return nil
     }
-    
+
     var userGalleryKey: String {
         let nemail = email.replacingOccurrences(of: ".", with: "-")
         let str = "zu-\( id )-\( nemail )"
         // xprint("userGalleryKey", str)
         return str
     }
-    
+
     init(id: String, dict: [String: Any]) {
-        
+
         let name = dict["name"] as? String ?? ""
         let email = dict["email"] as? String ?? ""
         let profileImg = dict["profileImg"] as? String ?? ""
@@ -55,7 +56,7 @@ class UserModel: ObservableObject, Identifiable {
         self.activeCount = activeCount
         self.caption = caption
         self.stats = stats
-        
+
         self.info = dict
         // info["lat
         // info["lon

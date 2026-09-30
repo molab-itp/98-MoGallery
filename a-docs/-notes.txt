@@ -1,0 +1,120 @@
+
+2025-09-09 16:31:48
+
+https://claude.ai/chat/cdb62de6-589c-4dc9-961b-d5d4ed59137e
+
+
+
+import SwiftUI
+
+@main
+struct YourApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+        .handlesExternalEvents(matching: Set(arrayLiteral: "yourapp"))
+        .onOpenURL { url in
+            handleURL(url)
+        }
+    }
+    
+    private func handleURL(_ url: URL) {
+        // Same URL handling logic as above
+        print("Received URL: \(url)")
+        
+        // Parse and handle the URL
+        // ... (use the same parsing logic from the AppKit example)
+    }
+}
+
+<key>CFBundleURLTypes</key>
+<array>
+    <dict>
+        <key>CFBundleURLName</key>
+        <string>com.yourcompany.yourapp</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>yourapp</string>
+        </array>
+    </dict>
+</array>
+
+
+import Cocoa
+
+@main
+class AppDelegate: NSObject, NSApplicationDelegate {
+    
+    func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // App setup
+    }
+    
+    // Handle URL when app is already running
+    func application(_ application: NSApplication, open urls: [URL]) {
+        for url in urls {
+            handleCustomURL(url)
+        }
+    }
+    
+    private func handleCustomURL(_ url: URL) {
+        print("Received URL: \(url)")
+        
+        guard url.scheme == "yourapp" else {
+            print("Invalid scheme: \(url.scheme ?? "none")")
+            return
+        }
+        
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        let host = url.host ?? ""
+        let queryItems = components?.queryItems ?? []
+        
+        // Convert query items to dictionary
+        var params: [String: String] = [:]
+        for item in queryItems {
+            params[item.name] = item.value ?? ""
+        }
+        
+        // Route based on host
+        switch host {
+        case "document":
+            handleDocumentAction(params: params)
+        case "settings":
+            handleSettingsAction(params: params)
+        case "search":
+            handleSearchAction(params: params)
+        default:
+            handleDefaultAction(url: url)
+        }
+    }
+    
+    private func handleDocumentAction(params: [String: String]) {
+        if let docName = params["name"] {
+            // Open specific document
+            print("Opening document: \(docName)")
+            // Your document opening logic here
+        }
+    }
+    
+    private func handleSettingsAction(params: [String: String]) {
+        if let tab = params["tab"] {
+            // Open settings to specific tab
+            print("Opening settings tab: \(tab)")
+            // Your settings opening logic here
+        }
+    }
+    
+    private func handleSearchAction(params: [String: String]) {
+        if let query = params["q"] {
+            // Perform search
+            print("Searching for: \(query)")
+            // Your search logic here
+        }
+    }
+    
+    private func handleDefaultAction(url: URL) {
+        print("Default action for: \(url)")
+        // Bring app to front by default
+        NSApp.activate(ignoringOtherApps: true)
+    }
+}

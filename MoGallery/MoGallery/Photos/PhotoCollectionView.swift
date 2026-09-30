@@ -11,10 +11,10 @@ import PhotosUI
 
 struct PhotoCollectionView: View {
     
-    @EnvironmentObject var lobbyModel: LobbyModel
-    @EnvironmentObject var photosModel: PhotosModel
-    @EnvironmentObject var cameraModel: CameraModel
-    @EnvironmentObject var app: AppModel
+    @Environment(LobbyModel.self) var lobbyModel
+    @Environment(PhotosModel.self) var photosModel
+    @Environment(CameraModel.self) var cameraModel
+    @Environment(AppModel.self) var app
 
     @Environment(\.displayScale) private var displayScale
     @Environment(\.dismiss) var dismiss

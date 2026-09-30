@@ -24,7 +24,7 @@ struct LobbyView: View {
                     AppSettingView()
                 }
             }
-            .navigationTitle("Info MoGallery v\(app.verNum)")
+            .navigationTitle("Info MoLobby v\(app.verNum)")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

@@ -6,14 +6,14 @@ import SwiftUI
 
 struct CameraView: View {
     
-    @EnvironmentObject var photosModel: PhotosModel
-    @EnvironmentObject var cameraModel: CameraModel
-    @EnvironmentObject var app: AppModel
+    @Environment(PhotosModel.self) var photosModel
+    @Environment(CameraModel.self) var cameraModel
+    @Environment(AppModel.self) var app
 
     private static let barHeightFactor = 0.15
-    
+
     var body: some View {
-        
+        @Bindable var photosModel = photosModel
         NavigationStack {
             GeometryReader { geometry in
                 ViewfinderView(image:  $photosModel.viewfinderImage )

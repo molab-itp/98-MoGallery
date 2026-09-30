@@ -7,10 +7,11 @@
 
 import Foundation
 import MapKit
+import Observation
 
-@MainActor class LocationModel: ObservableObject {
-        
-    @Published var region = MKCoordinateRegion(
+@Observable @MainActor class LocationModel {
+
+    var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(
             latitude: 40.630566,    // Brooklyn Flatlands
             longitude: -73.922013),
@@ -18,9 +19,9 @@ import MapKit
             latitudeDelta: 0.001,
             longitudeDelta: 0.001)
     )
-    @Published var locations:[Location] = []
-    var currentLocation = Location()
-    var index = 0
+    var locations:[Location] = []
+    @ObservationIgnored var currentLocation = Location()
+    @ObservationIgnored var index = 0
 
     static let main = LocationModel()
 
